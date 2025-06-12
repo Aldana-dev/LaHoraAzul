@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mi Sitio{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li><a href="{{ url_for('nosotras') }}">Nosotras</a></li>
+            <li><a href="{{ url_for('tienda') }}">Tienda</a></li>
+            <li><a href="{{ url_for('marcos') }}">Marcos</a></li>
+            <li><a href="{{ url_for('galeria') }}">Galería</a></li>
+            <li><a href="{{ url_for('carrito') }}">Carrito</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
