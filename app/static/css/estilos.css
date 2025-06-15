@@ -1,13 +1,14 @@
-@font-face {
+/* Fuente personalizada Macaroni */
+@font-face { 
   font-family: 'Macaroni';
   src: url('/app/static/fonts/Macaroni.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
-
-
-/* Estilos globales */
+/* -------------------
+   Estilos Globales
+------------------- */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -16,22 +17,18 @@
 
 html,
 body {
-  height: 100%;
   background-color: white;
   color: #153f6c;
   font-family: 'Libre Franklin', sans-serif;
+  scroll-padding-top: 80px; /* Para offset con elementos sticky */
 }
 
-/* Títulos y botones en Poppins */
+/* -------------------
+   Tipografías específicas
+------------------- */
 h1, h2, h3, h4, h5, h6,
 button, .btn {
   font-family: 'Poppins', sans-serif;
-}
-
-.pagina {
-  max-width: 1200px;
-  margin: 0 auto; /* centra horizontalmente */
-  padding: 1rem;
 }
 
 .logo-titulo {
@@ -39,32 +36,38 @@ button, .btn {
   font-size: 2.5rem;
 }
 
-
-/* Contenedor centrado */
+/* -------------------
+   Layout principal
+------------------- */
+.pagina,
 main {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  margin: 0 auto; /* Centrado horizontal */
+  padding: 1rem;
 }
 
-/* Estilos específicos */
+/* -------------------
+   Header y navegación
+------------------- */
 header {
   padding: 1em;
   text-align: center;
 }
 
+/* Iconos Material Symbols */
 .material-symbols-outlined {
   font-size: 45px;
   color: #153f6c;
 }
 
+/* Icono carrito */
 .carrito-icono {
   width: 65px;
   height: 65px;
   padding: 0;
 }
 
-
+/* Navegación principal */
 nav {
   display: flex;
   justify-content: center;
@@ -72,14 +75,19 @@ nav {
   padding: 15px 10px;
   border-top: 2px solid #153f6c;
   border-bottom: 2px solid #153f6c;
-  margin-bottom: 50px;
+  background-color: white; /* Para overlay si sticky */
+  z-index: 1050;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
 }
 
+/* Enlaces de navegación */
 nav a {
   color: #153f6c;
   text-decoration: none;
   font-weight: bold;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 nav a:hover {
@@ -87,18 +95,24 @@ nav a:hover {
   text-decoration: underline;
 }
 
-nav a {
-  color: #153f6c;
-  text-decoration: none;
+/* -------------------
+   Contenido principal y secciones
+------------------- */
+
+/* Carousel */
+.carousel {
+  position: relative;
+  z-index: 0;
 }
 
+/* Contenido centrado con ancho máximo */
 .contenido {
-  max-width: 800px; /* Ancho máximo del texto */
-  margin: 4em auto;  /* Centrado horizontal y espacio vertical */
-  margin-top: 8em;
+  max-width: 800px;
+  margin: 8em auto 4em; /* margin-top: 8em, margin-bottom:4em */
   text-align: center;
 }
 
+/* Galería */
 .galeria-preview {
   background-color: white;
   padding: 4em 2em;
@@ -108,54 +122,56 @@ nav a {
 .galeria-img {
   width: 100%;
   aspect-ratio: 1 / 1;
-  object-fit: cover;         /* Recorta si es necesario */
-  object-position: center;   /* Centra el recorte */
+  object-fit: cover;
+  object-position: center;
   border-radius: 0.5em;
 }
 
+/* Botón "Ver más" */
 .ver-mas {
   display: inline-block;
   padding: 10px 100px;
   background-color: #ffffff;
   color: #153f6c;
   border: 2px solid #153f6c;
-  text-decoration: none;
   font-family: 'Poppins', sans-serif;
   font-weight: bold;
-  border-radius: 0;          /* Sin bordes redondeados */
+  border-radius: 0;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  text-decoration: none;
 }
 
 .ver-mas:hover {
   background-color: #153f6c;
   color: #ffffff;
-
 }
 
+/* -------------------
+   Diseño de columnas flexibles
+------------------- */
 .dos-columnas {
   display: flex;
   flex-wrap: wrap;
-  padding: 4em;
-  padding-right: 0;
   gap: 2em;
+  padding: 4em 4em 4em 0;
   border-top: 2px solid #153f6c;
-  border-bottom: 2px solid #153f6c;
-  margin-top: 2em;
-  margin-bottom: 4em;
-  
+  /* margin: 2em 0 4em;*/
 }
 
 .columna {
   flex: 1;
   min-width: 300px;
 
-  /* Centrado vertical y horizontal */
+  /* Centramos contenido vertical y horizontalmente */
   display: flex;
   flex-direction: column;
-  justify-content: center; /* vertical */
+  justify-content: center;
 }
 
+/* -------------------
+   Enlaces de contacto con iconos
+------------------- */
 .contacto-link {
   display: flex;
   align-items: center;
@@ -166,9 +182,10 @@ nav a {
   font-family: 'Libre Franklin', sans-serif;
 }
 
+/* Iconos con círculo azul y blanco */
 .material-symbols-outlined.icono {
-  background-color: #153f6c; /* círculo azul */
-  color: white;              /* icono blanco */
+  background-color: #153f6c;
+  color: white;
   border-radius: 50%;
   padding: 8px;
   font-size: 40px;
@@ -177,28 +194,33 @@ nav a {
   align-items: center;
   width: 56px;
   height: 56px;
-  flex-shrink: 0;  /* evita que el icono se achique */
+  flex-shrink: 0;
 }
 
-
+/* -------------------
+   Estilo para iframe (mapas, videos, etc)
+------------------- */
 iframe {
   width: 100%;
-  height: 400px; /* Aumentá este valor según lo grande que lo quieras */
+  height: 400px;
   border: 0;
-  border-radius: 0.5em; /* Opcional, para bordes redondeados */
+  border-radius: 0.5em;
 }
 
-
+/* -------------------
+   Footer
+------------------- */
 .footer {
-  padding: 4em 1em 1.5em; /* mucho margen arriba */
+  padding: 4em 1em 1.5em;
   font-family: 'Libre Franklin', sans-serif;
   font-size: 0.9rem;
+  border-top: 2px solid #153f6c;
 }
+
 
 .footer-content {
   max-width: 1000px;
   margin: 0 auto;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -214,3 +236,30 @@ iframe {
   flex: 1;
 }
 
+/* -------------------
+   Página: Nosotras
+------------------- */
+
+/* Quitamos líneas divisorias en secciones de Nosotras */
+#nosotras,
+#nosotras ~ section.dos-columnas {
+  border: none;
+  margin-bottom: 3em;
+  padding-bottom: 0;
+}
+
+/* Estilo más limpio para las columnas */
+#nosotras .columna,
+#nosotras ~ section .columna {
+  border: none;
+  box-shadow: none;
+}
+
+/* Ajuste de tamaño de imágenes */
+#nosotras img,
+#nosotras ~ section img {
+  max-width: 80%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 8px;
+}
