@@ -3,7 +3,9 @@
   <head>
     
     <meta charset="UTF-8" />
-    <title>La Hora Azul</title>
+    <title>La Hora Azul - Inicio</title>
+    <link rel="icon" href="/app/static/icon/logo.png" type="image/png">
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       href="https://fonts.googleapis.com/css2?family=Macaroni&family=Poppins:wght@300;400;600&family=Libre+Franklin:wght@300;400;600&display=swap"
@@ -29,7 +31,7 @@
       </div>
 
       <!-- Carrito -->
-      <a href="/carrito" class="btn d-flex align-items-center justify-content-center carrito-icono">
+      <a href="..\templates\carrito.html" class="btn d-flex align-items-center justify-content-center carrito-icono">
         <span class="material-symbols-outlined">shopping_basket</span>
       </a>
     </header>
@@ -116,7 +118,8 @@
           <img src="../static/img/_MG_7681.jpg" class="img-fluid galeria-img" alt="Imagen 4" />
         </div>
       </div>
-      <a href="{{ url_for('galeria') }}" class="btn ver-mas">Ver más</a>
+      <a href="..\templates\galeria.html" class="btn ver-mas">Ver más</a>
+
     </div>
 
     <!-- Contacto + Mapa -->

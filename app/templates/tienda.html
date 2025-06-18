@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    
     <meta charset="UTF-8" />
     <title>La Hora Azul</title>
+        <link rel="icon" href="/app/static/icon/logo.png" type="image/png">
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       href="https://fonts.googleapis.com/css2?family=Macaroni&family=Poppins:wght@300;400;600&family=Libre+Franklin:wght@300;400;600&display=swap"
@@ -21,15 +22,24 @@
   </head>
 
   <body class="pagina">
-    <header class="d-flex justify-content-between align-items-center p-3 border-bottom">
+    <header
+      class="d-flex justify-content-between align-items-center p-3 border-bottom"
+    >
       <!-- Logo + Nombre -->
       <div class="d-flex align-items-center gap-3">
-        <img src="/app/static/icon/logo.png" alt="Logo La Hora Azul" height="80" />
-        <h1 class="logo-titulo m-0 fs-50">La Hora Azul</h1>
+        <img
+          src="/app/static/icon/logo.png"
+          alt="Logo La Hora Azul"
+          height="80"
+        />
+        <h1 class="logo-titulo m-0 fs-50">la hora azul</h1>
       </div>
 
       <!-- Carrito -->
-      <a href="/carrito" class="btn d-flex align-items-center justify-content-center carrito-icono">
+      <a
+        href="/carrito"
+        class="btn d-flex align-items-center justify-content-center carrito-icono"
+      >
         <span class="material-symbols-outlined">shopping_basket</span>
       </a>
     </header>
@@ -42,12 +52,60 @@
       <a href="/app/templates/marcos.html">Marcos</a>
     </nav>
 
+    <section class="tienda">
+      <!-- Filtros de Categorías -->
+      <div class="filtros-categorias">
+        <button class="categoria">
+          <img src="..\static\icon\1.svg" alt="Cuadros" class="icono" />
+          <span>Cuadros</span>
+        </button>
+        <button class="categoria">
+          <img src="..\static\icon\2.svg" alt="Ceramica" class="icono" />
+          <span>Ceramica</span>
+        </button>
+        <button class="categoria">
+          <img src="..\static\icon\3.svg" alt="Cuadernos" class="icono" />
+          <span>Cuadernos</span>
+        </button>
+        <button class="categoria">
+          <img src="..\static\icon\4.svg" alt="Totebags" class="icono" />
+          <span>Totebags</span>
+        </button>
+      </div>
+
+      <!-- Productos -->
+      <div class="lista-productos">
+        <div class="producto">
+          <img src="..\static\img\_MG_6466.jpg" alt="Producto 1" />
+          <p>Producto 1</p>
+          <p>$1200</p>
+        </div>
+        <div class="producto">
+          <img src="..\static\img\_MG_6495.jpg" alt="Producto 2" />
+          <p>Producto 2</p>
+          <p>$1500</p>
+        </div>
+        <div class="producto">
+          <img src="..\static\img\_MG_7586.jpg" alt="Producto 3" />
+          <p>Producto 3</p>
+          <p>$980</p>
+        </div>
+        <div class="producto">
+          <img src="..\static\img\_MG_7681.jpg" alt="Producto 4" />
+          <p>Producto 4</p>
+          <p>$1100</p>
+        </div>
+        <!-- Agregá más productos según necesites -->
+      </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
       <div class="container footer-content d-flex justify-content-between">
-        <p class="footer-left">© 2025 La Hora Azul. Todos los derechos reservados.</p>
-        <p class="footer-right">Creado con ❤️ por Aldana Ravalle.</p>
+        <p class="footer-left">
+          © 2025 La Hora Azul. Todos los derechos reservados.
+        </p>
+        <p class="footer-right">Creado con 💙 por Aldana Ravalle.</p>
       </div>
     </footer>
 
