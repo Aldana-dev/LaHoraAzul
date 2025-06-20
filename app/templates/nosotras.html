@@ -1,54 +1,14 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    
-    <meta charset="UTF-8" />
-    <title>La Hora Azul</title>
-        <link rel="icon" href="/app/static/icon/logo.png" type="image/png">
+{% extends "base.html" %}
+{% block title %}Nosotras - La Hora Azul{% endblock %}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Macaroni&family=Poppins:wght@300;400;600&family=Libre+Franklin:wght@300;400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/app/static/css/estilos.css" />
-  </head>
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/nosotras.css') }}">
+{% endblock %}
 
-  <body class="pagina">
-    <header class="d-flex justify-content-between align-items-center p-3 border-bottom">
-      <!-- Logo + Nombre -->
-      <div class="d-flex align-items-center gap-3">
-        <img src="/app/static/icon/logo.png" alt="Logo La Hora Azul" height="80" />
-        <h1 class="logo-titulo m-0 fs-50">La Hora Azul</h1>
-      </div>
-
-      <!-- Carrito -->
-      <a href="/carrito" class="btn d-flex align-items-center justify-content-center carrito-icono">
-        <span class="material-symbols-outlined">shopping_basket</span>
-      </a>
-    </header>
-
-    <!-- Navegación -->
-    <nav class="navegacion-sticky bg-white">
-      <a href="/app/templates/index.html">Inicio</a>
-      <a href="/app/templates/nosotras.html">Nosotras</a>
-      <a href="/app/templates/tienda.html">Tienda</a>
-      <a href="/app/templates/marcos.html">Marcos</a>
-    </nav>
-
-
+{% block content %}
 <section id="nosotras" class="dos-columnas">
-  <!-- Parte 1: Presentación -->
   <div class="columna">
-    <img src="../static/img/nosotras/image1.png" alt="Michele, Gisela y Sofía" class="galeria-img">
+    <img src="{{ url_for('static', filename='img/nosotras/image1.png') }}" alt="Michele, Gisela y Sofía" class="galeria-img">
   </div>
   <div class="columna">
     <h2>Nosotras</h2>
@@ -58,9 +18,8 @@
 </section>
 
 <section class="dos-columnas">
-  <!-- Parte 2: La tienda -->
   <div class="columna">
-    <img src="../static/img/nosotras/image2.png" alt="Interior de la tienda" class="galeria-img">
+    <img src="{{ url_for('static', filename='img/nosotras/image2.png') }}" alt="Interior de la tienda" class="galeria-img">
   </div>
   <div class="columna">
     <h2>La Tienda</h2>
@@ -69,9 +28,8 @@
 </section>
 
 <section class="dos-columnas">
-  <!-- Parte 3: El taller -->
   <div class="columna">
-    <img src="../static/img/nosotras/image3.png" alt="Taller de enmarcación" class="galeria-img">
+    <img src="{{ url_for('static', filename='img/nosotras/image3.png') }}" alt="Taller de enmarcación" class="galeria-img">
   </div>
   <div class="columna">
     <h2>El Taller</h2>
@@ -80,9 +38,8 @@
 </section>
 
 <section class="dos-columnas">
-  <!-- Parte 4: Encuentros -->
   <div class="columna">
-    <img src="../static/img/nosotras/image4.png" alt="Talleres y charlas" class="galeria-img">
+    <img src="{{ url_for('static', filename='img/nosotras/image4.png') }}" alt="Talleres y charlas" class="galeria-img">
   </div>
   <div class="columna">
     <h2>Encuentros</h2>
@@ -90,17 +47,4 @@
     <p>En los últimos meses, nuestra casa fue sede de diversas propuestas como acuarela, astrología, tarot y escritura.</p>
   </div>
 </section>
-
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container footer-content d-flex justify-content-between">
-        <p class="footer-left">© 2025 La Hora Azul. Todos los derechos reservados.</p>
-        <p class="footer-right">Creado con ❤️ por Aldana Ravalle.</p>
-      </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
+{% endblock %}

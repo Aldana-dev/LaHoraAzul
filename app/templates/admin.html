@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Panel de Administración - La Hora Azul</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/estilos.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin.css') }}"
+    />
+  </head>
+
+  <body class="pagina">
+    <section class="admin-panel container py-5">
+      <h2 class="text-center mb-4">Panel de Administración</h2>
+
+      <div class="admin-section mb-5">
+        <h3>Imágenes del Banner</h3>
+        <p>Subí, eliminá o cambiá las imágenes que se muestran en el banner principal del sitio.</p>
+        <button class="btn boton">Administrar Banner</button>
+      </div>
+
+      <div class="admin-section mb-5">
+        <h3>Galería</h3>
+        <p>Gestioná las imágenes de la galería.</p>
+        <button class="btn boton">Administrar Galería</button>
+      </div>
+
+      <div class="admin-section">
+        <h3>Productos</h3>
+        <p>Agregá, editá o eliminá productos de la tienda.</p>
+        <button class="btn boton">Administrar Productos</button>
+      </div>
+
+      <!-- Botón para volver al índice -->
+      <div class="text-center mt-5">
+        <a href="{{ url_for('index') }}" class="btn boton">Volver al Inicio</a>
+      </div>
+    </section>
+  </body>
+</html>

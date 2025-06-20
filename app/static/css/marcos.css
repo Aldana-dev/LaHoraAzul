@@ -1,0 +1,83 @@
+.introduccion-marcos {
+  margin: 100px auto 0 auto; 
+  max-width: 800px;
+  text-align: center;
+}
+
+.presupuesto-marcos {
+  margin: 100px auto 0 auto; 
+  max-width: 700px;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
+  text-align: center;
+}
+
+.presupuesto-marcos h3 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.presupuesto-marcos ol {
+  padding-left: 1.2rem;
+  text-align: left;
+}
+
+.presupuesto-marcos li {
+  margin-bottom: 0.5rem;
+}
+
+.carrusel-marcos {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.carrusel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+.carrusel-contenedor {
+  overflow: hidden;
+  width: 660px;
+  margin: 0 auto;
+}
+
+.carrusel-imagenes {
+  display: flex;
+  transition: transform 0.5s ease;
+  gap: 30px;
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+.carrusel-imagenes img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  opacity: 0.4;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  flex-shrink: 0;
+  border-radius: 8px;
+}
+
+.carrusel-imagenes img.centro {
+  transform: scale(1.15);
+  opacity: 1;
+  z-index: 1;
+}
+
+.carrusel-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.titulo-marco {
+  margin-top: 1rem;
+  font-weight: bold;
+}

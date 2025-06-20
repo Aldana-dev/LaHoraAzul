@@ -1,0 +1,44 @@
+.admin-container {
+  max-width: 900px;
+  margin: 4rem auto;
+  padding: 1rem 2rem;
+  box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+}
+
+.admin-panel {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.admin-panel h2,
+.admin-container h2 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #073763;
+  margin-bottom: 1.5rem;
+}
+
+.admin-section {
+  border-left: 4px solid #073763;
+  padding: 20px;
+  margin-bottom: 2rem;
+}
+
+.admin-section h3,
+.admin-container section h3 {
+  font-family: 'Libre Franklin', sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #073763;
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid #073763;
+  padding-bottom: 0.3rem;
+}
+
+.admin-section p {
+  margin-bottom: 1rem;
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 0.9rem;
+}

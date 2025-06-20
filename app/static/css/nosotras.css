@@ -1,0 +1,7 @@
+.dos-columnas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  padding: 4em 4em 4em 0;
+  border-top: 0px solid #153f6c;
+}

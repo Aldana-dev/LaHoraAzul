@@ -1,16 +1,12 @@
-/* -------------------
-   Fuentes personalizadas
-------------------- */
+/* Fuentes personalizadas */
 @font-face { 
   font-family: 'Macaroni';
-  src: url('/app/static/fonts/Macaroni.ttf') format('truetype');
+  src: url('../fonts/macaroni.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
-/* -------------------
-   Estilos Globales
-------------------- */
+/* Estilos Globales */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -26,7 +22,7 @@ html, body {
 
 h1, h2, h3, h4, h5, h6,
 button, .btn,
-.ver-mas,
+.boton,
 .item-marco h4,
 .titulo-marco {
   font-family: 'Poppins', sans-serif;
@@ -37,9 +33,7 @@ button, .btn,
   font-size: 2.5rem;
 }
 
-/* -------------------
-   Layout principal
-------------------- */
+/* Layout principal */
 .pagina,
 main {
   max-width: 1200px;
@@ -47,9 +41,7 @@ main {
   padding: 1rem;
 }
 
-/* -------------------
-   Header y navegación
-------------------- */
+/* Header y navegación */
 header {
   padding: 1em;
   text-align: center;
@@ -92,35 +84,8 @@ nav a:hover {
   text-decoration: underline;
 }
 
-/* -------------------
-   Contenido principal y secciones
-------------------- */
-.carousel {
-  position: relative;
-  z-index: 0;
-}
-
-.contenido {
-  max-width: 800px;
-  margin: 8em auto 4em;
-  text-align: center;
-}
-
-.galeria-preview {
-  background-color: white;
-  padding: 4em 2em;
-  text-align: center;
-}
-
-.galeria-img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 0.5em;
-}
-
-.ver-mas {
+/* Botones y texto comunes */
+.boton {
   display: inline-block;
   padding: 10px 100px;
   background-color: #ffffff;
@@ -133,14 +98,12 @@ nav a:hover {
   text-decoration: none;
 }
 
-.ver-mas:hover {
+.boton:hover {
   background-color: #153f6c;
   color: #ffffff;
 }
 
-/* -------------------
-   Diseño de columnas flexibles
-------------------- */
+/* Diseño de columnas flexibles */
 .dos-columnas {
   display: flex;
   flex-wrap: wrap;
@@ -157,45 +120,7 @@ nav a:hover {
   justify-content: center;
 }
 
-/* -------------------
-   Enlaces de contacto con iconos
-------------------- */
-.contacto-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: #153f6c;
-  margin-bottom: 0.8em;
-}
-
-.material-symbols-outlined.icono {
-  background-color: #153f6c;
-  color: white;
-  border-radius: 50%;
-  padding: 8px;
-  font-size: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 56px;
-  height: 56px;
-  flex-shrink: 0;
-}
-
-/* -------------------
-   Estilo para iframe
-------------------- */
-iframe {
-  width: 100%;
-  height: 400px;
-  border: 0;
-  border-radius: 0.5em;
-}
-
-/* -------------------
-   Footer
-------------------- */
+/* Footer */
 .footer {
   margin-top: 6rem;
   padding: 4em 1em 1.5em;
@@ -220,302 +145,11 @@ iframe {
   text-align: right;
 }
 
-/* -------------------
-   Página: Nosotras
-------------------- */
-#nosotras,
-#nosotras ~ section.dos-columnas {
-  border: none;
-  margin-bottom: 3em;
-  padding-bottom: 0;
-}
-
-#nosotras .columna,
-#nosotras ~ section .columna {
-  border: none;
-  box-shadow: none;
-}
-
-#nosotras img,
-#nosotras ~ section img {
-  max-width: 80%;
-  height: auto;
-  margin: 0 auto;
-  border-radius: 8px;
-}
-
-/* -------------------
-   Filtros y categorías
-------------------- */
-.filtros-categorias {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin: 4rem 0;
-  flex-wrap: wrap;
-}
-
-.categoria {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: none;
-  border: none;
+#admin-trigger {
   cursor: pointer;
+  user-select: none;
 }
 
-.icono {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 0.5rem;
-  transition: 0.3s;
-}
-
-.categoria span {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #153f6c;
-}
-
-.categoria:hover .icono {
-  box-shadow: 0 0 0 3px #153f6c;
-}
-
-/* -------------------
-   Lista de productos
-------------------- */
-.lista-productos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 2rem;
-  padding: 0 1rem;
-}
-
-.producto {
-  text-align: center;
-}
-
-.producto img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-/* ---- SECCIÓN MARCOS ---- */
-
-.introduccion-marcos {
-  margin: 100px auto 0 auto; 
-  max-width: 800px;
-  text-align: center;
-}
-
-
-.presupuesto-marcos {
-  margin: 100px auto 0 auto; 
-  max-width: 700px;
-  padding-left: 1.2rem; /* para que el ol tenga algo de sangría */
-  padding-right: 1.2rem;
-  text-align: center;
-}
-
-.presupuesto-marcos h3 {
-  margin-bottom: 1rem;
-  font-weight: 600;
-}
-
-.presupuesto-marcos ol {
-  padding-left: 1.2rem; /* para sangría de lista */
-  text-align: left; /* que quede alineado a la izquierda */
-}
-
-.presupuesto-marcos li {
-  margin-bottom: 0.5rem;
-}
-
-
-.carrusel-marcos {
-  text-align: center;
-  margin-top: 3rem;
-}
-
-.carrusel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  gap: 1rem;
-  overflow: hidden;
-}
-
-.carrusel-contenedor {
-  overflow: hidden;
-  width: 660px; /* 3 imágenes de 200px + 2 gaps de 30px */
-  margin: 0 auto;
-}
-
-.carrusel-imagenes {
-  display: flex;
-  transition: transform 0.5s ease;
-  gap: 30px;
-  margin-top: 60px;
-  margin-bottom: 60px;
-}
-
-.carrusel-imagenes img {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-  opacity: 0.4;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-  flex-shrink: 0;
-  border-radius: 8px;
-}
-
-.carrusel-imagenes img.centro {
-  transform: scale(1.15);
-  opacity: 1;
-  z-index: 1;
-}
-
-.carrusel-btn {
-  background: none;
-  border: none;
-  font-size: 2rem;
-  cursor: pointer;
-}
-
-.titulo-marco {
-  margin-top: 1rem;
-  font-weight: bold;
-}
-.galeria-pinterest {
-  padding: 2rem 1rem;
-  text-align: center;
-}
-.galeria-pinterest h2 {
-  margin-bottom: 1.5rem;
-  font-family: 'Poppins', sans-serif;
-  color: #153f6c;
-}
-.grid-galeria {
-  column-count: 4;
-  column-gap: 1rem;
-}
-.grid-galeria img {
-  width: 100%;
-  margin-bottom: 1rem;
-  border-radius: 8px;
-  display: block;
-}
-
-.item-carrito {
-  display: flex;
-  gap: 1.5rem;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 1rem;
-  margin-top: 2rem;
-  align-items: stretch;
-}
-
-.item-carrito img {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.detalle-producto {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.nombre-producto {
-  margin-bottom: 0.3rem; /* menos espacio que antes */
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.precio-quitar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.precio {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #153f6c;
-}
-
-.quitar-producto {
-  background: none;
-  border: 2px solid #c0392b;
-  color: #c0392b;
-  padding: 0.3rem 0.8rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.quitar-producto:hover {
-  background-color: #c0392b;
-  color: white;
-}
-
-/* Resumen final */
-
-.resumen-carrito {
-  margin-top: 3rem;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  border-top: 2px solid #153f6c;
-  padding-top: 1.5rem;
-  font-weight: 600;
-  font-size: 1.3rem;
-  color: #153f6c;
-}
-
-.resumen-carrito > div {
-  display: flex;
-  justify-content: space-between; /* justificado */
-  margin-bottom: 1rem;
-}
-
-.resumen-carrito > div span:first-child {
-  /* texto a la izquierda */
-}
-
-.resumen-carrito > div span:last-child {
-  /* número a la derecha */
-  min-width: 80px;
-  text-align: right;
-}
-
-/* Botón finalizar compra */
-
-.finalizar-compra-container {
-  text-align: center;
-  margin-top: 3rem;
-}
-
-.finalizar-compra {
-  background-color: #153f6c;
-  color: white;
-  padding: 1rem 3rem;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 700;
-  transition: background-color 0.3s ease;
-}
-
-.finalizar-compra:hover {
-  background-color: #0a2a4a;
+#admin-trigger:hover {
+  text-decoration: underline dashed; /* opcional para debug, podés quitarlo */
 }

@@ -1,176 +1,101 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    
-    <meta charset="UTF-8" />
-    <title>La Hora Azul - Inicio</title>
-    <link rel="icon" href="/app/static/icon/logo.png" type="image/png">
+{% extends "base.html" %}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Macaroni&family=Poppins:wght@300;400;600&family=Libre+Franklin:wght@300;400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../static/css/estilos.css" />
-  </head>
+{% block title %}Inicio - La Hora Azul{% endblock %}
 
-  <body class="pagina">
-    <header class="d-flex justify-content-between align-items-center p-3 border-bottom">
-      <!-- Logo + Nombre -->
-      <div class="d-flex align-items-center gap-3">
-        <img src="../static/icon/logo.png" alt="Logo La Hora Azul" height="80" />
-        <h1 class="logo-titulo m-0 fs-50">La Hora Azul</h1>
-      </div>
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
 
-      <!-- Carrito -->
-      <a href="..\templates\carrito.html" class="btn d-flex align-items-center justify-content-center carrito-icono">
-        <span class="material-symbols-outlined">shopping_basket</span>
-      </a>
-    </header>
+{% block content %}
 
-    <!-- Navegación -->
-    <nav class="navegacion-sticky bg-white">
-      <a href="../templates/index.html">Inicio</a>
-      <a href="../templates/nosotras.html">Nosotras</a>
-      <a href="../templates/tienda.html">Tienda</a>
-      <a href="../templates/marcos.html">Marcos</a>
-    </nav>
-
-    <!-- Carrusel -->
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="../static/banner/1.png" class="d-block w-100" alt="Imagen 1" />
-        </div>
-        <div class="carousel-item">
-          <img src="../static/banner/2.png" class="d-block w-100" alt="Imagen 2" />
-        </div>
-        <div class="carousel-item">
-          <img src="../static/banner/3.png" class="d-block w-100" alt="Imagen 3" />
-        </div>
-        <div class="carousel-item">
-          <img src="../static/banner/4.png" class="d-block w-100" alt="Imagen 4" />
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Anterior</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Siguiente</span>
-      </button>
+<!-- Carrusel -->
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{{ url_for('static', filename='banner/1.png') }}" class="d-block w-100" alt="Imagen 1" />
     </div>
-
-    <!-- Bienvenida -->
-    <div class="contenido">
-      <h2>Bienvenidxs a La hora azul,</h2>
-      <p>un refugio para todo lo que se hace con amor.</p>
-      <p>
-        Estamos en Villa la Angostura y en nuestra tienda-taller podés encontrar arte impreso, obras originales, cerámica y objetos únicos de artistas de todo el país. También hacemos enmarcación a medida y abrimos nuestras puertas a encuentros creativos a lo largo del año.
-      </p>
-      <p>
-        Te invitamos a acercarte a nuestro espacio patagónico o recorrer nuestra tienda online, con envíos a todo el país.
-      </p>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='banner/2.png') }}" class="d-block w-100" alt="Imagen 2" />
     </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='banner/3.png') }}" class="d-block w-100" alt="Imagen 3" />
+    </div>
+    <div class="carousel-item">
+      <img src="{{ url_for('static', filename='banner/4.png') }}" class="d-block w-100" alt="Imagen 4" />
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Anterior</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Siguiente</span>
+  </button>
+</div>
 
-    <!-- Galería -->
-    <div class="galeria-preview container text-center">
-      <div class="row justify-content-center my-4">
-        <!-- Repetido intencionalmente, podrías eliminar duplicados si no son necesarios -->
-        <div class="col-6 col-md-3 mb-3">
-          <img src="../static/img/_MG_6466.jpg" class="img-fluid galeria-img" alt="Imagen 1" />
-        </div>
-        <div class="col-6 col-md-3 mb-3">
-          <img src="../static/img/_MG_6495.jpg" class="img-fluid galeria-img" alt="Imagen 2" />
-        </div>
-        <div class="col-6 col-md-3 mb-3">
-          <img src="../static/img/_MG_7586.jpg" class="img-fluid galeria-img" alt="Imagen 3" />
-        </div>
-        <div class="col-6 col-md-3 mb-3">
-          <img src="../static/img/_MG_7681.jpg" class="img-fluid galeria-img" alt="Imagen 4" />
-        </div>
-        <!-- Duplicados -->
-        <div class="col-6 col-md-3 mb-3">
-          <img src="../static/img/_MG_6466.jpg" class="img-fluid galeria-img" alt="Imagen 1" />
-        </div>
-        <div class="col-6 col-md-3 mb-3">
-          <img src="../static/img/_MG_6495.jpg" class="img-fluid galeria-img" alt="Imagen 2" />
-        </div>
-        <div class="col-6 col-md-3 mb-3">
-          <img src="../static/img/_MG_7586.jpg" class="img-fluid galeria-img" alt="Imagen 3" />
-        </div>
-        <div class="col-6 col-md-3 mb-3">
-          <img src="../static/img/_MG_7681.jpg" class="img-fluid galeria-img" alt="Imagen 4" />
-        </div>
+<!-- Bienvenida -->
+<div class="contenido">
+  <h2>Bienvenidxs a La hora azul,</h2>
+  <p>un refugio para todo lo que se hace con amor.</p>
+  <p>
+    Estamos en Villa la Angostura y en nuestra tienda-taller podés encontrar arte impreso, obras originales, cerámica y objetos únicos de artistas de todo el país. También hacemos enmarcación a medida y abrimos nuestras puertas a encuentros creativos a lo largo del año.
+  </p>
+  <p>
+    Te invitamos a acercarte a nuestro espacio patagónico o recorrer nuestra tienda online, con envíos a todo el país.
+  </p>
+</div>
+
+<!-- Galería -->
+<div class="galeria-preview container text-center">
+  <div class="row justify-content-center my-4">
+    {% for img in ['_MG_6466.jpg', '_MG_6495.jpg', '_MG_7586.jpg', '_MG_7681.jpg'] * 2 %}
+      <div class="col-6 col-md-3 mb-3">
+        <img src="{{ url_for('static', filename='img/' + img) }}" class="img-fluid galeria-img" alt="Imagen galería" />
       </div>
-      <a href="..\templates\galeria.html" class="btn ver-mas">Ver más</a>
+    {% endfor %}
+  </div>
+  <a href="{{ url_for('galeria') }}" class="btn boton">Ver más</a>
+</div>
 
-    </div>
-
-    <!-- Contacto + Mapa -->
+<!-- Contacto + Mapa -->
 <div class="dos-columnas">
   <div class="columna">
-          <p>
-            <a href="https://www.instagram.com/lahoraazul.arte" target="_blank" rel="noopener" class="contacto-link">
-              <span class="material-symbols-outlined icono">photo_camera</span>
-              @lahoraazul.arte
-            </a>
-          </p>
-          <p>
-            <a href="mailto:ejemplo@correo.com" class="contacto-link">
-              <span class="material-symbols-outlined icono">mail</span>
-              ejemplo@correo.com
-            </a>
-          </p>
-          <p>
-            <a href="https://wa.me/5491112345678" target="_blank" rel="noopener" class="contacto-link">
-              <span class="material-symbols-outlined icono">call</span>
-              +54 9 11 1234 5678
-            </a>
-          </p>
-          <p>
-            <a href="https://goo.gl/maps/tu_ubicacion" target="_blank" rel="noopener" class="contacto-link">
-              <span class="material-symbols-outlined icono">location_on</span>
-              Calle Falsa 123, Buenos Aires
-            </a>
-          </p>
-        </div>
+    <p>
+      <a href="https://www.instagram.com/lahoraazul.arte" target="_blank" rel="noopener" class="contacto-link" aria-label="Instagram de La Hora Azul">
+        <span class="material-symbols-outlined icono">photo_camera</span>
+        @lahoraazul.arte
+      </a>
+    </p>
+    <p>
+      <a href="mailto:horaazul.obj@gmail.com" class="contacto-link" aria-label="Enviar correo a horaazul.obj@gmail.com">
+        <span class="material-symbols-outlined icono">mail</span>
+        horaazul.obj@gmail.com
+      </a>
+    </p>
+    <p>
+      <a href="tel:+5492944712263" class="contacto-link" aria-label="Llamar al número 549 2944 712263">
+        <span class="material-symbols-outlined icono">call</span>
+        +54 9 2944 712263
+      </a>
+    </p>
+    <p>
+      <a href="https://maps.app.goo.gl/jnN1apFYrUcXrke29" target="_blank" rel="noopener" class="contacto-link" aria-label="Ver ubicación en el mapa">
+        <span class="material-symbols-outlined icono">location_on</span>
+        Av. Arrayanes 282 - local 8 - Villa la Angostura
+      </a>
+    </p>
+  </div>
 
-        <div class="col-md-6">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3282.647915593252!2d-58.41945268477058!3d-34.61493458045571!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccb2f79e6186f%3A0xa3c8bdfae09c53d7!2sCalle%20Falsa%20123!5e0!3m2!1ses!2sar!4v1614883470576!5m2!1ses!2sar"
-            allowfullscreen
-            loading="lazy"
-            style="border:0; width: 100%; height: 300px;"
-          ></iframe>
-        </div>
-      </div>
-    </div>
+  <div class="columna">
+    <iframe class="mapa-iframe" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d188.87218740559135!2d-71.6421713!3d-40.7630145!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9610bf6848e39b5b%3A0x1b56873dfe7e2228!2sLibrer%C3%ADa%20Morgana!5e0!3m2!1ses!2sar!4v1750375113533!5m2!1ses!2sar" loading="lazy" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade" title="Ubicación en el mapa de La Hora Azul"></iframe>
+  </div>
+</div>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container footer-content d-flex justify-content-between">
-        <p class="footer-left">© 2025 La Hora Azul. Todos los derechos reservados.</p>
-        <p class="footer-right">Creado con ❤️ por Aldana Ravalle.</p>
-      </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
+{% endblock %}

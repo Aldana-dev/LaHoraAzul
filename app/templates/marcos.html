@@ -1,195 +1,134 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>La Hora Azul</title>
-    <link rel="icon" href="../static/icon/logo.png" type="image/png" />
+{% extends "base.html" %}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Macaroni&family=Poppins:wght@300;400;600&family=Libre+Franklin:wght@300;400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../static/css/estilos.css" />
-  </head>
+{% block title %}Marcos - La Hora Azul{% endblock %}
 
-  <body class="pagina">
-    <header class="d-flex justify-content-between align-items-center p-3 border-bottom">
-      <!-- Logo + Nombre -->
-      <div class="d-flex align-items-center gap-3">
-        <img src="../static/icon/logo.png" alt="Logo La Hora Azul" height="80" />
-        <h1 class="logo-titulo m-0 fs-50">La Hora Azul</h1>
-      </div>
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/marcos.css') }}">
+{% endblock %}
 
-      <!-- Carrito -->
-      <a href="/carrito" class="btn d-flex align-items-center justify-content-center carrito-icono">
-        <span class="material-symbols-outlined">shopping_basket</span>
-      </a>
-    </header>
+{% block content %}
+<section class="marcos">
+  <div class="introduccion-marcos">
+    <p>
+      Nuestros marcos son hechos a la medida de tu obra de manera artesanal y personalizada. Trabajamos con materiales de calidad y una amplia variedad de molduras, colores y terminaciones. Te acompañamos en todo el proceso para elegir el marco ideal que realce y proteja aquello que querés atesorar.
+    </p>
+  </div>
 
-    <!-- Navegación -->
-    <nav class="navegacion-sticky bg-white">
-      <a href="../templates/index.html">Inicio</a>
-      <a href="../templates/nosotras.html">Nosotras</a>
-      <a href="../templates/tienda.html">Tienda</a>
-      <a href="../templates/marcos.html">Marcos</a>
-    </nav>
-    <section class="marcos">
-      <div class="introduccion-marcos">
-        <p>
-          Nuestros marcos son hechos a la medida de tu obra de manera artesanal
-          y personalizada. Trabajamos con materiales de calidad y una amplia
-          variedad de molduras, colores y terminaciones. Te acompañamos en todo
-          el proceso para elegir el marco ideal que realce y proteja aquello que
-          querés atesorar.
-        </p>
-      </div>
+  <div class="presupuesto-marcos">
+    <h3>Cómo pedir un presupuesto</h3>
+    <ol>
+      <li>
+        Envíanos las medidas de la pieza que querés enmarcar, puede ser una fotografía, ilustración, pintura, bordado ¡O lo que quieras!
+      </li>
+      <li>
+        Indicanos el tipo de marco que preferís. Te podemos asesorar sobre molduras, passepartout, vidrios y montaje.
+      </li>
+      <li>
+        Te enviamos un presupuesto válido por 10 días, y te pedimos una seña del 30% para comenzar el trabajo.
+      </li>
+      <li>
+        En un plazo de 7 a 10 días hábiles te entregamos tu cuadro listo para colgar.
+      </li>
+    </ol>
+  </div>
 
-      <div class="presupuesto-marcos">
-        <h3>Cómo pedir un presupuesto</h3>
-        <ol>
-          <li>
-            Envíanos las medidas de la pieza que querés enmarcar, puede ser una
-            fotografía, ilustración, pintura, bordado ¡O lo que quieras!
-          </li>
-          <li>
-            Indicanos el tipo de marco que preferís. Te podemos asesorar sobre
-            molduras, passepartout, vidrios y montaje.
-          </li>
-          <li>
-            Te enviamos un presupuesto válido por 10 días, y te pedimos una seña
-            del 30% para comenzar el trabajo.
-          </li>
-          <li>
-            En un plazo de 7 a 10 días hábiles te entregamos tu cuadro listo
-            para colgar.
-          </li>
-        </ol>
-      </div>
+  <section class="carrusel-marcos text-center">
+    <h3>Explorá nuestros marcos</h3>
 
-      <section class="carrusel-marcos text-center">
-        <h3>Explorá nuestros marcos</h3>
+    <div class="carrusel d-flex align-items-center justify-content-center gap-3">
+      <button id="btn-prev" class="carrusel-btn">&#10094;</button>
 
-        <div class="carrusel d-flex align-items-center justify-content-center gap-3">
-          <button id="btn-prev" class="carrusel-btn">&#10094;</button>
-
-          <div class="carrusel-contenedor">
-            <div class="carrusel-imagenes" id="carruselMarcos">
-              <img src="../static/ejemplo.jpg" alt="Marco directo L" data-titulo="Marco directo L" />
-              <img src="../static/ejemplo.jpg" alt="Marco con passepartout" data-titulo="Marco con passepartout" />
-              <img src="../static/ejemplo.jpg" alt="Marco box simple" data-titulo="Marco box simple" />
-              <img src="../static/ejemplo.jpg" alt="Marco box flotante" data-titulo="Marco box flotante" />
-              <img src="../static/ejemplo.jpg" alt="Marco doble vidrio" data-titulo="Marco doble vidrio" />
-              <img src="../static/ejemplo.jpg" alt="Marco de colores" data-titulo="Marco de colores" />
-            </div>
-          </div>
-
-          <button id="btn-next" class="carrusel-btn">&#10095;</button>
+      <div class="carrusel-contenedor">
+        <div class="carrusel-imagenes" id="carruselMarcos">
+          {% for i in range(6) %}
+          <img src="{{ url_for('static', filename='ejemplo.jpg') }}" alt="Marco {{ i + 1 }}" data-titulo="Marco {{ i + 1 }}" />
+          {% endfor %}
         </div>
-
-        <div class="titulo-marco mt-3" id="titulo-marco">Marco directo L</div>
-      </section>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container footer-content d-flex justify-content-between">
-        <p class="footer-left">© 2025 La Hora Azul. Todos los derechos reservados.</p>
-        <p class="footer-right">Creado con ❤️ por Aldana Ravalle.</p>
       </div>
-    </footer>
 
-    <!-- Scripts -->
-    <script>
-      const carrusel = document.getElementById('carruselMarcos');
-      const btnPrev = document.getElementById('btn-prev');
-      const btnNext = document.getElementById('btn-next');
-      const imgWidth = 200;
-      const gap = 30;
+      <button id="btn-next" class="carrusel-btn">&#10095;</button>
+    </div>
 
-      let imgs = carrusel.querySelectorAll('img');
-      const imgCount = imgs.length;
+    <div class="titulo-marco mt-3" id="titulo-marco">Marco 1</div>
+  </section>
+</section>
+{% endblock %}
 
-      // Clonar imágenes para loop infinito
-      function clonarImagenes() {
-        imgs = carrusel.querySelectorAll('img'); // actualizar referencia por si cambia
-        for (let i = 0; i < imgCount; i++) {
-          let clone = imgs[i].cloneNode(true);
-          carrusel.appendChild(clone);
-        }
-        for (let i = imgCount - 1; i >= 0; i--) {
-          let clone = imgs[i].cloneNode(true);
-          carrusel.insertBefore(clone, carrusel.firstChild);
-        }
-      }
-      clonarImagenes();
+{% block extra_js %}
+<script>
+  const carrusel = document.getElementById('carruselMarcos');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  const imgWidth = 200;
+  const gap = 30;
 
-      const todasImgs = carrusel.querySelectorAll('img');
-      const totalImgs = todasImgs.length;
+  let imgs = carrusel.querySelectorAll('img');
+  const imgCount = imgs.length;
 
-      let posicion = imgCount; // primer original tras clones
-
-      // Ajustar posición y actualizar imagen central
-      function setPosition() {
-        const offset = -posicion * (imgWidth + gap);
-        carrusel.style.transform = `translateX(${offset}px)`;
-        actualizarCentro();
-        actualizarTitulo();
-      }
-
-function actualizarCentro() {
-  todasImgs.forEach((img) => img.classList.remove('centro'));
-  const indexCentro = posicion + 1; // porque la imagen visible central es la 2da de 3 visibles
-  if (todasImgs[indexCentro]) {
-    todasImgs[indexCentro].classList.add('centro');
+  function clonarImagenes() {
+    imgs = carrusel.querySelectorAll('img');
+    for (let i = 0; i < imgCount; i++) {
+      let clone = imgs[i].cloneNode(true);
+      carrusel.appendChild(clone);
+    }
+    for (let i = imgCount - 1; i >= 0; i--) {
+      let clone = imgs[i].cloneNode(true);
+      carrusel.insertBefore(clone, carrusel.firstChild);
+    }
   }
-}
+  clonarImagenes();
 
+  const todasImgs = carrusel.querySelectorAll('img');
+  const totalImgs = todasImgs.length;
+  let posicion = imgCount;
 
-      function actualizarTitulo() {
-        const titulo = todasImgs[posicion]?.dataset.titulo || '';
-        document.getElementById('titulo-marco').textContent = titulo;
-      }
+  function setPosition() {
+    const offset = -posicion * (imgWidth + gap);
+    carrusel.style.transform = `translateX(${offset}px)`;
+    actualizarCentro();
+    actualizarTitulo();
+  }
 
-      // Mover carrusel con transición y loop infinito
-      function mover(n) {
-        posicion += n;
-        carrusel.style.transition = 'transform 0.4s ease';
-        const offset = -posicion * (imgWidth + gap);
-        carrusel.style.transform = `translateX(${offset}px)`;
-        actualizarCentro();
-        actualizarTitulo();
+  function actualizarCentro() {
+    todasImgs.forEach((img) => img.classList.remove('centro'));
+    const indexCentro = posicion + 1;
+    if (todasImgs[indexCentro]) {
+      todasImgs[indexCentro].classList.add('centro');
+    }
+  }
 
-        carrusel.addEventListener(
-          'transitionend',
-          () => {
-            if (posicion >= imgCount * 2) {
-              posicion = imgCount;
-              carrusel.style.transition = 'none';
-              setPosition();
-            } else if (posicion < imgCount) {
-              posicion = imgCount * 2 - 1;
-              carrusel.style.transition = 'none';
-              setPosition();
-            }
-          },
-          { once: true }
-        );
-      }
+  function actualizarTitulo() {
+    const titulo = todasImgs[posicion]?.dataset.titulo || '';
+    document.getElementById('titulo-marco').textContent = titulo;
+  }
 
-      btnNext.addEventListener('click', () => mover(1));
-      btnPrev.addEventListener('click', () => mover(-1));
+  function mover(n) {
+    posicion += n;
+    carrusel.style.transition = 'transform 0.4s ease';
+    const offset = -posicion * (imgWidth + gap);
+    carrusel.style.transform = `translateX(${offset}px)`;
+    actualizarCentro();
+    actualizarTitulo();
 
-      // Inicializar carrusel
-      setPosition();
-    </script>
-  </body>
-</html>
+    carrusel.addEventListener(
+      'transitionend',
+      () => {
+        if (posicion >= imgCount * 2) {
+          posicion = imgCount;
+          carrusel.style.transition = 'none';
+          setPosition();
+        } else if (posicion < imgCount) {
+          posicion = imgCount * 2 - 1;
+          carrusel.style.transition = 'none';
+          setPosition();
+        }
+      },
+      { once: true }
+    );
+  }
+
+  btnNext.addEventListener('click', () => mover(1));
+  btnPrev.addEventListener('click', () => mover(-1));
+  setPosition();
+</script>
+{% endblock %}
