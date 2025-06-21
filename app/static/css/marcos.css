@@ -1,3 +1,4 @@
+/* Ajustes generales igual que antes */
 .introduccion-marcos {
   margin: 100px auto 0 auto; 
   max-width: 800px;
@@ -10,11 +11,6 @@
   padding-left: 1.2rem;
   padding-right: 1.2rem;
   text-align: center;
-}
-
-.presupuesto-marcos h3 {
-  margin-bottom: 1rem;
-  font-weight: 600;
 }
 
 .presupuesto-marcos ol {
@@ -80,4 +76,61 @@
 .titulo-marco {
   margin-top: 1rem;
   font-weight: bold;
+}
+
+/* Responsive manteniendo botones y efectos visuales */
+@media (max-width: 768px) {
+  .carrusel-contenedor {
+    width: 190px; /* Ancho de una imagen + gap */
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .carrusel-imagenes {
+    gap: 30px; /* Mantengo gap para separación */
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+
+  .carrusel-imagenes img {
+    width: 160px;
+    height: 160px;
+  }
+
+  .carrusel-imagenes img.centro {
+    transform: scale(1.15);
+  }
+
+  .carrusel-btn {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .carrusel-contenedor {
+    width: 100vw; /* Ocupa todo el ancho de pantalla */
+    max-width: 100vw;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .carrusel-imagenes {
+    gap: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .carrusel-imagenes img {
+    width: calc(100vw - 30px); /* Ancho pantalla menos gap */
+    height: auto;
+    max-height: 200px;
+  }
+
+  .carrusel-imagenes img.centro {
+    transform: scale(1.1);
+  }
+
+  .carrusel-btn {
+    font-size: 1.4rem;
+  }
 }

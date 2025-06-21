@@ -7,10 +7,11 @@
 }
 
 .item-carrito img {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
   border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .detalle-producto {
@@ -22,7 +23,7 @@
 
 .nombre-producto {
   margin-bottom: 0.3rem;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 600;
 }
 
@@ -30,29 +31,27 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .precio {
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #153f6c;
 }
 
 .boton-quitar {
-  padding: 10px 40px;
+  padding: 6px 20px;
   background-color: #ffffff;
   color: #153f6c;
   border: 2px solid #153f6c;
   font-weight: bold;
   border-radius: 0;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   margin-left: auto;
   display: block;
 }
-
 
 .boton-quitar:hover {
   background-color: #153f6c;
@@ -68,18 +67,18 @@
   border-top: 2px solid #153f6c;
   padding-top: 1.5rem;
   font-weight: 600;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   color: #153f6c;
+  max-width: 600px;
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .resumen-carrito > div {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1rem;
-}
-
-.resumen-carrito > div span:first-child {
-  /* texto a la izquierda */
 }
 
 .resumen-carrito > div span:last-child {
@@ -92,4 +91,39 @@
 .finalizar-compra-container {
   text-align: center;
   margin-top: 3rem;
+}
+
+/* Responsive: manteniendo diseño horizontal pero más compacto */
+
+@media (max-width: 600px) {
+  .item-carrito {
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .item-carrito img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .detalle-producto {
+    min-width: 140px;
+  }
+
+  .nombre-producto {
+    font-size: 1rem;
+  }
+
+  .precio {
+    font-size: 0.95rem;
+  }
+
+  .boton-quitar {
+    padding: 5px 16px;
+    font-size: 0.8rem;
+  }
+
+  .resumen-carrito {
+    font-size: 1.05rem;
+  }
 }

@@ -34,6 +34,8 @@
   text-decoration: none;
   color: #153f6c;
   margin-bottom: 0.8em;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .material-symbols-outlined.icono {
@@ -58,6 +60,52 @@ iframe {
   border-radius: 0.5em;
 }
 
-.footer{
+.footer {
   margin-top: 0px;
+}
+
+@media (max-width: 768px) {
+  /* Bienvenida */
+  .contenido {
+    margin: 4em 1em 2em;
+    padding: 0 1em;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  /* Galería */
+  .galeria-preview {
+    padding: 2em 1em;
+  }
+
+  .galeria-img {
+    border-radius: 0.3em;
+  }
+
+  /* Contacto */
+  .contacto-link {
+    font-size: 0.95rem;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .material-symbols-outlined.icono {
+    font-size: 25px;
+    width: 35px;
+    height: 35px;
+    padding: 6px;
+  }
+
+  /* iframe responsivo */
+  iframe {
+    width: 100%;
+    height: 300px;
+  }
+
+  /* Espaciado columnas */
+  .dos-columnas {
+    padding: 2em 1em;
+    gap: 1.5em;
+  }
 }

@@ -5,3 +5,33 @@
   padding: 4em 4em 4em 0;
   border-top: 0px solid #153f6c;
 }
+
+
+@media (max-width: 768px) {
+  .dos-columnas {
+    flex-direction: column;
+    padding: 2em 1em;
+    gap: 2em;
+    align-items: center;
+  }
+
+  .columna {
+    width: 100%;
+    text-align: center;
+  }
+
+  .galeria-img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5em;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}

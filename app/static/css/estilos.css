@@ -30,7 +30,7 @@ button, .btn,
 
 .logo-titulo {
   font-family: 'Macaroni', cursive;
-  font-size: 2.5rem;
+  font-size: 3rem;
 }
 
 /* Layout principal */
@@ -151,5 +151,70 @@ nav a:hover {
 }
 
 #admin-trigger:hover {
-  text-decoration: underline dashed; /* opcional para debug, podés quitarlo */
+  text-decoration: underline dashed; /* para debug, quitarlo */
+}
+
+
+@media (max-width: 768px) {
+  nav {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+  }
+
+  nav a {
+    flex: 1 1 25%; /* Ocupa un cuarto del ancho (ajustable) */
+    text-align: center;
+    font-size: 1rem;
+  }
+
+  /* Botones más adaptables */
+  .boton {
+    font-size: 1rem;
+  }
+
+  /* Header compacto */
+  header img {
+    height: 50px;
+  }
+
+  .logo-titulo {
+    font-size: 2rem;
+  }
+
+  .carrito-icono {
+    width: 40px;
+    height: 40px;
+  }
+
+  h2 {
+  font-size: 1.25rem; /* o 1.4rem, o incluso 1.2rem según lo que busques */
+  margin-bottom: 1rem;
+}
+
+
+  /* Columnas apiladas */
+  .dos-columnas {
+    flex-direction: column;
+    padding: 2em 1em;
+  }
+
+  .columna {
+    flex: 100%;
+    max-width: 100%;
+  }
+
+  /* Footer centrado */
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 1em;
+  }
+
+  .footer-left, .footer-right {
+    text-align: center;
+  }
 }

@@ -15,7 +15,7 @@
   </div>
 
   <div class="presupuesto-marcos">
-    <h3>Cómo pedir un presupuesto</h3>
+    <h2>Cómo pedir un presupuesto</h2>
     <ol>
       <li>
         Envíanos las medidas de la pieza que querés enmarcar, puede ser una fotografía, ilustración, pintura, bordado ¡O lo que quieras!
@@ -33,7 +33,7 @@
   </div>
 
   <section class="carrusel-marcos text-center">
-    <h3>Explorá nuestros marcos</h3>
+    <h2>Explorá nuestros marcos</h2>
 
     <div class="carrusel d-flex align-items-center justify-content-center gap-3">
       <button id="btn-prev" class="carrusel-btn">&#10094;</button>
@@ -59,7 +59,6 @@
   const carrusel = document.getElementById('carruselMarcos');
   const btnPrev = document.getElementById('btn-prev');
   const btnNext = document.getElementById('btn-next');
-  const imgWidth = 200;
   const gap = 30;
 
   let imgs = carrusel.querySelectorAll('img');
@@ -79,12 +78,40 @@
   clonarImagenes();
 
   const todasImgs = carrusel.querySelectorAll('img');
-  const totalImgs = todasImgs.length;
   let posicion = imgCount;
+
+  function getSizes() {
+    const vw = window.innerWidth;
+    if (vw <= 480) {
+      return {
+        imgWidth: vw - gap, // ancho casi todo el viewport menos gap
+        containerWidth: vw,
+        visibleCount: 1
+      };
+    } else if (vw <= 768) {
+      return {
+        imgWidth: 160,
+        containerWidth: 160 + gap,
+        visibleCount: 1
+      };
+    } else {
+      return {
+        imgWidth: 200,
+        containerWidth: 660, // como estaba
+        visibleCount: 3
+      };
+    }
+  }
+
+  let { imgWidth, containerWidth, visibleCount } = getSizes();
+
+  const contenedor = document.querySelector('.carrusel-contenedor');
 
   function setPosition() {
     const offset = -posicion * (imgWidth + gap);
+    carrusel.style.transition = 'none';
     carrusel.style.transform = `translateX(${offset}px)`;
+    contenedor.style.width = containerWidth + 'px'; // ajusto contenedor
     actualizarCentro();
     actualizarTitulo();
   }
@@ -129,6 +156,17 @@
 
   btnNext.addEventListener('click', () => mover(1));
   btnPrev.addEventListener('click', () => mover(-1));
+
+  window.addEventListener('resize', () => {
+    const sizes = getSizes();
+    imgWidth = sizes.imgWidth;
+    containerWidth = sizes.containerWidth;
+    visibleCount = sizes.visibleCount;
+    setPosition();
+  });
+
   setPosition();
 </script>
+
+
 {% endblock %}

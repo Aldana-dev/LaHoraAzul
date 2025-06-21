@@ -53,3 +53,54 @@
   object-fit: cover;
   border-radius: 5px;
 }
+
+@media (max-width: 768px) {
+@media (max-width: 768px) {
+  .filtros-categorias {
+    flex-wrap: nowrap;        /* no permite que se bajen */
+    justify-content: center;  /* centra el contenido */
+    gap: 0;                   /* quitamos el gap para que no quede muy separado */
+    margin: 2rem;
+  }
+
+  .categoria {
+    flex: 0 0 25%;            /* ocupa exactamente 1/4 del ancho */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .icono {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 0.5rem;
+  }
+}
+
+
+  .categoria span {
+    font-size: 0.9rem;
+  }
+
+  .lista-productos {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .producto img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .icono {
+    width: 80px;
+    height: 80px;
+  }
+
+  .categoria span {
+    font-size: 0.8rem;
+  }
+}
