@@ -3,10 +3,8 @@
 }
 
 .grid-galeria {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  grid-auto-rows: 10px; /* fila base para calcular el span */
-  gap: 15px;
+  column-count: 3;
+  column-gap: 15px;
 }
 
 .grid-galeria img {
@@ -14,12 +12,18 @@
   height: auto;
   object-fit: cover;
   border-radius: 6px;
-  /* importante para que el JS pueda manejar la altura con --span */
-  grid-row-end: span var(--span);
+  margin-bottom: 15px;
+  break-inside: avoid;
   transition: transform 0.3s ease;
   cursor: pointer;
 }
 
 .grid-galeria img:hover {
   transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .grid-galeria {
+    column-count: 2;
+  }
 }
