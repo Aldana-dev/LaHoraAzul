@@ -43,10 +43,29 @@
   padding: 0 1rem;
 }
 
+/* Producto individual */
 .producto {
   text-align: center;
 }
 
+/* Link producto: quitar subrayado y herencia de color en texto */
+.lista-productos a.producto {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  border-radius: 5px;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Efecto hover para link producto */
+.lista-productos a.producto:hover {
+  box-shadow: 0 0 10px rgba(21, 63, 108, 0.3);
+  transform: scale(1.03);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+
+/* Imagen producto */
 .producto img {
   width: 100%;
   height: 300px;
@@ -54,17 +73,26 @@
   border-radius: 5px;
 }
 
-@media (max-width: 768px) {
+/* Texto dentro del producto */
+.lista-productos a.producto p {
+  text-decoration: none;
+  color: inherit;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Media Queries */
+
 @media (max-width: 768px) {
   .filtros-categorias {
-    flex-wrap: nowrap;        /* no permite que se bajen */
-    justify-content: center;  /* centra el contenido */
-    gap: 0;                   /* quitamos el gap para que no quede muy separado */
+    flex-wrap: nowrap;        
+    justify-content: center;  
+    gap: 0;                   
     margin: 2rem;
   }
 
   .categoria {
-    flex: 0 0 25%;            /* ocupa exactamente 1/4 del ancho */
+    flex: 0 0 25%;            
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -76,8 +104,6 @@
     height: 80px;
     margin-bottom: 0.5rem;
   }
-}
-
 
   .categoria span {
     font-size: 0.9rem;

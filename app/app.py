@@ -14,6 +14,10 @@ def nosotras():
 def tienda():
     return render_template('tienda.html')
 
+@app.route('/producto')
+def producto():
+    return render_template('producto.html')
+
 @app.route('/marcos')
 def marcos():
     return render_template('marcos.html')

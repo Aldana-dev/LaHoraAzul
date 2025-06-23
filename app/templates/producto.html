@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/producto.css') }}"
+/>
+{% endblock %}
+
+{% block content %}
+<main class="pagina">
+  <section class="producto-detalle">
+
+    <div class="producto-header">
+      <h2 class="producto-nombre">Nombre de producto</h2>
+    </div>
+
+    <div class="imagen-producto-marco">
+      <img src="{{ url_for('static', filename='img/_MG_6466.jpg') }}" alt="Nombre de producto" />
+    </div>
+
+    <div class="precio-boton">
+      <h2 class="producto-precio">$1234</h2>
+      <button class="boton agregar-carrito" type="button">Agregar al carrito</button>
+    </div>
+
+    <p class="producto-descripcion">
+      Este producto ha sido cuidadosamente diseñado para ofrecer la mejor combinación de calidad, funcionalidad y estética. Fabricado con materiales de alta durabilidad, su tamaño compacto lo hace ideal para adaptarse a distintos espacios y usos. Disponible en una variedad de colores elegantes y modernos, permite combinarlo fácilmente con cualquier estilo de decoración. Además, su acabado suave y detalles refinados garantizan una experiencia visual y táctil única. Perfecto tanto para uso cotidiano como para ocasiones especiales, este producto satisface las necesidades de quienes buscan practicidad sin sacrificar diseño. Se recomienda seguir las instrucciones de cuidado para mantener su apariencia y funcionalidad a lo largo del tiempo.
+
+
+    </p>
+
+  </section>
+</main>
+{% endblock %}

@@ -1,56 +1,70 @@
-{% extends "base.html" %}
-
-{% block title %}Tienda - La Hora Azul{% endblock %}
-
+{% extends "base.html" %} {% block title %}Tienda - La Hora Azul{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/tienda.css') }}">
-{% endblock %}
-
-{% block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/tienda.css') }}"
+/>
+{% endblock %} {% block content %}
 <section class="tienda">
   <!-- Filtros de Categorías -->
   <div class="filtros-categorias">
     <button class="categoria">
-      <img src="{{ url_for('static', filename='icon/1.svg') }}" alt="Cuadros" class="icono" />
+      <img
+        src="{{ url_for('static', filename='icon/1.svg') }}"
+        alt="Cuadros"
+        class="icono"
+      />
       <span>Cuadros</span>
     </button>
     <button class="categoria">
-      <img src="{{ url_for('static', filename='icon/2.svg') }}" alt="Cerámica" class="icono" />
+      <img
+        src="{{ url_for('static', filename='icon/2.svg') }}"
+        alt="Cerámica"
+        class="icono"
+      />
       <span>Cerámica</span>
     </button>
     <button class="categoria">
-      <img src="{{ url_for('static', filename='icon/3.svg') }}" alt="Cuadernos" class="icono" />
+      <img
+        src="{{ url_for('static', filename='icon/3.svg') }}"
+        alt="Cuadernos"
+        class="icono"
+      />
       <span>Cuadernos</span>
     </button>
     <button class="categoria">
-      <img src="{{ url_for('static', filename='icon/4.svg') }}" alt="Totebags" class="icono" />
+      <img
+        src="{{ url_for('static', filename='icon/4.svg') }}"
+        alt="Totebags"
+        class="icono"
+      />
       <span>Totebags</span>
     </button>
   </div>
 
-  <!-- Productos -->
-  <div class="lista-productos">
-    <div class="producto">
-      <img src="{{ url_for('static', filename='img/_MG_6466.jpg') }}" alt="Producto 1" />
-      <p>Producto 1</p>
-      <p>$1200</p>
-    </div>
-    <div class="producto">
-      <img src="{{ url_for('static', filename='img/_MG_6495.jpg') }}" alt="Producto 2" />
-      <p>Producto 2</p>
-      <p>$1500</p>
-    </div>
-    <div class="producto">
-      <img src="{{ url_for('static', filename='img/_MG_7586.jpg') }}" alt="Producto 3" />
-      <p>Producto 3</p>
-      <p>$980</p>
-    </div>
-    <div class="producto">
-      <img src="{{ url_for('static', filename='img/_MG_7681.jpg') }}" alt="Producto 4" />
-      <p>Producto 4</p>
-      <p>$1100</p>
-    </div>
-    <!-- Agregá más productos según necesites -->
-  </div>
+<!-- Productos -->
+<div class="lista-productos">
+  <a href="{{ url_for('producto') }}" class="producto">
+    <img src="{{ url_for('static', filename='img/_MG_6466.jpg') }}" alt="Producto 1" />
+    <p>Producto 1</p>
+    <p>$1200</p>
+  </a>
+  <a href="{{ url_for('producto') }}" class="producto">
+    <img src="{{ url_for('static', filename='img/_MG_6495.jpg') }}" alt="Producto 2" />
+    <p>Producto 2</p>
+    <p>$1500</p>
+  </a>
+  <a href="{{ url_for('producto') }}" class="producto">
+    <img src="{{ url_for('static', filename='img/_MG_7586.jpg') }}" alt="Producto 3" />
+    <p>Producto 3</p>
+    <p>$980</p>
+  </a>
+  <a href="{{ url_for('producto') }}" class="producto">
+    <img src="{{ url_for('static', filename='img/_MG_7681.jpg') }}" alt="Producto 4" />
+    <p>Producto 4</p>
+    <p>$1100</p>
+  </a>
+</div>
+
 </section>
 {% endblock %}

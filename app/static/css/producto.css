@@ -1,0 +1,60 @@
+.producto-detalle {
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Header: nombre a la izquierda, botón volver a la derecha */
+.producto-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #153f6c;
+}
+
+/* Imagen centrada y tamaño mediano */
+.imagen-producto-marco {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.imagen-producto-marco img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* Precio a la izquierda, botón a la derecha */
+.precio-boton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* Descripción */
+.producto-descripcion {
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+/* Responsive */
+
+@media (max-width: 480px) {
+  .producto-detalle {
+    padding: 0 0.5rem;
+  }
+
+  .imagen-producto-marco img {
+    max-width: 100%;
+  }
+
+  /* Redefinir padding del botón en móvil */
+  .precio-boton .boton {
+    padding: 8px 30px;
+    font-size: 0.9rem;
+  }
+}
