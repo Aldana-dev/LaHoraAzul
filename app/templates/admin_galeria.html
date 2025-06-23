@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Administrar Galería - La Hora Azul</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/estilos.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin.css') }}"
+    />
+  </head>
+  <body class="pagina">
+    <section class="admin-panel container">
+      <!-- Título y separador -->
+      <h2 class="titulo-admin">Administrar Galería</h2>
+      <hr class="separador" />
+
+      <!-- Descripción -->
+      <p class="descripcion">
+        Esta sección te permite gestionar las imágenes de la galería. Podés
+        subir nuevas imágenes para mostrar tus productos o trabajos, y también
+        eliminar aquellas que ya no quieras mantener visibles en el sitio.
+      </p>
+
+      <!-- Tarjeta de subida -->
+      <div class="tarjeta form-galeria">
+        <form
+          action="#"
+          method="post"
+          enctype="multipart/form-data"
+          class="form-upload"
+        >
+          <label for="galeria-img" class="label-upload"
+            >Seleccioná una imagen para agregar a la galería:</label
+          >
+          <input type="file" id="galeria-img" name="galeria-img" required />
+          <button class="btn boton" type="submit">Subir Imagen</button>
+        </form>
+      </div>
+
+      <!-- Previsualización -->
+      <div class="galeria-preview-grid">
+        <h4 class="subtitulo">Imágenes actuales:</h4>
+
+        <div class="galeria-grid">
+          {% for i in range(1, 24) %}
+          <div class="galeria-item">
+            <img
+              src="{{ url_for('static', filename='img/galeria/gal (' ~ i ~ ').jpg') }}"
+              alt="Galería {{ i }}"
+            />
+            <button class="btn boton">Eliminar</button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Botón volver -->
+      <div class="text-center mt-5">
+        <a href="{{ url_for('admin') }}" class="btn boton">Volver al Panel</a>
+      </div>
+    </section>
+  </body>
+</html>

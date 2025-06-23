@@ -34,5 +34,17 @@ def login():
 def admin():
     return render_template('admin.html')
 
+@app.route("/admin/banner")
+def admin_banner():
+    return render_template("admin_banner.html")
+
+@app.route("/admin/galeria")
+def admin_galeria():
+    return render_template("admin_galeria.html")
+
+@app.route("/admin/productos")
+def admin_productos():
+    return render_template("admin_productos.html")
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

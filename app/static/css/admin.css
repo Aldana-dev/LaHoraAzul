@@ -1,44 +1,280 @@
-.admin-container {
-  max-width: 900px;
-  margin: 4rem auto;
-  padding: 1rem 2rem;
-  box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
-}
-
+/* ==========================
+   ESTRUCTURA GENERAL
+========================== */
 .admin-panel {
-  max-width: 800px;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 3rem 2rem;
+  box-sizing: border-box;
 }
 
-.admin-panel h2,
-.admin-container h2 {
+.titulo-admin {
+  text-align: center;
   font-family: 'Poppins', sans-serif;
-  font-weight: 600;
   font-size: 2rem;
   color: #073763;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.admin-section {
-  border-left: 4px solid #073763;
-  padding: 20px;
+.separador {
+  height: 4px;
+  background-color: #073763;
+  border: none;
+  margin: 0 auto 3rem auto;
+}
+
+.text-center {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+/* ==========================
+   TARJETAS ADMIN (y galería/productos)
+========================== */
+.tarjetas-admin {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
+}
+
+.tarjeta {
+  flex: 1 1 calc(33.333% - 2rem);
+  border: 2px solid #073763;
+  padding: 2rem;
+  background-color: #f9f9fb;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 250px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.tarjeta h3 {
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 1.3rem;
+  color: #073763;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #073763;
+  padding-bottom: 0.5rem;
+}
+
+.tarjeta p {
   margin-bottom: 2rem;
 }
 
-.admin-section h3,
-.admin-container section h3 {
-  font-family: 'Libre Franklin', sans-serif;
-  font-weight: 600;
-  font-size: 1.5rem;
-  color: #073763;
-  margin-top: 0;
-  margin-bottom: 0.8rem;
-  border-bottom: 2px solid #073763;
-  padding-bottom: 0.3rem;
+.tarjeta .btn {
+  align-self: center;
+  text-align: center;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  display: inline-block;
 }
 
-.admin-section p {
-  margin-bottom: 1rem;
+/* ==========================
+   FORMULARIOS
+========================== */
+.form-banner,
+.form-galeria {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.form-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.label-upload {
+  font-weight: 600;
+  color: #073763;
+}
+
+.form-upload input[type="file"],
+.form-producto input,
+.form-producto textarea,
+.form-producto input[type="file"] {
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+}
+
+/* ==========================
+   DESCRIPCIÓN Y TÍTULOS
+========================== */
+.descripcion {
+  max-width: 700px;
+  margin: 0 auto 3rem auto;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.subtitulo {
   font-family: 'Libre Franklin', sans-serif;
-  font-size: 0.9rem;
+  color: #073763;
+  font-size: 1.4rem;
+  border-bottom: 2px solid #073763;
+  padding-bottom: 0.3rem;
+  margin: 3rem auto 1.5rem auto;
+}
+
+/* ==========================
+   GALERÍA Y PRODUCTOS - TARJETAS
+========================== */
+.galeria-item,
+.producto-item {
+  background-color: #f9f9fb;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.galeria-item img,
+.producto-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+/* ==========================
+   BOTONES PRODUCTOS
+========================== */
+.botones-producto {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.botones-producto .btn {
+  flex: 1 1 0;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+
+/* ==========================
+   PREVISUALIZACIÓN BANNER
+========================== */
+.banner-preview .imagen-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 0 auto 1.5rem auto;
+  max-width: 900px;
+  gap: 1rem;
+}
+
+.banner-preview .imagen-item img {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+/* ==========================
+   PREVISUALIZACIÓN GALERÍA
+========================== */
+.galeria-preview-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* ==========================
+   PREVISUALIZACIÓN PRODUCTOS
+========================== */
+.imagen-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.imagen-item img {
+  width: 100px;
+  height: auto;
+  border: 1px solid #ccc;
+  object-fit: cover;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+@media (max-width: 768px) {
+  .tarjetas-admin {
+    flex-direction: column;
+  }
+
+  .tarjeta {
+    flex: 1 1 100%;
+  }
+}
+
+/* ==========================
+   ESTILOS MODAL
+========================== */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+  background-color: #f9f9fb;
+  margin: 8% auto;
+  padding: 2rem;
+  border: 2px solid #073763;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+  position: relative;
+}
+
+.cerrar {
+  color: #073763;
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.cerrar:hover {
+  color: #be2a88;
 }

@@ -1,0 +1,76 @@
+.login-container {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  border: 1px solid #073763;
+  background: #f9f9fb;
+}
+
+.login-container h2 {
+  color: #073763;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-container label {
+  font-weight: 600;
+  color: #073763;
+}
+
+.login-container input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+/* Estilo base compartido por ambos botones */
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 0.6rem;
+  font-weight: bold;
+  text-align: center;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+/* Botón azul */
+.boton-acceder {
+  background-color: #073763;
+  color: white;
+  border: 2px solid #073763;
+}
+
+.boton-acceder:hover {
+  background-color: white;
+  color: #073763;
+
+}
+
+/* Botón blanco con borde azul */
+.boton-volver {
+  background-color: white;
+  color: #073763;
+  border: 2px solid #073763;
+}
+
+.boton-volver:hover {
+  background-color: #073763;
+  color: white;
+}
+
+.volver-container {
+  text-align: center;
+  margin-top: 1rem;
+}

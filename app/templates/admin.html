@@ -15,31 +15,34 @@
   </head>
 
   <body class="pagina">
-    <section class="admin-panel container py-5">
-      <h2 class="text-center mb-4">Panel de Administración</h2>
+   <section class="admin-panel container">
+  <h2 class="titulo-admin">Panel de Administración</h2>
+  <hr class="separador" />
 
-      <div class="admin-section mb-5">
-        <h3>Imágenes del Banner</h3>
-        <p>Subí, eliminá o cambiá las imágenes que se muestran en el banner principal del sitio.</p>
-        <button class="btn boton">Administrar Banner</button>
-      </div>
+  <div class="tarjetas-admin">
+    <div class="tarjeta">
+      <h3>Imágenes del Banner</h3>
+      <p>Subí, eliminá o cambiá las imágenes que se muestran en el banner principal del sitio.</p>
+      <a href="{{ url_for('admin_banner') }}" class="btn boton">Administrar Banner</a>
+    </div>
 
-      <div class="admin-section mb-5">
-        <h3>Galería</h3>
-        <p>Gestioná las imágenes de la galería.</p>
-        <button class="btn boton">Administrar Galería</button>
-      </div>
+    <div class="tarjeta">
+      <h3>Galería</h3>
+      <p>Gestioná las imágenes de la galería.</p>
+      <a href="{{ url_for('admin_galeria') }}" class="btn boton">Administrar Galería</a>
+    </div>
 
-      <div class="admin-section">
-        <h3>Productos</h3>
-        <p>Agregá, editá o eliminá productos de la tienda.</p>
-        <button class="btn boton">Administrar Productos</button>
-      </div>
+    <div class="tarjeta">
+      <h3>Productos</h3>
+      <p>Agregá, editá o eliminá productos de la tienda.</p>
+      <a href="{{ url_for('admin_productos') }}" class="btn boton">Administrar Productos</a>
+    </div>
+  </div>
 
-      <!-- Botón para volver al índice -->
-      <div class="text-center mt-5">
-        <a href="{{ url_for('index') }}" class="btn boton">Volver al Inicio</a>
-      </div>
-    </section>
+  <div class="text-center mt-5">
+    <a href="{{ url_for('index') }}" class="btn boton">Volver al Inicio</a>
+  </div>
+</section>
+
   </body>
 </html>

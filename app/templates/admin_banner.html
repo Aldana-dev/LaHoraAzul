@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Administrar Banner - La Hora Azul</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/estilos.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin.css') }}"
+    />
+  </head>
+  <body class="pagina">
+    <section class="admin-panel container">
+      <!-- Título y línea azul -->
+      <h2 class="titulo-admin">Administrar Imágenes del Banner</h2>
+      <hr class="separador" />
+
+      <!-- Descripción centrada y con margen -->
+      <p class="descripcion">
+        En esta sección podés gestionar las imágenes que se muestran en el
+        banner principal del sitio. Subí nuevas imágenes para destacarlas en la
+        página de inicio, ordená su aparición o eliminá aquellas que ya no
+        quieras mostrar.
+      </p>
+
+      <!-- Tarjeta con el formulario para subir imagen -->
+      <div class="tarjeta form-banner">
+        <form
+          action="#"
+          method="post"
+          enctype="multipart/form-data"
+          class="form-upload"
+        >
+          <label for="banner-img" class="label-upload"
+            >Seleccioná una imagen para subir:</label
+          >
+          <input type="file" id="banner-img" name="banner-img" required />
+          <button class="btn boton" type="submit">Subir Imagen</button>
+        </form>
+      </div>
+
+      <!-- Previsualización imágenes actuales -->
+      <div class="banner-preview">
+        <h4 class="subtitulo">Imágenes actuales:</h4>
+
+          <div class="imagen-item">
+            <img
+              src="{{ url_for('static', filename='banner/1.png') }}"
+              alt="Banner 1"
+            />
+            <button class="btn boton">Eliminar</button>
+          </div>
+          <div class="imagen-item">
+            <img
+              src="{{ url_for('static', filename='banner/2.png') }}"
+              alt="Banner 2"
+            />
+            <button class="btn boton">Eliminar</button>
+          </div>
+          <div class="imagen-item">
+            <img
+              src="{{ url_for('static', filename='banner/3.png') }}"
+              alt="Banner 3"
+            />
+            <button class="btn boton">Eliminar</button>
+          </div>
+          <div class="imagen-item">
+            <img
+              src="{{ url_for('static', filename='banner/4.png') }}"
+              alt="Banner 4"
+            />
+            <button class="btn boton">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón volver -->
+      <div class="text-center mt-5">
+        <a href="{{ url_for('admin') }}" class="btn boton">Volver al Panel</a>
+      </div>
+    </section>
+  </body>
+</html>
