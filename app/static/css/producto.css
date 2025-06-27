@@ -1,33 +1,19 @@
+/* ───────────── Contenedor detalle producto ───────────── */
 .producto-detalle {
-  margin: 2rem auto;
+  margin: 5rem auto;
   padding: 0 1rem;
 }
 
-/* Header: nombre a la izquierda, botón volver a la derecha */
+/* ───────────── Header: nombre a la izquierda, botón a la derecha ───────────── */
 .producto-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  padding-bottom: 1rem;
   border-bottom: 2px solid #153f6c;
 }
 
-/* Imagen centrada y tamaño mediano */
-.imagen-producto-marco {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 2rem;
-}
-
-.imagen-producto-marco img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  border-radius: 6px;
-}
-
-/* Precio a la izquierda, botón a la derecha */
+/* ───────────── Precio a la izquierda, botón a la derecha ───────────── */
 .precio-boton {
   display: flex;
   justify-content: space-between;
@@ -35,24 +21,71 @@
   margin-bottom: 2rem;
 }
 
-/* Descripción */
+/* ───────────── Descripción del producto ───────────── */
 .producto-descripcion {
   line-height: 1.5;
   margin-bottom: 2rem;
 }
 
-/* Responsive */
+/* ───────────── Galería con imagen y miniaturas ───────────── */
+.producto-galeria {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 4rem;
+  align-items: flex-start;
+}
 
+.imagen-principal {
+  flex: 1 1 65%;
+}
+
+.imagen-principal img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  object-fit: cover;
+  max-height: 500px;
+}
+
+.galeria-miniaturas {
+  flex: 1 1 35%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  align-self: flex-start;
+}
+
+.galeria-miniaturas img {
+  width: 100%;
+  
+  border-radius: 4px;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.2s ease;
+}
+
+.galeria-miniaturas img:hover,
+.galeria-miniaturas img.seleccionada {
+  border: 2px solid #153f6c;
+}
+
+/* ───────────── Responsive (max-width: 480px) ───────────── */
 @media (max-width: 480px) {
   .producto-detalle {
     padding: 0 0.5rem;
   }
 
-  .imagen-producto-marco img {
-    max-width: 100%;
+  .producto-galeria {
+    flex-direction: column;
   }
 
-  /* Redefinir padding del botón en móvil */
+  .imagen-principal img {
+    max-width: 100%; /* Ajusta imagen al ancho móvil */
+  }
+
+  /* Ajuste padding y tamaño botón en móvil */
   .precio-boton .boton {
     padding: 8px 30px;
     font-size: 0.9rem;

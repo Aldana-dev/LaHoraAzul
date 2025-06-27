@@ -1,3 +1,4 @@
+/* ───────────── Contenedor principal del login ───────────── */
 .login-container {
   max-width: 400px;
   margin: 3rem auto;
@@ -13,6 +14,7 @@
   margin-bottom: 1.5rem;
 }
 
+/* ───────────── Formulario con layout en columna y espacios ───────────── */
 .login-container form {
   display: flex;
   flex-direction: column;
@@ -27,13 +29,13 @@
 .login-container input {
   padding: 0.5rem;
   border: 1px solid #ccc;
-  outline: none;
+  outline: none; /* Quita el borde azul por defecto al enfocar */
 }
 
-/* Estilo base compartido por ambos botones */
+/* ───────────── Botones base (compartidos) ───────────── */
 .btn {
   display: inline-block;
-  width: 100%;
+  width: 100%; /* Botón ocupa todo el ancho del contenedor */
   padding: 0.6rem;
   font-weight: bold;
   text-align: center;
@@ -45,7 +47,7 @@
   box-sizing: border-box;
 }
 
-/* Botón azul */
+/* ───────────── Botón principal azul ───────────── */
 .boton-acceder {
   background-color: #073763;
   color: white;
@@ -55,10 +57,9 @@
 .boton-acceder:hover {
   background-color: white;
   color: #073763;
-
 }
 
-/* Botón blanco con borde azul */
+/* ───────────── Botón secundario blanco con borde azul ───────────── */
 .boton-volver {
   background-color: white;
   color: #073763;
@@ -70,6 +71,7 @@
   color: white;
 }
 
+/* ───────────── Contenedor para centrar el botón volver ───────────── */
 .volver-container {
   text-align: center;
   margin-top: 1rem;

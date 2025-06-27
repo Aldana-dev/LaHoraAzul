@@ -1,6 +1,4 @@
-/* ==========================
-   Filtros y categorías
-========================== */
+/* ───────────── Filtros y categorías ───────────── */
 .filtros-categorias {
   display: flex;
   justify-content: center;
@@ -22,7 +20,7 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: cover; /* La imagen se recorta sin deformarse */
   margin-bottom: 0.5rem;
   transition: 0.3s;
 }
@@ -37,13 +35,10 @@
   box-shadow: 0 0 0 3px #153f6c;
 }
 
-
-/* ==========================
-   Lista de productos
-========================== */
+/* ───────────── Lista de productos ───────────── */
 .lista-productos {
   display: grid;
-  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  grid-template-columns: repeat(4, minmax(160px, 1fr)); /* Columnas flexibles con mínimo de 160px */
   gap: 2rem;
   padding: 0 1rem;
 }
@@ -62,14 +57,14 @@
 
 .lista-productos a.producto:hover {
   box-shadow: 0 0 10px rgba(21, 63, 108, 0.3);
-  transform: scale(1.03);
+  transform: scale(1.03); /* Ligeramente más grande al pasar el mouse */
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .producto img {
   width: 100%;
   height: 300px;
-  object-fit: cover;
+  object-fit: cover; /* Asegura que las imágenes llenen sin deformarse */
   border-radius: 5px;
 }
 
@@ -79,16 +74,14 @@
   margin: 0.5rem 0;
 }
 
-
-/* ==========================
-   Media Queries
-========================== */
+/* ───────────── Responsive: max-width 1200px ───────────── */
 @media (max-width: 1200px) {
   .lista-productos {
     grid-template-columns: repeat(3, minmax(160px, 1fr));
   }
 }
 
+/* ───────────── Responsive: max-width 768px ───────────── */
 @media (max-width: 768px) {
   .filtros-categorias {
     flex-wrap: nowrap;
@@ -126,9 +119,10 @@
   }
 }
 
+/* ───────────── Responsive: max-width 480px ───────────── */
 @media (max-width: 480px) {
   .lista-productos {
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(1, 1fr); /* Una sola columna */
   }
 
   .icono {

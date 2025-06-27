@@ -1,3 +1,4 @@
+/* ───────────── Ítem del carrito ───────────── */
 .item-carrito {
   display: flex;
   gap: 1.5rem;
@@ -9,9 +10,9 @@
 .item-carrito img {
   width: 120px;
   height: 120px;
-  object-fit: cover;
+  object-fit: cover; /* La imagen llena el contenedor sin deformarse */
   border-radius: 8px;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Evita que la imagen se reduzca en flexbox */
 }
 
 .detalle-producto {
@@ -58,8 +59,7 @@
   color: #ffffff;
 }
 
-/* Resumen final */
-
+/* ───────────── Resumen final del carrito ───────────── */
 .resumen-carrito {
   margin-top: 3rem;
   margin-left: auto;
@@ -85,15 +85,13 @@
   text-align: right;
 }
 
-/* Botón finalizar compra */
-
+/* ───────────── Botón finalizar compra ───────────── */
 .finalizar-compra-container {
   text-align: center;
   margin-top: 3rem;
 }
 
-/* Responsive: manteniendo diseño horizontal pero más compacto */
-
+/* ───────────── Responsive (max-width 600px) ───────────── */
 @media (max-width: 600px) {
   .item-carrito {
     gap: 1rem;

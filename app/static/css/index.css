@@ -1,32 +1,32 @@
-/* Carrusel */
+/* ───────────── Banner ───────────── */
 .carousel {
   position: relative;
   z-index: 0;
 }
 
-/* Contenido principal */
+/* ──────── Texto de Bienvenida ──────── */
 .contenido {
   max-width: 800px;
-  margin: 8em auto 4em;
+  margin: 6em auto 6em;
   text-align: center;
 }
 
-/* Galería preview */
+/* ───────────── Preview de Galería ───────────── */
 .galeria-preview {
   background-color: white;
-  padding: 4em 2em;
+  margin-bottom: 6em;
   text-align: center;
 }
 
 .galeria-img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 1; /* Mantiene la imagen perfectamente cuadrada sin importar el tamaño del contenedor */
   object-fit: cover;
   object-position: center;
   border-radius: 0.5em;
 }
 
-/* Enlaces contacto */
+/* ───────────── Contacto ───────────── */
 .contacto-link {
   display: flex;
   align-items: center;
@@ -34,9 +34,19 @@
   text-decoration: none;
   color: #153f6c;
   margin-bottom: 0.8em;
-  word-wrap: break-word;
   white-space: normal;
 }
+
+.contacto-link .icono {
+  flex-shrink: 0;
+}
+
+.contacto-link .texto-contacto {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+
 
 .material-symbols-outlined.icono {
   background-color: #153f6c;
@@ -49,10 +59,10 @@
   align-items: center;
   width: 56px;
   height: 56px;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Evita que el ícono se reduzca cuando el contenedor es estrecho */
 }
 
-/* iframe */
+/* ───────────── Mapa iframe ───────────── */
 iframe {
   width: 600px;
   height: 400px;
@@ -60,20 +70,22 @@ iframe {
   border-radius: 0.5em;
 }
 
+/* ───────────── Footer ───────────── */
 .footer {
-  margin-top: 0px;
+  margin-top: 0;
 }
 
+/* ───────────── Responsive: Mobile ───────────── */
 @media (max-width: 768px) {
-  /* Bienvenida */
+  
+  /* ─── Contenido principal ─── */
   .contenido {
     margin: 4em 1em 2em;
     padding: 0 1em;
-    text-align: center;
     font-size: 0.9rem;
   }
 
-  /* Galería */
+  /* ─── Galería ─── */
   .galeria-preview {
     padding: 2em 1em;
   }
@@ -82,11 +94,11 @@ iframe {
     border-radius: 0.3em;
   }
 
-  /* Contacto */
+  /* ─── Contacto ─── */
   .contacto-link {
     font-size: 0.95rem;
     gap: 8px;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Permite que los elementos se acomoden en varias líneas si no entran */
     justify-content: flex-start;
   }
 
@@ -97,13 +109,13 @@ iframe {
     padding: 6px;
   }
 
-  /* iframe responsivo */
+  /* ─── iframe ─── */
   iframe {
     width: 100%;
     height: 300px;
   }
 
-  /* Espaciado columnas */
+  /* ─── Sección con dos columnas ─── */
   .dos-columnas {
     padding: 2em 1em;
     gap: 1.5em;

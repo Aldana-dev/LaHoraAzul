@@ -1,11 +1,9 @@
-/* ==========================
-   ESTRUCTURA GENERAL
-========================== */
+/* ───────────── Estructura general ───────────── */
 .admin-panel {
   max-width: 1100px;
   margin: 0 auto;
   padding: 3rem 2rem;
-  box-sizing: border-box;
+  box-sizing: border-box; /* Incluye el padding y border en el ancho total */
 }
 
 .titulo-admin {
@@ -28,9 +26,7 @@
   margin-top: 4rem;
 }
 
-/* ==========================
-   TARJETAS ADMIN (y galería/productos)
-========================== */
+/* ───────────── Tarjetas admin ───────────── */
 .tarjetas-admin {
   display: flex;
   flex-wrap: wrap;
@@ -40,13 +36,13 @@
 
 .tarjeta {
   flex: 1 1 calc(33.333% - 2rem);
+  min-width: 250px;
   border: 2px solid #073763;
   padding: 2rem;
   background-color: #f9f9fb;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-width: 250px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -71,42 +67,70 @@
   display: inline-block;
 }
 
-/* ==========================
-   FORMULARIOS
-========================== */
+/* ───────────── Formularios ───────────── */
 .form-banner,
-.form-galeria {
-  max-width: 500px;
+.form-galeria,
+.form-producto {
   margin: 0 auto;
   padding: 2rem;
+  background-color: #f9f9fb;
+  border: 2px solid #073763;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
 .form-upload {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
+/* Etiquetas */
+.form-upload label,
 .label-upload {
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   color: #073763;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  display: block;
 }
 
+/* Campos de entrada y selección */
+.form-upload input[type="text"],
+.form-upload input[type="number"],
 .form-upload input[type="file"],
-.form-producto input,
-.form-producto textarea,
-.form-producto input[type="file"] {
-  padding: 0.5rem 0.6rem;
+.form-upload textarea,
+.form-upload select {
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 1rem;
+  padding: 0.7rem 0.8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
   box-sizing: border-box;
+  color: #153f6c;
+  background-color: #fff;
+  transition: border 0.3s ease;
+}
+
+/* Efecto focus */
+.form-upload input:focus,
+.form-upload textarea:focus,
+.form-upload select:focus {
+  border-color: #073763;
+  outline: none;
+}
+
+/* Espacio inferior en los campos */
+.form-upload input,
+.form-upload textarea,
+.form-upload select {
   margin-bottom: 0.5rem;
 }
 
-/* ==========================
-   DESCRIPCIÓN Y TÍTULOS
-========================== */
+
+/* ───────────── Descripción y títulos ───────────── */
 .descripcion {
   max-width: 700px;
   margin: 0 auto 3rem auto;
@@ -123,9 +147,7 @@
   margin: 3rem auto 1.5rem auto;
 }
 
-/* ==========================
-   GALERÍA Y PRODUCTOS - TARJETAS
-========================== */
+/* ───────────── Tarjetas galería/productos ───────────── */
 .galeria-item,
 .producto-item {
   background-color: #f9f9fb;
@@ -142,15 +164,13 @@
 .galeria-item img,
 .producto-item img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 1; /* Mantiene proporción cuadrada */
   object-fit: cover;
   border-radius: 4px;
   margin-bottom: 1rem;
 }
 
-/* ==========================
-   BOTONES PRODUCTOS
-========================== */
+/* ───────────── Botones productos ───────────── */
 .botones-producto {
   display: flex;
   gap: 1rem;
@@ -168,32 +188,24 @@
   text-align: center;
 }
 
-
-/* ==========================
-   PREVISUALIZACIÓN BANNER
-========================== */
+/* ───────────── Previsualización banner ───────────── */
 .banner-preview .imagen-item {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
   border-radius: 6px;
   padding: 1rem;
   margin: 0 auto 1.5rem auto;
-  max-width: 900px;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .banner-preview .imagen-item img {
   width: 100%;
-  max-width: 700px;
-  height: auto;
   border-radius: 4px;
   object-fit: cover;
 }
 
-/* ==========================
-   PREVISUALIZACIÓN GALERÍA
-========================== */
+/* ───────────── Previsualización galería ───────────── */
 .galeria-preview-grid {
   max-width: 1100px;
   margin: 0 auto;
@@ -201,14 +213,30 @@
 
 .galeria-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* 4 columnas fijas en escritorio */
   gap: 2rem;
   margin-top: 2rem;
 }
 
-/* ==========================
-   PREVISUALIZACIÓN PRODUCTOS
-========================== */
+/* Botón de eliminar en la galería de previsualización */
+.galeria-preview-grid .galeria-item .btn {
+  width: auto;
+  padding: 0.5rem 4rem;
+  font-size: 0.9rem;
+  white-space: nowrap; /* Evita que se parta en varias líneas */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* Responsive: 2 columnas en móviles */
+@media (max-width: 768px) {
+  .galeria-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ───────────── Previsualización productos ───────────── */
 .imagen-item {
   display: flex;
   align-items: center;
@@ -223,9 +251,7 @@
   object-fit: cover;
 }
 
-/* ==========================
-   RESPONSIVE
-========================== */
+/* ───────────── Responsive ───────────── */
 @media (max-width: 768px) {
   .tarjetas-admin {
     flex-direction: column;
@@ -234,11 +260,27 @@
   .tarjeta {
     flex: 1 1 100%;
   }
+
+  .galeria-grid {
+    gap: 1rem;
+  }
+
+  .galeria-item {
+    padding: 0.5rem;
+  }
+
+  .galeria-item img {
+    margin-bottom: 0.5rem;
+  }
+
+  .galeria-preview-grid .galeria-item .btn {
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+  }
 }
 
-/* ==========================
-   ESTILOS MODAL
-========================== */
+
+/* ───────────── Modal ───────────── */
 .modal {
   display: none;
   position: fixed;
@@ -248,7 +290,7 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .modal-content {
@@ -259,7 +301,7 @@
   border-radius: 8px;
   width: 90%;
   max-width: 500px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   position: relative;
 }
 

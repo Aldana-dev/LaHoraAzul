@@ -1,16 +1,18 @@
-{% extends "base.html" %}
-
-{% block title %}Marcos - La Hora Azul{% endblock %}
-
+{% extends "base.html" %} {% block title %}Marcos - La Hora Azul{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/marcos.css') }}">
-{% endblock %}
-
-{% block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/marcos.css') }}"
+/>
+{% endblock %} {% block content %}
 <section class="marcos">
   <div class="introduccion-marcos">
     <p>
-      Nuestros marcos son hechos a la medida de tu obra de manera artesanal y personalizada. Trabajamos con materiales de calidad y una amplia variedad de molduras, colores y terminaciones. Te acompañamos en todo el proceso para elegir el marco ideal que realce y proteja aquello que querés atesorar.
+      Nuestros marcos son hechos a la medida de tu obra de manera artesanal y
+      personalizada. Trabajamos con materiales de calidad y una amplia variedad
+      de molduras, colores y terminaciones. Te acompañamos en todo el proceso
+      para elegir el marco ideal que realce y proteja aquello que querés
+      atesorar.
     </p>
   </div>
 
@@ -18,16 +20,20 @@
     <h2>Cómo pedir un presupuesto</h2>
     <ol>
       <li>
-        Envíanos las medidas de la pieza que querés enmarcar, puede ser una fotografía, ilustración, pintura, bordado ¡O lo que quieras!
+        Envíanos las medidas de la pieza que querés enmarcar, puede ser una
+        fotografía, ilustración, pintura, bordado ¡O lo que quieras!
       </li>
       <li>
-        Indicanos el tipo de marco que preferís. Te podemos asesorar sobre molduras, passepartout, vidrios y montaje.
+        Indicanos el tipo de marco que preferís. Te podemos asesorar sobre
+        molduras, passepartout, vidrios y montaje.
       </li>
       <li>
-        Te enviamos un presupuesto válido por 10 días, y te pedimos una seña del 30% para comenzar el trabajo.
+        Te enviamos un presupuesto válido por 10 días, y te pedimos una seña del
+        30% para comenzar el trabajo.
       </li>
       <li>
-        En un plazo de 7 a 10 días hábiles te entregamos tu cuadro listo para colgar.
+        En un plazo de 7 a 10 días hábiles te entregamos tu cuadro listo para
+        colgar.
       </li>
     </ol>
   </div>
@@ -35,13 +41,21 @@
   <section class="carrusel-marcos text-center">
     <h2>Explorá nuestros marcos</h2>
 
-    <div class="carrusel d-flex align-items-center justify-content-center gap-3">
+    <div
+      class="carrusel d-flex align-items-center justify-content-center gap-3"
+    >
       <button id="btn-prev" class="carrusel-btn">&#10094;</button>
 
       <div class="carrusel-contenedor">
         <div class="carrusel-imagenes" id="carruselMarcos">
-          {% for i in range(6) %}
-          <img src="{{ url_for('static', filename='ejemplo.jpg') }}" alt="Marco {{ i + 1 }}" data-titulo="Marco {{ i + 1 }}" />
+          {% set nombres_marcos = [ "Marco directo L", "Marco L con
+          passepartout", "Marco Box simple", "Marco box flotante", "Marco doble
+          vidrio", "Marcos de colores" ] %} {% for nombre in nombres_marcos %}
+          <img
+            src="{{ url_for('static', filename='ejemplo.jpg') }}"
+            alt="{{ nombre }}"
+            data-titulo="{{ nombre }}"
+          />
           {% endfor %}
         </div>
       </div>
@@ -52,20 +66,18 @@
     <div class="titulo-marco mt-3" id="titulo-marco">Marco 1</div>
   </section>
 </section>
-{% endblock %}
-
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
-  const carrusel = document.getElementById('carruselMarcos');
-  const btnPrev = document.getElementById('btn-prev');
-  const btnNext = document.getElementById('btn-next');
+  const carrusel = document.getElementById("carruselMarcos");
+  const btnPrev = document.getElementById("btn-prev");
+  const btnNext = document.getElementById("btn-next");
   const gap = 30;
 
-  let imgs = carrusel.querySelectorAll('img');
+  let imgs = carrusel.querySelectorAll("img");
   const imgCount = imgs.length;
 
   function clonarImagenes() {
-    imgs = carrusel.querySelectorAll('img');
+    imgs = carrusel.querySelectorAll("img");
     for (let i = 0; i < imgCount; i++) {
       let clone = imgs[i].cloneNode(true);
       carrusel.appendChild(clone);
@@ -77,7 +89,7 @@
   }
   clonarImagenes();
 
-  const todasImgs = carrusel.querySelectorAll('img');
+  const todasImgs = carrusel.querySelectorAll("img");
   let posicion = imgCount;
 
   function getSizes() {
@@ -86,67 +98,67 @@
       return {
         imgWidth: vw - gap, // ancho casi todo el viewport menos gap
         containerWidth: vw,
-        visibleCount: 1
+        visibleCount: 1,
       };
     } else if (vw <= 768) {
       return {
         imgWidth: 160,
         containerWidth: 160 + gap,
-        visibleCount: 1
+        visibleCount: 1,
       };
     } else {
       return {
-        imgWidth: 200,
-        containerWidth: 660, // como estaba
-        visibleCount: 3
+        imgWidth: 300,
+        containerWidth: 960, // como estaba
+        visibleCount: 3,
       };
     }
   }
 
   let { imgWidth, containerWidth, visibleCount } = getSizes();
 
-  const contenedor = document.querySelector('.carrusel-contenedor');
+  const contenedor = document.querySelector(".carrusel-contenedor");
 
   function setPosition() {
     const offset = -posicion * (imgWidth + gap);
-    carrusel.style.transition = 'none';
+    carrusel.style.transition = "none";
     carrusel.style.transform = `translateX(${offset}px)`;
-    contenedor.style.width = containerWidth + 'px'; // ajusto contenedor
+    contenedor.style.width = containerWidth + "px"; // ajusto contenedor
     actualizarCentro();
     actualizarTitulo();
   }
 
   function actualizarCentro() {
-    todasImgs.forEach((img) => img.classList.remove('centro'));
+    todasImgs.forEach((img) => img.classList.remove("centro"));
     const indexCentro = posicion + 1;
     if (todasImgs[indexCentro]) {
-      todasImgs[indexCentro].classList.add('centro');
+      todasImgs[indexCentro].classList.add("centro");
     }
   }
 
   function actualizarTitulo() {
-    const titulo = todasImgs[posicion]?.dataset.titulo || '';
-    document.getElementById('titulo-marco').textContent = titulo;
+    const titulo = todasImgs[posicion]?.dataset.titulo || "";
+    document.getElementById("titulo-marco").textContent = titulo;
   }
 
   function mover(n) {
     posicion += n;
-    carrusel.style.transition = 'transform 0.4s ease';
+    carrusel.style.transition = "transform 0.4s ease";
     const offset = -posicion * (imgWidth + gap);
     carrusel.style.transform = `translateX(${offset}px)`;
     actualizarCentro();
     actualizarTitulo();
 
     carrusel.addEventListener(
-      'transitionend',
+      "transitionend",
       () => {
         if (posicion >= imgCount * 2) {
           posicion = imgCount;
-          carrusel.style.transition = 'none';
+          carrusel.style.transition = "none";
           setPosition();
         } else if (posicion < imgCount) {
           posicion = imgCount * 2 - 1;
-          carrusel.style.transition = 'none';
+          carrusel.style.transition = "none";
           setPosition();
         }
       },
@@ -154,10 +166,10 @@
     );
   }
 
-  btnNext.addEventListener('click', () => mover(1));
-  btnPrev.addEventListener('click', () => mover(-1));
+  btnNext.addEventListener("click", () => mover(1));
+  btnPrev.addEventListener("click", () => mover(-1));
 
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     const sizes = getSizes();
     imgWidth = sizes.imgWidth;
     containerWidth = sizes.containerWidth;
@@ -167,6 +179,5 @@
 
   setPosition();
 </script>
-
 
 {% endblock %}

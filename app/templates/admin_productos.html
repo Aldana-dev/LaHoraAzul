@@ -44,6 +44,15 @@
             placeholder="Descripción"
             rows="3"
           ></textarea>
+
+          <select name="categoria" id="categoria" required>
+            <option value="" disabled selected>Seleccioná una categoría</option>
+            <option value="cuadros">Cuadros</option>
+            <option value="ceramica">Cerámica</option>
+            <option value="cuadernos">Cuadernos</option>
+            <option value="totebags">Totebags</option>
+          </select>
+
           <input type="file" name="imagen" required />
           <button type="submit" class="btn boton">Agregar Producto</button>
         </form>
@@ -56,13 +65,13 @@
           <!-- Repetir por producto -->
           <div class="galeria-item">
             <img
-              src="{{ url_for('static', filename='img/producto1.jpg') }}"
+              src="{{ url_for('static', filename='ejemplo.jpg') }}"
               alt="Producto"
             />
             <p>Producto 1 - $1000</p>
             <div class="botones-producto">
               <button class="btn boton">Eliminar</button>
-              <button class="btn boton">Editar</button>
+              <button class="btn boton edit-btn">Editar</button>
             </div>
           </div>
           <!-- Fin producto -->
@@ -99,6 +108,17 @@
             placeholder="Descripción"
             rows="3"
           ></textarea>
+
+          <!-- Nuevo campo categoría -->
+          <label for="categoria-editar">Categoría:</label>
+          <select name="categoria" id="categoria-editar" required>
+            <option value="" disabled selected>Seleccioná una categoría</option>
+            <option value="cuadros">Cuadros</option>
+            <option value="ceramica">Cerámica</option>
+            <option value="cuadernos">Cuadernos</option>
+            <option value="totebags">Totebags</option>
+          </select>
+
           <input type="file" name="imagen" />
           <button type="submit" class="btn boton">Guardar Cambios</button>
         </form>
@@ -114,7 +134,6 @@
       btnsEditar.forEach((btn) => {
         btn.addEventListener("click", (e) => {
           e.preventDefault();
-          // Aquí podés cargar datos del producto a editar si querés
           modal.style.display = "block";
         });
       });
