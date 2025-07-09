@@ -30,7 +30,7 @@
       <!-- Tarjeta con el formulario para subir imagen -->
       <div class="tarjeta form-banner">
         <form
-          action="#"
+          action="{{ url_for('subir_banner') }}"
           method="post"
           enctype="multipart/form-data"
           class="form-upload"
@@ -38,7 +38,7 @@
           <label for="banner-img" class="label-upload"
             >Seleccioná una imagen para subir:</label
           >
-          <input type="file" id="banner-img" name="banner-img" required />
+          <input type="file" id="banner-img" name="imagen" required />
           <button class="btn boton" type="submit">Subir Imagen</button>
         </form>
       </div>
@@ -47,35 +47,29 @@
       <div class="banner-preview">
         <h4 class="subtitulo">Imágenes actuales:</h4>
 
-          <div class="imagen-item">
-            <img
-              src="{{ url_for('static', filename='banner/1.png') }}"
-              alt="Banner 1"
-            />
-            <button class="btn boton">Eliminar</button>
-          </div>
-          <div class="imagen-item">
-            <img
-              src="{{ url_for('static', filename='banner/2.png') }}"
-              alt="Banner 2"
-            />
-            <button class="btn boton">Eliminar</button>
-          </div>
-          <div class="imagen-item">
-            <img
-              src="{{ url_for('static', filename='banner/3.png') }}"
-              alt="Banner 3"
-            />
-            <button class="btn boton">Eliminar</button>
-          </div>
-          <div class="imagen-item">
-            <img
-              src="{{ url_for('static', filename='banner/4.png') }}"
-              alt="Banner 4"
-            />
-            <button class="btn boton">Eliminar</button>
-          </div>
+        {% if banners %} {% for banner in banners %}
+        <div class="imagen-item">
+          <img
+            src="{{ url_for('static', filename=banner.imagen.split('static/')[1]) }}"
+            alt="Banner {{ loop.index }}"
+          />
+          <form
+            action="{{ url_for('eliminar_banner', banner_id=banner.id) }}"
+            method="post"
+            style="display: inline;"
+          >
+            <button
+              class="btn boton"
+              type="submit"
+              onclick="return confirm('¿Seguro querés eliminar este banner?');"
+            >
+              Eliminar
+            </button>
+          </form>
         </div>
+        {% endfor %} {% else %}
+        <p>No hay banners cargados.</p>
+        {% endif %}
       </div>
 
       <!-- Botón volver -->
