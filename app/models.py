@@ -1,11 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy 
 from datetime import datetime
 
 db = SQLAlchemy()
 
-# ====================
-# CATEGORÍAS DE PRODUCTOS
-# ====================
+# ----------------- CATEGORÍAS DE PRODUCTOS ----------------- #
 class Categoria(db.Model):
     __tablename__ = 'categorias'
 
@@ -14,9 +12,7 @@ class Categoria(db.Model):
 
     productos = db.relationship('Producto', backref='categoria', lazy=True)
 
-# ====================
-# PRODUCTOS
-# ====================
+# ----------------- PRODUCTOS ----------------- #
 class Producto(db.Model):
     __tablename__ = 'productos'
 
@@ -24,14 +20,30 @@ class Producto(db.Model):
     nombre = db.Column(db.String(120), nullable=False)
     descripcion = db.Column(db.Text, nullable=True)
     precio = db.Column(db.Numeric(10, 2), nullable=False)
-    imagen = db.Column(db.String(255), nullable=False)
+    imagen = db.Column(db.String(255), nullable=False)  # Imagen principal / thumbnail
     vendido = db.Column(db.Boolean, default=False)
-    
+
     categoria_id = db.Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 
-# ====================
-# PEDIDOS
-# ====================
+    # Relación uno a muchos con las imágenes adicionales
+    imagenes = db.relationship(
+        'ProductoImagen',
+        backref='producto',
+        lazy=True,
+        cascade='all, delete-orphan',
+        order_by="ProductoImagen.orden"
+    )
+
+# ----------------- IMÁGENES DE PRODUCTOS ----------------- #
+class ProductoImagen(db.Model):
+    __tablename__ = 'producto_imagenes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    producto_id = db.Column(db.Integer, db.ForeignKey('productos.id'), nullable=False)
+    imagen = db.Column(db.String(255), nullable=False)  # Ruta relativa a /static/uploads/
+    orden = db.Column(db.Integer, default=0)  # Para ordenar imágenes; 0 = principal
+
+# ----------------- PEDIDOS ----------------- #
 class Pedido(db.Model):
     __tablename__ = 'pedidos'
 
@@ -43,9 +55,7 @@ class Pedido(db.Model):
 
     items = db.relationship('PedidoItem', backref='pedido', lazy=True)
 
-# ====================
-# ITEMS DE CADA PEDIDO
-# ====================
+# ----------------- ITEMS DE CADA PEDIDO ----------------- #
 class PedidoItem(db.Model):
     __tablename__ = 'pedido_items'
 
@@ -56,9 +66,7 @@ class PedidoItem(db.Model):
 
     producto = db.relationship('Producto')
 
-# ====================
-# USUARIOS (SOLO ADMIN)
-# ====================
+# ----------------- USUARIOS (SOLO ADMIN) ----------------- #
 class Usuario(db.Model):
     __tablename__ = 'usuarios'
 
@@ -68,9 +76,7 @@ class Usuario(db.Model):
     contraseña_hash = db.Column(db.String(255), nullable=False)
     es_admin = db.Column(db.Boolean, default=True)
 
-# ====================
-# GALERÍA
-# ====================
+# ----------------- GALERÍA ----------------- #
 class Galeria(db.Model):
     __tablename__ = 'galeria'
 
@@ -78,9 +84,7 @@ class Galeria(db.Model):
     imagen = db.Column(db.String(255), nullable=False)
     fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
 
-# ====================
-# BANNERS
-# ====================
+# ----------------- BANNERS ----------------- #
 class Banner(db.Model):
     __tablename__ = 'banners'
 

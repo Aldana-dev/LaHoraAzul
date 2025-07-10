@@ -1,21 +1,26 @@
-{% extends "base.html" %}
-
-{% block title %}Galería - La Hora Azul{% endblock %}
-
+{% extends "base.html" %} {% block title %}Galería - La Hora Azul{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/galeria.css') }}">
-{% endblock %}
-
-{% block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/galeria.css') }}"
+/>
+{% endblock %} {% block content %}
 <section class="galeria-pinterest">
   <div class="grid-galeria">
-    {% for i in range(1, 24) %}
-      <img src="{{ url_for('static', filename='img/galeria/gal (' ~ i ~ ').jpg') }}" alt="Foto {{ i }}" loading="lazy" />
-    {% endfor %}
+    {% if imagenes %} {% for img in imagenes %}
+    <img
+      src="{{ url_for('static', filename=img.imagen.split('static/')[1]) }}"
+      alt="Imagen galería {{ loop.index }}"
+      loading="lazy"
+    />
+    {% endfor %} {% else %}
+    <div class="mensaje-vacio">
+      <p>No hay imágenes cargadas en la galería.</p>
+    </div>
+    {% endif %}
   </div>
 </section>
-{% endblock %}
 
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <!-- Este bloque puede quedar vacío o eliminarse si ya no usás JS para el grid -->
 {% endblock %}

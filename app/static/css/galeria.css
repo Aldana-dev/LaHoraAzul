@@ -2,6 +2,20 @@
 .galeria-pinterest {
   padding: 20px;
 }
+.mensaje-vacio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200vh;
+  text-align: center;
+}
+
+.mensaje-vacio p {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+
 
 /* ───────────── Grid de columnas para galería ───────────── */
 /* Uso de columnas CSS para crear 'efecto tipo Pinterest' */

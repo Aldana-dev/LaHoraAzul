@@ -1,177 +1,39 @@
-{% extends "base.html" %} {% block title %}Tienda - La Hora Azul{% endblock %}
+{% extends "base.html" %}
+{% block title %}Tienda - La Hora Azul{% endblock %}
 {% block extra_css %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/tienda.css') }}"
-/>
-{% endblock %} {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tienda.css') }}" />
+{% endblock %}
+
+{% block content %}
 <section class="tienda">
-  <!-- Filtros de Categorías -->
   <div class="filtros-categorias">
-    <button class="categoria">
-      <img
-        src="{{ url_for('static', filename='icon/1.svg') }}"
-        alt="Cuadros"
-        class="icono"
-      />
-      <span>Cuadros</span>
-    </button>
-    <button class="categoria">
-      <img
-        src="{{ url_for('static', filename='icon/2.svg') }}"
-        alt="Cerámica"
-        class="icono"
-      />
-      <span>Cerámica</span>
-    </button>
-    <button class="categoria">
-      <img
-        src="{{ url_for('static', filename='icon/3.svg') }}"
-        alt="Cuadernos"
-        class="icono"
-      />
-      <span>Cuadernos</span>
-    </button>
-    <button class="categoria">
-      <img
-        src="{{ url_for('static', filename='icon/4.svg') }}"
-        alt="Totebags"
-        class="icono"
-      />
-      <span>Totebags</span>
-    </button>
+    {% set iconos = {
+      'Cuadros': 'cuadros.svg',
+      'Cerámica': 'ceramica.svg',
+      'Cuadernos': 'cuadernos.svg',
+      'Totebags': 'totebags.svg'
+    } %}
+
+    {% for cat in categorias %}
+    <a href="{{ url_for('tienda', categoria_id=cat.id) }}" class="categoria {% if categoria_id == cat.id %}activa{% endif %}">
+      <img src="{{ url_for('static', filename='icon/' ~ iconos.get(cat.nombre, 'default.svg')) }}" alt="{{ cat.nombre }}" class="icono" />
+      <span>{{ cat.nombre }}</span>
+    </a>
+    {% endfor %}
   </div>
 
-  <!-- Productos -->
   <div class="lista-productos">
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_6466.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3500</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_6495.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$4200</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_7586.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3100</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_7681.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3900</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_6466.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3500</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_6495.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$4200</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_7586.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3100</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_7681.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3900</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_6466.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3500</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_6495.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$4200</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_7586.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3100</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_7681.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3900</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_6466.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3500</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_6495.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$4200</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_7586.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3100</p>
-    </a>
-    <a href="{{ url_for('producto') }}" class="producto">
-      <img
-        src="{{ url_for('static', filename='img/_MG_7681.jpg') }}"
-        alt="Nombre de Producto"
-      />
-      <p>Nombre de Producto</p>
-      <p>$3900</p>
-    </a>
+    {% if productos %}
+      {% for prod in productos %}
+      <a href="{{ url_for('producto', producto_id=prod.id) }}" class="producto">
+        <img src="{{ url_for('static', filename=prod.imagen) }}" alt="{{ prod.nombre }}" />
+        <p>{{ prod.nombre }}</p>
+        <p>${{ "%.0f"|format(prod.precio) }}</p>
+      </a>
+      {% endfor %}
+    {% else %}
+      <p class="sin-productos">No hay productos disponibles en este momento.</p>
+    {% endif %}
   </div>
 </section>
 {% endblock %}

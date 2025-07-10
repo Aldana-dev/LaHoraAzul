@@ -9,15 +9,12 @@
 {% block content %}
 
 <!-- Carrusel -->
+{% if banners %}
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
     {% for banner in banners %}
       <div class="carousel-item {% if loop.first %}active{% endif %}">
         <img src="{{ url_for('static', filename=banner.imagen.split('static/')[1]) }}" class="d-block w-100" alt="Banner {{ loop.index }}" />
-      </div>
-    {% else %}
-      <div class="carousel-item active">
-        <img src="{{ url_for('static', filename='banner/1.png') }}" class="d-block w-100" alt="Imagen por defecto" />
       </div>
     {% endfor %}
   </div>
@@ -31,6 +28,8 @@
     <span class="visually-hidden">Siguiente</span>
   </button>
 </div>
+{% endif %}
+
 
 
 <!-- Bienvenida -->
@@ -48,17 +47,18 @@
 <!-- Galería -->
 <div class="galeria-preview container text-center">
   
-  <div class="row justify-content-center my-4">
-    {% for i in range(1, 9) %}
-      <div class="col-6 col-md-3 mb-3">
+ <div class="row justify-content-center my-4">
+  {% for imagen in imagenes_galeria[:8] %}
+    <div class="col-6 col-md-3 mb-3">
+      <img src="{{ url_for('static', filename=imagen.imagen.split('static/')[1]) }}" class="img-fluid galeria-img" alt="Imagen galería {{ loop.index }}" />
+    </div>
+  {% endfor %}
+</div>
 
-        <img src="{{ url_for('static', filename='img/galeria/gal (' ~ i ~ ').jpg') }}" class="img-fluid galeria-img" alt="Imagen galería" />
-      </div>
-    {% endfor %}
-
-    
-  </div>
+{% if imagenes_galeria %}
   <a href="{{ url_for('galeria') }}" class="btn boton">Ver más</a>
+{% endif %}
+
 </div>
 
 <!-- Contacto + Mapa -->
@@ -83,7 +83,7 @@
       </a>
     </p>
     <p>
-      <a href="https://maps.app.goo.gl/jnN1apFYrUcXrke29" target="_blank" rel="noopener" class="contacto-link" aria-label="Ver ubicación en el mapa">
+      <a href="https://maps.app.goo.gl/7QqgRrGrNxKmvXU57" target="_blank" rel="noopener" class="contacto-link" aria-label="Ver ubicación en el mapa">
         <span class="material-symbols-outlined icono">location_on</span>
         <span class="texto-contacto">Av. Arrayanes 282 - Local 8 - Villa la Angostura</span>
       </a>
@@ -91,7 +91,7 @@
   </div>
 
   <div class="columna">
-    <iframe class="mapa-iframe" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d188.87218740559135!2d-71.6421713!3d-40.7630145!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9610bf6848e39b5b%3A0x1b56873dfe7e2228!2sLibrer%C3%ADa%20Morgana!5e0!3m2!1ses!2sar!4v1750375113533!5m2!1ses!2sar" loading="lazy" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade" title="Ubicación en el mapa de La Hora Azul"></iframe>
+    <iframe class="mapa-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3021.95875407797!2d-71.6418157!3d-40.762931900000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9610bf40fd7f503d%3A0x3e12e4209e19682a!2sLa%20hora%20azul!5e0!3m2!1ses-419!2sar!4v1752101680920!5m2!1ses-419!2sar" loading="lazy" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade" title="Ubicación en el mapa de La Hora Azul"></iframe>
   </div>
 </div>
 

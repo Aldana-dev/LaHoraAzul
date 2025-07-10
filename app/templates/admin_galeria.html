@@ -28,34 +28,48 @@
 
       <!-- Tarjeta de subida -->
       <div class="tarjeta form-galeria">
+        <!-- Formulario de subida -->
         <form
-          action="#"
+          action="{{ url_for('subir_galeria') }}"
           method="post"
           enctype="multipart/form-data"
           class="form-upload"
         >
-          <label for="galeria-img" class="label-upload"
-            >Seleccioná una imagen para agregar a la galería:</label
-          >
-          <input type="file" id="galeria-img" name="galeria-img" required />
+          <label for="galeria-img" class="label-upload">
+            Seleccioná una imagen para agregar a la galería:
+          </label>
+          <input type="file" id="galeria-img" name="imagen" required />
           <button class="btn boton" type="submit">Subir Imagen</button>
         </form>
       </div>
 
-      <!-- Previsualización -->
+      <!-- Vista previa -->
       <div class="galeria-preview-grid">
         <h4 class="subtitulo">Imágenes actuales:</h4>
-
         <div class="galeria-grid">
-          {% for i in range(1, 24) %}
+          {% if imagenes %} {% for img in imagenes %}
           <div class="galeria-item">
             <img
-              src="{{ url_for('static', filename='img/galeria/gal (' ~ i ~ ').jpg') }}"
-              alt="Galería {{ i }}"
+              src="{{ url_for('static', filename=img.imagen.split('static/')[1]) }}"
+              alt="Imagen galería {{ loop.index }}"
             />
-            <button class="btn boton">Eliminar</button>
+            <form
+              action="{{ url_for('eliminar_galeria', imagen_id=img.id) }}"
+              method="post"
+              style="display: inline"
+            >
+              <button
+                class="btn boton"
+                type="submit"
+                onclick="return confirm('¿Eliminar esta imagen?');"
+              >
+                Eliminar
+              </button>
+            </form>
           </div>
-          {% endfor %}
+          {% endfor %} {% else %}
+          <p>No hay imágenes cargadas.</p>
+          {% endif %}
         </div>
       </div>
 
