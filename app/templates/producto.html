@@ -7,7 +7,7 @@
 <main class="pagina">
   <section class="producto-detalle">
     <div class="producto-header">
-      <h2 class="producto-nombre">Nombre de producto</h2>
+      <h2 class="producto-nombre">{{ producto.nombre }}</h2>
     </div>
 
     <div class="producto-galeria">
@@ -15,55 +15,44 @@
       <div class="imagen-principal">
         <img
           id="img-principal"
-          src="{{ url_for('static', filename='ejemplo.jpg') }}"
-          alt="Nombre de producto"
+          src="{{ url_for('static', filename=producto.imagen) }}"
+          alt="{{ producto.nombre }}"
         />
       </div>
 
       <!-- Miniaturas -->
       <div class="galeria-miniaturas">
+        {% if imagenes %}
         <img
           class="miniatura seleccionada"
-          src="{{ url_for('static', filename='ejemplo.jpg') }}"
-          alt="Miniatura 1"
+          src="{{ url_for('static', filename=producto.imagen) }}"
+          alt="Imagen principal"
         />
+        {% for img in imagenes %}
         <img
           class="miniatura"
-          src="{{ url_for('static', filename='ejemplo.jpg') }}"
-          alt="Miniatura 2"
+          src="{{ url_for('static', filename=img.imagen) }}"
+          alt="Miniatura {{ loop.index }}"
         />
-        <img
-          class="miniatura"
-          src="{{ url_for('static', filename='ejemplo.jpg') }}"
-          alt="Miniatura 3"
-        />
-        <img
-          class="miniatura"
-          src="{{ url_for('static', filename='ejemplo.jpg') }}"
-          alt="Miniatura 4"
-        />
+        {% endfor %} {% else %}
+        <p>No hay imágenes adicionales para este producto.</p>
+        {% endif %}
       </div>
     </div>
 
     <div class="precio-boton">
-      <h2 class="producto-precio">$1234</h2>
-      <button class="boton agregar-carrito" type="button">
-        Agregar al carrito
-      </button>
+      <h2 class="producto-precio">${{ producto.precio }}</h2>
+      <form
+        method="POST"
+        action="{{ url_for('agregar_al_carrito', producto_id=producto.id) }}"
+      >
+        <button class="boton agregar-carrito" type="submit">
+          Agregar al carrito
+        </button>
+      </form>
     </div>
 
-    <p class="producto-descripcion">
-      Esta pieza artesanal ha sido elaborada con dedicación y detalle,
-      combinando creatividad, oficio y materiales nobles. Su diseño único
-      refleja el trabajo manual y la calidez de lo hecho a mano, aportando un
-      carácter especial a cualquier espacio. Gracias a su tamaño versátil, puede
-      integrarse fácilmente en distintos rincones del hogar o ser un regalo
-      significativo. Cada unidad presenta ligeras variaciones que la hacen
-      irrepetible, y su terminación cuidada garantiza una experiencia visual y
-      táctil auténtica. Ideal para quienes valoran lo artesanal, lo original y
-      lo duradero. Se recomienda manipularla con cuidado para conservar su
-      belleza natural a lo largo del tiempo.
-    </p>
+    <p class="producto-descripcion">{{ producto.descripcion }}</p>
   </section>
 </main>
 
@@ -74,11 +63,9 @@
   miniaturas.forEach((miniatura) => {
     miniatura.addEventListener("click", () => {
       imgPrincipal.src = miniatura.src;
-
       miniaturas.forEach((m) => m.classList.remove("seleccionada"));
       miniatura.classList.add("seleccionada");
     });
   });
 </script>
-
 {% endblock %}

@@ -50,13 +50,13 @@
         {% if banners %} {% for banner in banners %}
         <div class="imagen-item">
           <img
-            src="{{ url_for('static', filename=banner.imagen.split('static/')[1]) }}"
+            src="{{ url_for('static', filename=banner.imagen) }}"
             alt="Banner {{ loop.index }}"
           />
           <form
             action="{{ url_for('eliminar_banner', banner_id=banner.id) }}"
             method="post"
-            style="display: inline;"
+            style="display: inline"
           >
             <button
               class="btn boton"

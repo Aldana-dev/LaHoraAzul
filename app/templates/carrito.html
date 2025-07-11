@@ -1,36 +1,45 @@
-{% extends "base.html" %} {% block title %}Carrito - La Hora Azul{% endblock %}
+{% extends "base.html" %}
+{% block title %}Carrito - La Hora Azul{% endblock %}
+
 {% block extra_css %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/carrito.css') }}"
-/>
-{% endblock %} {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/carrito.css') }}">
+{% endblock %}
+
+{% block content %}
 <section class="lista-carrito">
-  <div class="item-carrito">
-    <img src="{{ url_for('static', filename='img/_MG_6466.jpg') }}" alt="Producto" />
+  {% if carrito %}
+    {% for item in carrito %}
+      <div class="item-carrito">
+        <img src="{{ url_for('static', filename=item.imagen) }}" alt="{{ item.nombre }}" />
 
-    <div class="detalle-producto">
-      <h3 class="nombre-producto">Nombre del Producto</h3>
-      <div class="precio-quitar">
-        <p class="precio">Precio: $1000</p>
+        <div class="detalle-producto">
+          <h3 class="nombre-producto">{{ item.nombre }}</h3>
+          <div class="precio-quitar">
+            <p class="precio">Precio: ${{ item.precio }}</p>
+          </div>
+          <form method="POST" action="{{ url_for('quitar_del_carrito', producto_id=item.id) }}">
+            <button class="btn boton-quitar" type="submit">X</button>
+          </form>
+        </div>
       </div>
-      <button class="btn boton-quitar" type="button">X</button>
-    </div>
-  </div>
+    {% endfor %}
 
-  <div class="resumen-carrito">
-    <div class="envio">
-      <span>Costo de envío:</span>
-      <span>$150</span>
+    <div class="resumen-carrito">
+      <div class="envio">
+        <span>Costo de envío:</span>
+        <span>${{ costo_envio }}</span>
+      </div>
+      <div class="total">
+        <span>Total:</span>
+        <span>${{ total }}</span>
+      </div>
     </div>
-    <div class="total">
-      <span>Total:</span>
-      <span>$1150</span>
-    </div>
-  </div>
 
-  <div class="finalizar-compra-container">
-    <button class="btn boton">Finalizar Compra</button>
-  </div>
+    <div class="finalizar-compra-container">
+      <button class="btn boton">Finalizar Compra</button>
+    </div>
+  {% else %}
+    <p class="mensaje-vacio">Tu carrito está vacío.</p>
+  {% endif %}
 </section>
 {% endblock %}
