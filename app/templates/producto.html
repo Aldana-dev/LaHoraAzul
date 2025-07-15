@@ -34,8 +34,7 @@
           src="{{ url_for('static', filename=img.imagen) }}"
           alt="Miniatura {{ loop.index }}"
         />
-        {% endfor %} {% else %}
-        <p>No hay imágenes adicionales para este producto.</p>
+        {% endfor %}
         {% endif %}
       </div>
     </div>

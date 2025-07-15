@@ -91,7 +91,7 @@
 
               <div class="botones-producto">
                 <button
-                  class="btn boton edit-btn"
+                  class="boton small-btn"
                   data-id="{{ producto.id }}"
                   data-nombre="{{ producto.nombre }}"
                   data-precio="{{ producto.precio }}"
@@ -100,12 +100,12 @@
                   data-imagen="{{ producto.imagen }}"
                   data-imagenes='{{ producto.imagenes|map(attribute="imagen")|list|tojson }}'
                 >
-                  Editar
+                  Editar 
                 </button>
 
                 <form action="{{ url_for('eliminar_producto', producto_id=producto.id) }}" method="post" style="display:inline;">
                   <button
-                    class="btn boton"
+                    class="boton small-btn"
                     type="submit"
                     onclick="return confirm('¿Eliminar este producto?');"
                   >

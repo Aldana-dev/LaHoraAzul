@@ -1,15 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-from app.models import db, Banner, Galeria, Producto, Categoria, ProductoImagen
+from app.models import db, Banner, Galeria, Producto, Categoria, ProductoImagen, Usuario, Pedido, PedidoItem
 import os
 import logging
 from flask import session
 from werkzeug.utils import secure_filename
 from functools import wraps
+from decimal import Decimal
+from sqlalchemy import func
+from datetime import datetime, timedelta
 
 
 logging.basicConfig(level=logging.DEBUG)
 
-app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
+app = Flask(__name__, template_folder='app/templates',
+            static_folder='app/static')
 
 # Configuración base de datos (cambiar por tus datos reales)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://aldana_dev:devadmin@localhost/lahoraazul_db'
@@ -26,9 +30,11 @@ app.secret_key = 'tu_clave_secreta_aqui'
 # Inicializar la base de datos con la app
 db.init_app(app)
 
+
 def allowed_file(filename):
     """Valida que el archivo tenga una extensión permitida."""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def guardar_archivo(file):
     if file and allowed_file(file.filename):
@@ -41,6 +47,7 @@ def guardar_archivo(file):
     logging.debug('Archivo no válido o no enviado')
     return None
 
+
 def admin_required(f):
     @wraps(f)
     def decorada(*args, **kwargs):
@@ -50,21 +57,27 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorada
 
+
 def obtener_carrito():
     if 'carrito' not in session:
         session['carrito'] = []
     return session['carrito']
+
+
 # ----------------- Rutas ----------------- #
 
 @app.route('/')
 def index():
     banners = Banner.query.order_by(Banner.fecha_creacion).all()
-    imagenes_galeria = Galeria.query.order_by(Galeria.fecha_creacion.desc()).all()
+    imagenes_galeria = Galeria.query.order_by(
+        Galeria.fecha_creacion.desc()).all()
     return render_template('index.html', banners=banners, imagenes_galeria=imagenes_galeria)
+
 
 @app.route('/nosotras')
 def nosotras():
     return render_template('nosotras.html')
+
 
 @app.route('/init_categorias')
 def init_categorias():
@@ -79,13 +92,15 @@ def init_categorias():
 
     return "Categorías inicializadas correctamente."
 
+
 @app.route('/tienda')
 def tienda():
     categoria_id = request.args.get('categoria_id', type=int)
     categorias = Categoria.query.order_by(Categoria.id).all()
 
     if categoria_id:
-        productos = Producto.query.filter_by(categoria_id=categoria_id).order_by(Producto.id.desc()).all()
+        productos = Producto.query.filter_by(
+            categoria_id=categoria_id).order_by(Producto.id.desc()).all()
     else:
         productos = Producto.query.order_by(Producto.id.desc()).all()
 
@@ -103,20 +118,25 @@ def tienda():
 
     return render_template('tienda.html', categorias=categorias, productos=productos_data, categoria_id=categoria_id)
 
+
 @app.route('/producto/<int:producto_id>')
 def producto(producto_id):
     producto = Producto.query.get_or_404(producto_id)
-    imagenes = ProductoImagen.query.filter_by(producto_id=producto_id).order_by(ProductoImagen.orden).all()
+    imagenes = ProductoImagen.query.filter_by(
+        producto_id=producto_id).order_by(ProductoImagen.orden).all()
     return render_template('producto.html', producto=producto, imagenes=imagenes)
+
 
 @app.route('/marcos')
 def marcos():
     return render_template('marcos.html')
 
+
 @app.route('/galeria')
 def galeria():
     imagenes = Galeria.query.order_by(Galeria.fecha_creacion.desc()).all()
     return render_template('galeria.html', imagenes=imagenes)
+
 
 @app.route('/carrito')
 def carrito():
@@ -139,6 +159,7 @@ def carrito():
 
     return render_template('carrito.html', carrito=carrito_data, costo_envio=costo_envio, total=total_final)
 
+
 @app.route('/carrito/agregar/<int:producto_id>', methods=['POST'])
 def agregar_al_carrito(producto_id):
     carrito = obtener_carrito()
@@ -148,6 +169,7 @@ def agregar_al_carrito(producto_id):
         flash('Producto agregado al carrito')
     return redirect(url_for('producto', producto_id=producto_id))
 
+
 @app.route('/carrito/quitar/<int:producto_id>', methods=['POST'])
 def quitar_del_carrito(producto_id):
     carrito = session.get('carrito', [])
@@ -156,18 +178,79 @@ def quitar_del_carrito(producto_id):
         session['carrito'] = carrito
         flash('Producto eliminado del carrito')
     return redirect(url_for('carrito'))
+
+@app.route('/carrito/confirmar', methods=['POST'])
+def confirmar_pedido():
+    carrito_ids = session.get('carrito', [])
+    if not carrito_ids:
+        flash('Tu carrito está vacío')
+        return redirect(url_for('carrito'))
+
+    email_contacto = request.form.get('email_contacto')
+    if not email_contacto:
+        flash('Debés ingresar un email')
+        return redirect(url_for('carrito'))
+
+    productos = Producto.query.filter(Producto.id.in_(carrito_ids)).all()
+
+    total = sum([p.precio for p in productos])
+    nuevo_pedido = Pedido(email_contacto=email_contacto, total=total)
+
+    db.session.add(nuevo_pedido)
+    db.session.flush()  # para obtener nuevo_pedido.id antes del commit
+
+    for p in productos:
+        item = PedidoItem(
+            pedido_id=nuevo_pedido.id,
+            producto_id=p.id,
+            precio_unitario=p.precio
+        )
+        db.session.add(item)
+
+    try:
+        db.session.commit()
+        session.pop('carrito', None)
+        flash('Pedido realizado con éxito')
+    except Exception as e:
+        db.session.rollback()
+        logging.error(f"Error al guardar pedido: {e}")
+        flash('Ocurrió un error al confirmar el pedido')
+
+    return redirect(url_for('index'))
+
+
+@app.route('/init_admin')
+def init_admin():
+    if Usuario.query.filter_by(email='admin@site.com').first():
+        return 'El admin ya existe'
+
+    admin = Usuario(
+        nombre='Admin',
+        email='admin@site.com',
+        es_admin=True
+    )
+    admin.set_password('123')  # Cambialo luego por algo más fuerte
+    db.session.add(admin)
+    db.session.commit()
+    return 'Admin creado correctamente'
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
-        usuario = request.form.get('username')
+        email = request.form.get('username')
         clave = request.form.get('password')
-        if usuario == 'admin' and clave == 'admin123':  # temporal
+
+        usuario = Usuario.query.filter_by(email=email).first()
+        if usuario and usuario.es_admin and usuario.check_password(clave):
             session['admin'] = True
-            flash('Sesión iniciada')
+            flash('Sesión iniciada correctamente')
             return redirect(url_for('admin'))
         else:
             flash('Credenciales incorrectas')
+
     return render_template('login.html')
+
 
 @app.route('/logout')
 def admin_logout():
@@ -175,28 +258,90 @@ def admin_logout():
     flash('Sesión cerrada')
     return redirect(url_for('index'))
 
+
 @app.route('/admin')
 @admin_required
 def admin():
     return render_template('admin.html')
 
+
 @app.route("/admin/banner")
+@admin_required
 def admin_banner():
     banners = Banner.query.all()
     return render_template("admin_banner.html", banners=banners)
 
+
 @app.route("/admin/galeria")
+@admin_required
 def admin_galeria():
     imagenes = Galeria.query.order_by(Galeria.fecha_creacion).all()
     return render_template("admin_galeria.html", imagenes=imagenes)
 
+
 @app.route("/admin/productos")
+@admin_required
 def admin_productos():
     categorias = Categoria.query.all()
     productos = Producto.query.order_by(Producto.id.desc()).all()
     return render_template("admin_productos.html", categorias=categorias, productos=productos)
 
+@app.route("/admin/pedidos")
+@admin_required
+def admin_pedidos():
+    filtro = request.args.get('filtro', 'todos')  # obtiene el filtro, default "todos"
+
+    if filtro == "pendientes":
+        pedidos = Pedido.query.filter(Pedido.estado == "pendiente").order_by(Pedido.fecha.desc()).all()
+    elif filtro == "enviados":
+        pedidos = Pedido.query.filter(Pedido.estado == "enviado").order_by(Pedido.fecha.desc()).all()
+    else:
+        pedidos = Pedido.query.filter(Pedido.estado.in_(["pendiente", "enviado"])).order_by(Pedido.fecha.desc()).all()
+
+    return render_template("admin_pedidos.html", pedidos=pedidos, filtro=filtro)
+
+
+@app.route('/admin/pedidos/estado/<int:pedido_id>', methods=['POST'])
+@admin_required
+def cambiar_estado_pedido(pedido_id):
+    pedido = Pedido.query.get_or_404(pedido_id)
+    nuevo_estado = request.form.get('nuevo_estado')
+
+    if nuevo_estado in ['pendiente', 'enviado', 'entregado']:
+        pedido.estado = nuevo_estado
+        try:
+            db.session.commit()
+            flash('Estado del pedido actualizado')
+        except Exception as e:
+            db.session.rollback()
+            flash('Error al actualizar estado')
+            logging.error(f'Error cambiando estado de pedido: {e}')
+    else:
+        flash('Estado no válido')
+
+    return redirect(url_for('admin_pedidos'))
+
+@app.route('/admin/pedidos/<int:pedido_id>/actualizar', methods=['POST'])
+@admin_required
+def actualizar_estado_pedido(pedido_id):
+    pedido = Pedido.query.get_or_404(pedido_id)
+    nuevo_estado = request.form.get('estado')
+
+    if nuevo_estado in ['pendiente', 'enviado', 'entregado']:
+        pedido.estado = nuevo_estado
+        try:
+            db.session.commit()
+            flash('Estado del pedido actualizado')
+        except Exception as e:
+            db.session.rollback()
+            flash('Error al actualizar el estado')
+    else:
+        flash('Estado inválido')
+
+    return redirect(url_for('admin_pedidos'))
+
 @app.route('/admin/productos/agregar', methods=['POST'])
+@admin_required
 def agregar_producto():
     nombre = request.form.get('nombre')
     descripcion = request.form.get('descripcion')
@@ -216,7 +361,8 @@ def agregar_producto():
 
     filename = secure_filename(imagen_file.filename)
 
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Ruta absoluta donde está app.py
+    # Ruta absoluta donde está app.py
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     uploads_path = os.path.join(BASE_DIR, 'app', 'static', 'uploads')
     os.makedirs(uploads_path, exist_ok=True)
     ruta_guardado = os.path.join(uploads_path, filename)
@@ -244,7 +390,58 @@ def agregar_producto():
 
     return redirect(url_for('admin_productos'))
 
+@app.route('/admin/pedidos/actualizar', methods=['POST'])
+@admin_required
+def actualizar_estado_masivo():
+    ids = request.form.getlist('enviar_ids')
+    filtro = request.args.get('filtro', 'todos')
+
+    if ids:
+        pedidos = Pedido.query.filter(Pedido.id.in_(ids)).all()
+        for pedido in pedidos:
+            if filtro == 'pendientes':
+                # Se marcó pedido pendiente => pasar a enviado
+                if pedido.estado == 'pendiente':
+                    pedido.estado = 'enviado'
+            elif filtro == 'enviados':
+                # Se desmarcó pedido enviado => volver a pendiente
+                if pedido.estado == 'enviado':
+                    pedido.estado = 'pendiente'
+        db.session.commit()
+
+    return redirect(url_for('admin_pedidos', filtro=filtro))
+
+
+@app.route('/admin/borrar_pedidos_antiguos', methods=['POST'])
+def borrar_pedidos_antiguos():
+    try:
+        ids_json = request.form.get('borrar_ids')
+        if not ids_json:
+            flash("No se seleccionaron pedidos.", "error")
+            return redirect(url_for('admin_pedidos', filtro='enviados'))
+
+        import json
+        ids = json.loads(ids_json)
+        limite_fecha = datetime.now() - timedelta(days=30)
+
+        pedidos = Pedido.query.filter(Pedido.id.in_(ids),
+                                      Pedido.estado == 'enviado',
+                                      Pedido.fecha < limite_fecha).all()
+
+        for pedido in pedidos:
+            db.session.delete(pedido)
+
+        db.session.commit()
+        flash(f"Se eliminaron {len(pedidos)} pedidos antiguos.", "success")
+    except Exception as e:
+        print("Error borrando pedidos:", e)
+        flash("Hubo un error al borrar los pedidos.", "error")
+
+    return redirect(url_for('admin_pedidos', filtro='enviados'))
+
+
 @app.route('/admin/productos/editar/<int:producto_id>', methods=['POST'])
+@admin_required
 def editar_producto(producto_id):
     producto = Producto.query.get_or_404(producto_id)
 
@@ -252,8 +449,10 @@ def editar_producto(producto_id):
     descripcion = request.form.get('descripcion')
     precio = request.form.get('precio')
     categoria_id = request.form.get('categoria_id')
-    imagen_file = request.files.get('imagen')  # Imagen principal nueva (opcional)
-    imagenes_adicionales_files = request.files.getlist('imagenes_adicionales')  # Nuevas imágenes adicionales
+    # Imagen principal nueva (opcional)
+    imagen_file = request.files.get('imagen')
+    imagenes_adicionales_files = request.files.getlist(
+        'imagenes_adicionales')  # Nuevas imágenes adicionales
 
     if not (nombre and precio and categoria_id):
         flash('Faltan campos obligatorios')
@@ -275,7 +474,8 @@ def editar_producto(producto_id):
         # Actualizar imagen principal si hay nueva
         if imagen_file and imagen_file.filename != '':
             filename = secure_filename(imagen_file.filename)
-            ruta_guardado = os.path.join(app.root_path, 'static', 'uploads', filename)
+            ruta_guardado = os.path.join(
+                app.root_path, 'static', 'uploads', filename)
             os.makedirs(os.path.dirname(ruta_guardado), exist_ok=True)
             imagen_file.save(ruta_guardado)
             producto.imagen = filename
@@ -284,7 +484,8 @@ def editar_producto(producto_id):
         for img_file in imagenes_adicionales_files:
             if img_file and img_file.filename != '':
                 filename = secure_filename(img_file.filename)
-                ruta_guardado = os.path.join(app.root_path, 'static', 'uploads', filename)
+                ruta_guardado = os.path.join(
+                    app.root_path, 'static', 'uploads', filename)
                 os.makedirs(os.path.dirname(ruta_guardado), exist_ok=True)
                 img_file.save(ruta_guardado)
                 nueva_imagen = ProductoImagen(
@@ -303,7 +504,9 @@ def editar_producto(producto_id):
 
     return redirect(url_for('admin_productos'))
 
+
 @app.route('/admin/productos/<int:producto_id>/imagenes/subir', methods=['POST'])
+@admin_required
 def subir_imagen_producto(producto_id):
     producto = Producto.query.get_or_404(producto_id)
     files = request.files.getlist('imagenes')
@@ -315,9 +518,11 @@ def subir_imagen_producto(producto_id):
     for file in files:
         filepath = guardar_archivo(file)
         if filepath:
-            max_orden = db.session.query(db.func.max(ProductoImagen.orden)).filter_by(producto_id=producto_id).scalar()
+            max_orden = db.session.query(db.func.max(ProductoImagen.orden)).filter_by(
+                producto_id=producto_id).scalar()
             orden = (max_orden or 0) + 1
-            nueva_img = ProductoImagen(producto_id=producto_id, imagen=filepath, orden=orden)
+            nueva_img = ProductoImagen(
+                producto_id=producto_id, imagen=filepath, orden=orden)
             db.session.add(nueva_img)
         else:
             flash(f'Archivo no permitido: {file.filename}')
@@ -333,7 +538,9 @@ def subir_imagen_producto(producto_id):
 
     return redirect(url_for('admin_productos'))
 
+
 @app.route('/admin/productos/imagenes/editar/<int:imagen_id>', methods=['POST'])
+@admin_required
 def editar_imagen_producto(imagen_id):
     imagen = ProductoImagen.query.get_or_404(imagen_id)
     file = request.files.get('imagen_nueva')
@@ -364,7 +571,9 @@ def editar_imagen_producto(imagen_id):
 
     return redirect(url_for('admin_productos'))
 
+
 @app.route('/admin/productos/eliminar/<int:producto_id>', methods=['POST'])
+@admin_required
 def eliminar_producto(producto_id):
     producto = Producto.query.get_or_404(producto_id)
 
@@ -386,7 +595,9 @@ def eliminar_producto(producto_id):
 
     return redirect(url_for('admin_productos'))
 
+
 @app.route('/admin/productos/imagenes/eliminar/<int:imagen_id>', methods=['POST'])
+@admin_required
 def eliminar_imagen_producto(imagen_id):
     imagen = ProductoImagen.query.get_or_404(imagen_id)
     try:
@@ -404,7 +615,9 @@ def eliminar_imagen_producto(imagen_id):
 
     return redirect(url_for('admin_productos'))
 
+
 @app.route('/admin/banner/subir', methods=['POST'])
+@admin_required
 def subir_banner():
     file = request.files.get('imagen')
     if not file or file.filename == '':
@@ -426,7 +639,9 @@ def subir_banner():
         flash('Error al guardar en la base de datos')
     return redirect(url_for('admin_banner'))
 
+
 @app.route('/admin/banner/eliminar/<int:banner_id>', methods=['POST'])
+@admin_required
 def eliminar_banner(banner_id):
     banner = Banner.query.get_or_404(banner_id)
     try:
@@ -442,7 +657,9 @@ def eliminar_banner(banner_id):
         flash('Error al eliminar el banner')
     return redirect(url_for('admin_banner'))
 
+
 @app.route('/admin/galeria/subir', methods=['POST'])
+@admin_required
 def subir_galeria():
     file = request.files.get('imagen')
     if not file or file.filename == '':
@@ -464,7 +681,9 @@ def subir_galeria():
         flash('Error al guardar en la base de datos')
     return redirect(url_for('admin_galeria'))
 
+
 @app.route('/admin/galeria/eliminar/<int:imagen_id>', methods=['POST'])
+@admin_required
 def eliminar_galeria(imagen_id):
     imagen = Galeria.query.get_or_404(imagen_id)
     try:
@@ -479,6 +698,7 @@ def eliminar_galeria(imagen_id):
         db.session.rollback()
         flash('Error al eliminar la imagen')
     return redirect(url_for('admin_galeria'))
+
 
 if __name__ == '__main__':
     with app.app_context():
