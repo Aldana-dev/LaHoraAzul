@@ -24,7 +24,7 @@ class Producto(db.Model):
     precio = db.Column(db.Numeric(10, 2), nullable=False)
     imagen = db.Column(db.String(255), nullable=False)  # Imagen principal / thumbnail
     vendido = db.Column(db.Boolean, default=False)
-
+    
     categoria_id = db.Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 
     # Relación uno a muchos con las imágenes adicionales
@@ -54,6 +54,8 @@ class Pedido(db.Model):
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
     estado = db.Column(db.String(50), default='pendiente')  # pendiente, enviado, entregado...
     total = db.Column(db.Numeric(10, 2), nullable=False)
+
+    es_viejo = db.Column(db.Boolean, default=False)
 
     items = db.relationship('PedidoItem', backref='pedido', lazy=True)
 
