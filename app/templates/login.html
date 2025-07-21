@@ -23,7 +23,8 @@
     <div class="login-container">
       <h2>Iniciar sesión</h2>
 
-      <form action="{{ url_for('admin_login') }}" method="post">
+      <form action="{{ url_for('admin.admin_login') }}" method="post">
+
         <label for="username">Email</label>
         <input
           type="email"
@@ -46,7 +47,7 @@
       </form>
 
       <div class="volver-container">
-        <a href="{{ url_for('index') }}" class="btn boton-volver"
+        <a href="{{ url_for('main.index') }}" class="btn boton-volver"
           >Volver al Inicio</a
         >
       </div>

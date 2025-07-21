@@ -1,14 +1,13 @@
-/* ───────────── Estructura general ───────────── */
 .admin-panel {
   max-width: 1100px;
   margin: 0 auto;
   padding: 3rem 2rem;
-  box-sizing: border-box; /* Incluye el padding y border en el ancho total */
+  box-sizing: border-box;
 }
 
 .titulo-admin {
   text-align: center;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 2rem;
   color: #073763;
   margin-bottom: 1rem;
@@ -21,12 +20,6 @@
   margin: 0 auto 3rem auto;
 }
 
-.text-center {
-  text-align: center;
-  margin-top: 4rem;
-}
-
-/* ───────────── Tarjetas admin ───────────── */
 .tarjetas-admin {
   display: flex;
   flex-wrap: wrap;
@@ -47,7 +40,7 @@
 }
 
 .tarjeta h3 {
-  font-family: 'Libre Franklin', sans-serif;
+  font-family: "Libre Franklin", sans-serif;
   font-size: 1.3rem;
   color: #073763;
   margin-bottom: 2rem;
@@ -62,445 +55,20 @@
 .tarjeta .btn {
   align-self: center;
   text-align: center;
-  padding: 0.7rem 1.5rem;
+  padding: 0.7rem 2rem;
   font-size: 1rem;
   display: inline-block;
 }
 
-/* ───────────── Formularios ───────────── */
-.form-banner,
-.form-galeria,
-.form-producto {
-  margin: 0 auto;
-  padding: 2rem;
-  background-color: #f9f9fb;
-  border: 2px solid #073763;
-  border-radius: 6px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-}
-
-.form-upload {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-/* Etiquetas */
-.form-upload label,
-.label-upload {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  color: #073763;
-  font-size: 1rem;
-  margin-bottom: 0.3rem;
-  display: block;
-}
-
-/* Campos de entrada y selección */
-.form-upload input[type="text"],
-.form-upload input[type="number"],
-.form-upload input[type="file"],
-.form-upload textarea,
-.form-upload select {
-  font-family: 'Libre Franklin', sans-serif;
-  font-size: 1rem;
-  padding: 0.7rem 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 100%;
-  box-sizing: border-box;
-  color: #153f6c;
-  background-color: #fff;
-  transition: border 0.3s ease;
-}
-
-/* Efecto focus */
-.form-upload input:focus,
-.form-upload textarea:focus,
-.form-upload select:focus {
-  border-color: #073763;
-  outline: none;
-}
-
-/* Espacio inferior en los campos */
-.form-upload input,
-.form-upload textarea,
-.form-upload select {
-  margin-bottom: 0.5rem;
-}
-
-
-/* ───────────── Descripción y títulos ───────────── */
-.descripcion {
-  max-width: 700px;
-  margin: 0 auto 3rem auto;
-  font-size: 1rem;
+.btn_large {
+  align-self: center;
   text-align: center;
-}
-
-.subtitulo {
-  font-family: 'Libre Franklin', sans-serif;
-  color: #073763;
-  font-size: 1.4rem;
-  border-bottom: 2px solid #073763;
-  padding-bottom: 0.3rem;
-  margin: 3rem auto 1.5rem auto;
-}
-
-/* ───────────── Tarjetas galería/productos ───────────── */
-.galeria-item,
-.producto-item {
-  background-color: #f9f9fb;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-}
-
-.galeria-item img,
-.producto-item img {
-  width: 100%;
-  aspect-ratio: 1 / 1; /* Mantiene proporción cuadrada */
-  object-fit: cover;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-}
-
-/* ───────────── Botones productos ───────────── */
-.botones-producto {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
-
-/* ───────────── Previsualización banner ───────────── */
-.banner-preview .imagen-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 6px;
-  padding: 1rem;
-  margin: 0 auto 1.5rem auto;
-  gap: 0.8rem;
-}
-
-.banner-preview .imagen-item img {
-  width: 100%;
-  border-radius: 4px;
-  object-fit: cover;
-}
-
-/* ───────────── Previsualización galería ───────────── */
-.galeria-preview-grid {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.galeria-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 columnas fijas en escritorio */
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-/* Botón de eliminar en la galería de previsualización */
-.galeria-preview-grid .galeria-item .btn {
-  width: auto;
-  padding: 0.5rem 4rem;
-  font-size: 0.9rem;
-  white-space: nowrap; /* Evita que se parta en varias líneas */
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-
-/* Responsive: 2 columnas en móviles */
-@media (max-width: 768px) {
-  .galeria-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* ───────────── Previsualización productos ───────────── */
-.imagen-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.imagen-item img {
-  width: 100px;
-  height: auto;
-  border: 1px solid #ccc;
-  object-fit: cover;
-}
-
-/* ───────────── Responsive ───────────── */
-@media (max-width: 768px) {
-  .tarjetas-admin {
-    flex-direction: column;
-  }
-
-  .tarjeta {
-    flex: 1 1 100%;
-  }
-
-  .galeria-grid {
-    gap: 1rem;
-  }
-
-  .galeria-item {
-    padding: 0.5rem;
-  }
-
-  .galeria-item img {
-    margin-bottom: 0.5rem;
-  }
-
-  .galeria-preview-grid .galeria-item .btn {
-    padding: 0.4rem 1rem;
-    font-size: 0.85rem;
-  }
-}
-
-/* ───────────── Pedidos ───────────── */
-
-.filtro-btn.activo {
-  background-color: #073763;
-  color: #fff;
-  border: 2px solid #073763;
-}
-
-
-.estado-tabla {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.estado-tabla h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: #153f6c;
-}
-
-.tabla-admin input[type="checkbox"] {
-  transform: scale(1.2);
-}
-
-/* ───────────── Tabla de pedidos ───────────── */
-.tabla-responsive {
-  overflow-x: auto;
-  margin-bottom: 2rem;
-}
-
-.tabla-admin {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: 'Libre Franklin', sans-serif;
-  font-size: 0.95rem;
-  background-color: #fff;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-}
-
-.tabla-admin thead {
-  background-color: #073763;
-  color: #ffffff;
-}
-
-.tabla-admin th,
-.tabla-admin td {
-  padding: 0.8rem 1rem;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-.tabla-admin th:first-child,
-.tabla-admin td:first-child {
-  text-align: center;
-}
-
-.tabla-admin tbody tr:hover {
-  background-color: #f0f4fa;
-}
-
-
-/* ───────────── Fila expandida (productos del pedido) ───────────── */
-.fila-modal {
-  background-color: #f9f9fb;
-}
-
-.fila-expandida {
-  padding: 1rem 1.5rem;
-  border: 2px solid #073763;
-  border-radius: 6px;
-  background-color: #fff;
-}
-
-.fila-expandida h4 {
-  margin-top: 0;
-  font-size: 1.1rem;
-  color: #073763;
-  margin-bottom: 1rem;
-}
-
-.fila-expandida ul {
-  list-style: disc;
-  padding-left: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.fila-expandida li {
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #333;
-}
-
-.fila-expandida .btn {
-  background-color: #073763;
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1.2rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.fila-expandida .btn:hover {
-  background-color: #0b488c;
-}
-.lista-productos-pedido {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 1.5rem;
-}
-
-.lista-productos-pedido li {
-  margin-bottom: 1.5rem;
-}
-
-.producto-modal {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.producto-modal img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.detalle-producto-modal p {
-  margin: 0.2rem 0;
-  font-size: 0.95rem;
-  color: #333;
-}
-
- 
-/* ───────────── Modal ───────────── */
-/* Modal general oculto y fondo oscuro */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0; top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.6);
-  overflow-y: auto;  /* para que la página modal pueda hacer scroll si el contenido es muy largo */
-}
-
-.modal-content {
-  background-color: #f9f9fb;
-  margin: 3rem auto;  /* margen vertical para separar del top y bottom */
-  padding: 2rem;
-  border: 2px solid #073763;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 600px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.25);
-  position: relative;
-  box-sizing: border-box;
-  height: auto;       /* que se ajuste al contenido */
-  overflow: visible;  /* que no tenga scroll interno */
-}
-
-
-/* Botón cerrar */
-.cerrar {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  font-size: 2rem;
-  font-weight: bold;
-  color: #073763;
-  cursor: pointer;
-  user-select: none;
-  transition: color 0.3s ease;
-}
-
-.cerrar:hover {
-  color: #be2a88;
-}
-
-/* Productos dentro del modal */
-.productos-modal-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.producto-modal {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  background-color: #fff;
-}
-
-.producto-modal img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.detalle-producto-modal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.detalle-producto-modal p {
-  margin: 0;
-  line-height: 1.3;
-}
-
-.btn-danger {
-  background-color: #073763;
-  color: white;
-  padding: 0.6rem 1.2rem;
+  padding: 0.7rem 8rem;
   font-size: 1rem;
-  cursor: pointer;
-  margin-left: 1rem;
+  display: inline-block;
 }
 
-.btn-danger:hover {
-  background-color: #a01e71;
+.text-center {
+  text-align: center;
+  margin-top: 4rem;
 }

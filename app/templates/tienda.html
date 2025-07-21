@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+
 {% block title %}Tienda - La Hora Azul{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/tienda.css') }}" />
 {% endblock %}
@@ -7,16 +9,23 @@
 {% block content %}
 <section class="tienda">
   <div class="filtros-categorias">
-    {% set iconos = {
+    {% set iconos = { 
       'Cuadros': 'cuadros.svg',
       'Cerámica': 'ceramica.svg',
       'Cuadernos': 'cuadernos.svg',
       'Totebags': 'totebags.svg'
     } %}
-
     {% for cat in categorias %}
-    <a href="{{ url_for('tienda', categoria_id=cat.id) }}" class="categoria {% if categoria_id == cat.id %}activa{% endif %}">
-      <img src="{{ url_for('static', filename='icon/' ~ iconos.get(cat.nombre, 'default.svg')) }}" alt="{{ cat.nombre }}" class="icono" />
+    <a
+      href="{{ url_for('main.tienda', categoria_id=cat.id) }}"
+      class="categoria {% if categoria_id == cat.id %}activa{% endif %}"
+      title="Filtrar por categoría {{ cat.nombre }}"
+    >
+      <img
+        src="{{ url_for('static', filename='icon/' ~ iconos.get(cat.nombre, 'default.svg')) }}"
+        alt="{{ cat.nombre }}"
+        class="icono"
+      />
       <span>{{ cat.nombre }}</span>
     </a>
     {% endfor %}
@@ -25,14 +34,21 @@
   <div class="lista-productos">
     {% if productos %}
       {% for prod in productos %}
-      <a href="{{ url_for('producto', producto_id=prod.id) }}" class="producto">
-        <img src="{{ url_for('static', filename=prod.imagen) }}" alt="{{ prod.nombre }}" />
+      <a
+        href="{{ url_for('main.producto', producto_id=prod.id) }}"
+        class="producto"
+        title="{{ prod.nombre }}"
+      >
+        <img
+          src="{{ url_for('static', filename=prod.imagen) }}"
+          alt="{{ prod.nombre }}"
+        />
         <p>{{ prod.nombre }}</p>
-        <p>${{ "%.0f"|format(prod.precio) }}</p>
+        <p>$ {{ "%.2f"|format(prod.precio) }}</p>
       </a>
       {% endfor %}
     {% else %}
-      <p class="mensaje-vacio">No hay productos disponibles en este momento.</p>
+    <p class="mensaje-vacio">No hay productos disponibles en este momento.</p>
     {% endif %}
   </div>
 </section>

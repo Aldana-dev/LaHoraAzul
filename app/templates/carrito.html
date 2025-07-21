@@ -20,7 +20,8 @@
       </div>
       <form
         method="POST"
-        action="{{ url_for('quitar_del_carrito', producto_id=item.id) }}"
+        action="{{ url_for('main.quitar_del_carrito', producto_id=item.id) }}"
+
       >
         <button class="btn boton-quitar" type="submit">X</button>
       </form>
@@ -50,7 +51,8 @@
       <h2 class="modal-title">Confirmación de Pedido</h2>
       <hr class="modal-divider" />
       <form
-        action="{{ url_for('confirmar_pedido') }}"
+        action="{{ url_for('main.confirmar_pedido') }}"
+
         method="post"
         class="modal-form"
       >

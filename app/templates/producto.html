@@ -1,13 +1,14 @@
-{% extends "base.html" %} {% block extra_css %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/producto.css') }}"
-/>
-{% endblock %} {% block content %}
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/producto.css') }}" />
+{% endblock %}
+
+{% block content %}
 <main class="pagina">
   <section class="producto-detalle">
     <div class="producto-header">
-      <h2 class="producto-nombre">{{ producto.nombre }}</h2>
+      <h2 class="producto-nombre">{{ producto.nombre }}</h2> <!-- Símbolo sugerido -->
     </div>
 
     <div class="producto-galeria">
@@ -21,8 +22,9 @@
       </div>
 
       <!-- Miniaturas -->
+      {% if imagenes %}
       <div class="galeria-miniaturas">
-        {% if imagenes %}
+        <!-- Imagen principal como primera miniatura -->
         <img
           class="miniatura seleccionada"
           src="{{ url_for('static', filename=producto.imagen) }}"
@@ -35,15 +37,15 @@
           alt="Miniatura {{ loop.index }}"
         />
         {% endfor %}
-        {% endif %}
       </div>
+      {% endif %}
     </div>
 
     <div class="precio-boton">
-      <h2 class="producto-precio">${{ producto.precio }}</h2>
+      <h2 class="producto-precio">$ {{ "{:.2f}".format(producto.precio) }}</h2>
       <form
         method="POST"
-        action="{{ url_for('agregar_al_carrito', producto_id=producto.id) }}"
+        action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}"
       >
         <button class="boton agregar-carrito" type="submit">
           Agregar al carrito
@@ -51,7 +53,10 @@
       </form>
     </div>
 
-    <p class="producto-descripcion">{{ producto.descripcion }}</p>
+    <!-- Descripción con formato enriquecido -->
+    <div class="producto-descripcion">
+      {{ producto.descripcion | safe }}
+    </div>
   </section>
 </main>
 
