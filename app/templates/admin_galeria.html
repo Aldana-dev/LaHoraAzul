@@ -50,7 +50,7 @@
           {% if imagenes %} {% for img in imagenes %}
           <div class="galeria-item">
             <img
-              src="{{ url_for('static', filename=img.imagen.split('static/')[1]) }}"
+              src="{{ url_for('static', filename=img.imagen) }}"
               alt="Imagen galería {{ loop.index }}"
             />
             <form
@@ -67,6 +67,7 @@
               </button>
             </form>
           </div>
+
           {% endfor %} {% else %}
           <p>No hay imágenes cargadas.</p>
           {% endif %}

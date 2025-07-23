@@ -7,17 +7,14 @@
 {% endblock %} {% block content %}
 <section class="galeria-pinterest">
   <div class="grid-galeria">
-    {% if imagenes %} {% for img in imagenes %}
-    <img
-      src="{{ url_for('static', filename=img.imagen.split('static/')[1]) }}"
-      alt="Imagen galería {{ loop.index }}"
-      loading="lazy"
-    />
-    {% endfor %} {% else %}
-    <div class="mensaje-vacio">
-      <p>No hay imágenes cargadas en la galería.</p>
-    </div>
-    {% endif %}
+{% if imagenes %}
+  {% for img in imagenes %}
+    <img src="{{ url_for('static', filename=img.imagen) }}" alt="Imagen galería {{ loop.index }}" />
+  {% endfor %}
+{% else %}
+  <p>No hay imágenes cargadas en la galería.</p>
+{% endif %}
+
   </div>
 </section>
 

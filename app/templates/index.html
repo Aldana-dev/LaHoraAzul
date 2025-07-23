@@ -1,97 +1,146 @@
-{% extends "base.html" %}
-
-{% block title %}Inicio - La Hora Azul{% endblock %}
-
+{% extends "base.html" %} {% block title %}Inicio - La Hora Azul{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-{% endblock %}
-
-{% block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/index.css') }}"
+/>
+{% endblock %} {% block content %}
 
 <!-- Carrusel -->
 {% if banners %}
-<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+<div
+  id="carouselExampleIndicators"
+  class="carousel slide"
+  data-bs-ride="carousel"
+>
   <div class="carousel-inner">
     {% for banner in banners %}
-      <div class="carousel-item {% if loop.first %}active{% endif %}">
-        <img src="{{ url_for('static', filename=banner.imagen.split('static/')[1]) }}" class="d-block w-100" alt="Banner {{ loop.index }}" />
-      </div>
+    <div class="carousel-item {% if loop.first %}active{% endif %}">
+      <img
+        src="{{ url_for('static', filename=banner.imagen) }}"
+        class="d-block w-100"
+        alt="Banner {{ loop.index }}"
+      />
+    </div>
     {% endfor %}
   </div>
 
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+  <button
+    class="carousel-control-prev"
+    type="button"
+    data-bs-target="#carouselExampleIndicators"
+    data-bs-slide="prev"
+  >
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Anterior</span>
   </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+  <button
+    class="carousel-control-next"
+    type="button"
+    data-bs-target="#carouselExampleIndicators"
+    data-bs-slide="next"
+  >
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Siguiente</span>
   </button>
 </div>
 {% endif %}
 
-
-
 <!-- Bienvenida -->
 <div class="contenido">
   <h2>Bienvenidxs a La hora azul,</h2>
   <p>un refugio para todo lo que se hace con amor.</p>
   <p>
-    Estamos en Villa la Angostura y en nuestra tienda-taller podés encontrar arte impreso, obras originales, cerámica y objetos únicos de artistas de todo el país. También hacemos enmarcación a medida y abrimos nuestras puertas a encuentros creativos a lo largo del año.
+    Estamos en Villa la Angostura y en nuestra tienda-taller podés encontrar
+    arte impreso, obras originales, cerámica y objetos únicos de artistas de
+    todo el país. También hacemos enmarcación a medida y abrimos nuestras
+    puertas a encuentros creativos a lo largo del año.
   </p>
   <p>
-    Te invitamos a acercarte a nuestro espacio patagónico o recorrer nuestra tienda online, con envíos a todo el país.
+    Te invitamos a acercarte a nuestro espacio patagónico o recorrer nuestra
+    tienda online, con envíos a todo el país.
   </p>
 </div>
 
 <!-- Galería -->
 <div class="galeria-preview container text-center">
-  
- <div class="row justify-content-center my-4">
-  {% for imagen in imagenes_galeria[:8] %}
+  <div class="row justify-content-center my-4">
+    {% for imagen in imagenes_galeria[:8] %}
     <div class="col-6 col-md-3 mb-3">
-      <img src="{{ url_for('static', filename=imagen.imagen.split('static/')[1]) }}" class="img-fluid galeria-img" alt="Imagen galería {{ loop.index }}" />
+      <img
+        src="{{ url_for('static', filename=imagen.imagen) }}"
+        class="img-fluid galeria-img"
+        alt="Imagen galería {{ loop.index }}"
+      />
     </div>
-  {% endfor %}
-</div>
+    {% endfor %}
+  </div>
 
-{% if imagenes_galeria %}
+  {% if imagenes_galeria %}
   <a href="{{ url_for('galeria') }}" class="btn boton">Ver más</a>
-{% endif %}
-
+  {% endif %}
 </div>
 
 <!-- Contacto + Mapa -->
 <div class="dos-columnas">
   <div class="columna">
     <p>
-      <a href="https://www.instagram.com/lahoraazul.arte" target="_blank" rel="noopener" class="contacto-link" aria-label="Instagram de La Hora Azul">
+      <a
+        href="https://www.instagram.com/lahoraazul.arte"
+        target="_blank"
+        rel="noopener"
+        class="contacto-link"
+        aria-label="Instagram de La Hora Azul"
+      >
         <span class="material-symbols-outlined icono">photo_camera</span>
         <span class="texto-contacto">@lahoraazul.arte</span>
       </a>
     </p>
     <p>
-      <a href="mailto:horaazul.obj@gmail.com" class="contacto-link" aria-label="Enviar correo a horaazul.obj@gmail.com">
+      <a
+        href="mailto:horaazul.obj@gmail.com"
+        class="contacto-link"
+        aria-label="Enviar correo a horaazul.obj@gmail.com"
+      >
         <span class="material-symbols-outlined icono">mail</span>
         <span class="texto-contacto">horaazul.obj@gmail.com</span>
       </a>
     </p>
     <p>
-      <a href="tel:+5492944712263" class="contacto-link" aria-label="Llamar al número 549 2944 712263">
+      <a
+        href="tel:+5492944712263"
+        class="contacto-link"
+        aria-label="Llamar al número 549 2944 712263"
+      >
         <span class="material-symbols-outlined icono">call</span>
         <span class="texto-contacto">+54 9 2944 712263</span>
       </a>
     </p>
     <p>
-      <a href="https://maps.app.goo.gl/7QqgRrGrNxKmvXU57" target="_blank" rel="noopener" class="contacto-link" aria-label="Ver ubicación en el mapa">
+      <a
+        href="https://maps.app.goo.gl/7QqgRrGrNxKmvXU57"
+        target="_blank"
+        rel="noopener"
+        class="contacto-link"
+        aria-label="Ver ubicación en el mapa"
+      >
         <span class="material-symbols-outlined icono">location_on</span>
-        <span class="texto-contacto">Av. Arrayanes 282 - Local 8 - Villa la Angostura</span>
+        <span class="texto-contacto"
+          >Av. Arrayanes 282 - Local 8 - Villa la Angostura</span
+        >
       </a>
     </p>
   </div>
 
   <div class="columna">
-    <iframe class="mapa-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3021.95875407797!2d-71.6418157!3d-40.762931900000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9610bf40fd7f503d%3A0x3e12e4209e19682a!2sLa%20hora%20azul!5e0!3m2!1ses-419!2sar!4v1752101680920!5m2!1ses-419!2sar" loading="lazy" allowfullscreen="" referrerpolicy="no-referrer-when-downgrade" title="Ubicación en el mapa de La Hora Azul"></iframe>
+    <iframe
+      class="mapa-iframe"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3021.95875407797!2d-71.6418157!3d-40.762931900000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9610bf40fd7f503d%3A0x3e12e4209e19682a!2sLa%20hora%20azul!5e0!3m2!1ses-419!2sar!4v1752101680920!5m2!1ses-419!2sar"
+      loading="lazy"
+      allowfullscreen=""
+      referrerpolicy="no-referrer-when-downgrade"
+      title="Ubicación en el mapa de La Hora Azul"
+    ></iframe>
   </div>
 </div>
 
