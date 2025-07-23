@@ -12,6 +12,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/admin.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_banner.css') }}"
+    />
   </head>
   <body class="pagina">
     <section class="admin-panel container">
@@ -30,16 +34,22 @@
       <!-- Tarjeta con el formulario para subir imagen -->
       <div class="tarjeta form-banner">
         <form
-          action="{{ url_for('subir_banner') }}"
+          action="{{ url_for('admin.subir_banner') }}"
           method="post"
           enctype="multipart/form-data"
           class="form-upload"
         >
           <label for="banner-img" class="label-upload"
-            >Seleccioná una imagen para subir:</label
+            >Seleccioná uno o más banners:</label
           >
-          <input type="file" id="banner-img" name="imagen" required />
-          <button class="btn boton" type="submit">Subir Imagen</button>
+          <input
+            type="file"
+            id="banner-img"
+            name="imagenes"
+            multiple
+            required
+          />
+          <button class="boton btn_large" type="submit">Subir</button>
         </form>
       </div>
 
@@ -49,23 +59,24 @@
 
         {% if banners %} {% for banner in banners %}
         <div class="imagen-item">
+          <form
+            action="{{ url_for('admin.eliminar_banner', banner_id=banner.id) }}"
+            method="post"
+            onsubmit="return confirm('¿Seguro querés eliminar este banner?');"
+          >
+            <button
+              class="eliminar-imagen"
+              type="submit"
+              title="Eliminar banner"
+            >
+              ×
+            </button>
+          </form>
+
           <img
             src="{{ url_for('static', filename=banner.imagen) }}"
             alt="Banner {{ loop.index }}"
           />
-          <form
-            action="{{ url_for('eliminar_banner', banner_id=banner.id) }}"
-            method="post"
-            style="display: inline"
-          >
-            <button
-              class="btn boton"
-              type="submit"
-              onclick="return confirm('¿Seguro querés eliminar este banner?');"
-            >
-              Eliminar
-            </button>
-          </form>
         </div>
         {% endfor %} {% else %}
         <p>No hay banners cargados.</p>
@@ -74,7 +85,9 @@
 
       <!-- Botón volver -->
       <div class="text-center mt-5">
-        <a href="{{ url_for('admin') }}" class="btn boton">Volver al Panel</a>
+        <a href="{{ url_for('admin.admin') }}" class="btn boton"
+          >Volver al Panel</a
+        >
       </div>
     </section>
   </body>

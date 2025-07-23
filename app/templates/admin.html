@@ -15,34 +15,65 @@
   </head>
 
   <body class="pagina">
-   <section class="admin-panel container">
-  <h2 class="titulo-admin">Panel de Administración</h2>
-  <hr class="separador" />
+    <section class="admin-panel container">
+      <h2 class="titulo-admin">Panel de Administración</h2>
+      <hr class="separador" />
 
-  <div class="tarjetas-admin">
-    <div class="tarjeta">
-      <h3>Imágenes del Banner</h3>
-      <p>Subí, eliminá o cambiá las imágenes que se muestran en el banner principal del sitio.</p>
-      <a href="{{ url_for('admin_banner') }}" class="btn boton">Administrar Banner</a>
-    </div>
+      <div class="tarjetas-admin">
+        <div class="tarjeta">
+          <h3>Imágenes del Banner</h3>
+          <p>
+            Desde esta sección se pueden subir nuevas imágenes, eliminar las
+            existentes o reemplazarlas para mantener actualizado el banner
+            principal del sitio en la página de inicio.
+          </p>
+          <a href="{{ url_for('admin.admin_banner') }}" class="btn boton"
+            >Administrar Banner</a
+          >
+        </div>
 
-    <div class="tarjeta">
-      <h3>Galería</h3>
-      <p>Gestioná las imágenes de la galería.</p>
-      <a href="{{ url_for('admin_galeria') }}" class="btn boton">Administrar Galería</a>
-    </div>
+        <div class="tarjeta">
+          <h3>Galería</h3>
+          <p>
+            Desde esta sección se gestionan las imágenes que conforman la
+            galería del sitio. Permite agregar, eliminar o reorganizar contenido
+            visual complementario.
+          </p>
+          <a href="{{ url_for('admin.admin_galeria') }}" class="btn boton"
+            >Administrar Galería</a
+          >
+        </div>
 
-    <div class="tarjeta">
-      <h3>Productos</h3>
-      <p>Agregá, editá o eliminá productos de la tienda.</p>
-      <a href="{{ url_for('admin_productos') }}" class="btn boton">Administrar Productos</a>
-    </div>
-  </div>
+        <div class="tarjeta">
+          <h3>Productos</h3>
+          <p>
+            Desde esta sección se administra el catálogo de productos de la
+            tienda. Es posible incorporar nuevos productos, editar sus
+            características o eliminar aquellos que ya no estén disponibles.
+          </p>
+          <a href="{{ url_for('admin.admin_productos') }}" class="btn boton"
+            >Administrar Productos</a
+          >
+        </div>
 
-  <div class="text-center mt-5">
-    <a href="{{ url_for('index') }}" class="btn boton">Volver al Inicio</a>
-  </div>
-</section>
+        <div class="tarjeta">
+          <h3>Pedidos</h3>
+          <p>
+            Desde esta sección se visualizan y gestionan los pedidos realizados
+            en la tienda. Se pueden consultar los datos de cada compra,
+            actualizar su estado y realizar el seguimiento correspondiente.
+          </p>
+          <a href="{{ url_for('admin.admin_pedidos') }}" class="btn boton"
+            >Administrar Pedidos</a
+          >
+        </div>
+      </div>
 
+      <div class="text-center mt-5">
+        <a href="{{ url_for('main.index') }}" class="btn boton"
+          >Volver al Inicio</a
+        >
+      </div>
+    </section>
   </body>
 </html>

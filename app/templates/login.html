@@ -4,22 +4,33 @@
     <meta charset="UTF-8" />
     <title>Login - La Hora Azul</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="{{ url_for('static', filename='icon/logo.png') }}" type="image/png" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='icon/logo.png') }}"
+      type="image/png"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/estilos.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/login.css') }}"
+    />
   </head>
 
   <body class="pagina">
     <div class="login-container">
       <h2>Iniciar sesión</h2>
 
-      <form action="{{ url_for('admin_login') }}" method="post">
-        <label for="username">Usuario</label>
+      <form action="{{ url_for('admin.admin_login') }}" method="post">
+
+        <label for="username">Email</label>
         <input
-          type="text"
+          type="email"
           id="username"
           name="username"
-          placeholder="Ingrese usuario"
+          placeholder="ejemplo@correo.com"
           required
         />
 
@@ -36,7 +47,9 @@
       </form>
 
       <div class="volver-container">
-        <a href="{{ url_for('index') }}" class="btn boton-volver">Volver al Inicio</a>
+        <a href="{{ url_for('main.index') }}" class="btn boton-volver"
+          >Volver al Inicio</a
+        >
       </div>
     </div>
   </body>

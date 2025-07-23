@@ -2,7 +2,7 @@
 .filtros-categorias {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 4.5rem;
   margin: 4rem 0;
   flex-wrap: wrap;
 }
@@ -14,31 +14,49 @@
   background: none;
   border: none;
   cursor: pointer;
+  text-decoration: none;
+  position: relative;
 }
 
 .icono {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  object-fit: cover; /* La imagen se recorta sin deformarse */
+  object-fit: cover;
   margin-bottom: 0.5rem;
   transition: 0.3s;
+  position: relative;
+  z-index: 2; /* ícono encima del círculo decorativo */
 }
 
 .categoria span {
   font-size: 1rem;
   font-weight: 500;
   color: #153f6c;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 8px;
 }
 
-.categoria:hover .icono {
-  box-shadow: 0 0 0 3px #153f6c;
+/* Círculo decorativo detrás del ícono en hover o categoría activa */
+.categoria:hover::after,
+.categoria.activa::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 126px;
+    height: 126px;
+    background-color: #153f6c;
+    border-radius: 50%;
+    z-index: 1;
 }
 
 /* ───────────── Lista de productos ───────────── */
 .lista-productos {
   display: grid;
-  grid-template-columns: repeat(4, minmax(160px, 1fr)); /* Columnas flexibles con mínimo de 160px */
+  grid-template-columns: repeat(4, minmax(160px, 1fr)); 
   gap: 2rem;
   padding: 0 1rem;
 }
@@ -57,14 +75,14 @@
 
 .lista-productos a.producto:hover {
   box-shadow: 0 0 10px rgba(21, 63, 108, 0.3);
-  transform: scale(1.03); /* Ligeramente más grande al pasar el mouse */
+  transform: scale(1.03); 
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .producto img {
   width: 100%;
   height: 300px;
-  object-fit: cover; /* Asegura que las imágenes llenen sin deformarse */
+  object-fit: cover;
   border-radius: 5px;
 }
 
@@ -117,6 +135,18 @@
   .producto img {
     height: 180px;
   }
+
+  .categoria:hover::after, .categoria.activa::after {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 70px;
+    background-color: #153f6c;
+    border-radius: 50%;
+    z-index: 1;
 }
 
 /* ───────────── Responsive: max-width 480px ───────────── */

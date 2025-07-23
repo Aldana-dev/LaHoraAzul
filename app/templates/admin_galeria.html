@@ -12,6 +12,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/admin.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_galeria.css') }}"
+    />
   </head>
   <body class="pagina">
     <section class="admin-panel container">
@@ -29,17 +33,24 @@
       <!-- Tarjeta de subida -->
       <div class="tarjeta form-galeria">
         <!-- Formulario de subida -->
+
         <form
-          action="{{ url_for('subir_galeria') }}"
+          action="{{ url_for('admin.subir_galeria') }}"
           method="post"
           enctype="multipart/form-data"
           class="form-upload"
         >
-          <label for="galeria-img" class="label-upload">
-            Seleccioná una imagen para agregar a la galería:
-          </label>
-          <input type="file" id="galeria-img" name="imagen" required />
-          <button class="btn boton" type="submit">Subir Imagen</button>
+          <label for="galeria-img" class="label-upload"
+            >Seleccioná una o más imágenes para subir:</label
+          >
+          <input
+            type="file"
+            id="galeria-img"
+            name="imagenes"
+            multiple
+            required
+          />
+          <button class="btn_large boton" type="submit">Subir</button>
         </form>
       </div>
 
@@ -49,25 +60,25 @@
         <div class="galeria-grid">
           {% if imagenes %} {% for img in imagenes %}
           <div class="galeria-item">
+            <form
+              action="{{ url_for('admin.eliminar_galeria', imagen_id=img.id) }}"
+              method="post"
+              onsubmit="return confirm('¿Eliminar esta imagen?');"
+            >
+              <button
+                class="eliminar-imagen"
+                type="submit"
+                title="Eliminar imagen"
+              >
+                ×
+              </button>
+            </form>
+
             <img
               src="{{ url_for('static', filename=img.imagen) }}"
               alt="Imagen galería {{ loop.index }}"
             />
-            <form
-              action="{{ url_for('eliminar_galeria', imagen_id=img.id) }}"
-              method="post"
-              style="display: inline"
-            >
-              <button
-                class="btn boton"
-                type="submit"
-                onclick="return confirm('¿Eliminar esta imagen?');"
-              >
-                Eliminar
-              </button>
-            </form>
           </div>
-
           {% endfor %} {% else %}
           <p>No hay imágenes cargadas.</p>
           {% endif %}
@@ -76,7 +87,9 @@
 
       <!-- Botón volver -->
       <div class="text-center mt-5">
-        <a href="{{ url_for('admin') }}" class="btn boton">Volver al Panel</a>
+        <a href="{{ url_for('admin.admin') }}" class="btn boton"
+          >Volver al Panel</a
+        >
       </div>
     </section>
   </body>

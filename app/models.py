@@ -1,7 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy 
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+from app import db
 
-db = SQLAlchemy()
 
 # ----------------- CATEGORÍAS DE PRODUCTOS ----------------- #
 class Categoria(db.Model):
@@ -22,7 +22,7 @@ class Producto(db.Model):
     precio = db.Column(db.Numeric(10, 2), nullable=False)
     imagen = db.Column(db.String(255), nullable=False)  # Imagen principal / thumbnail
     vendido = db.Column(db.Boolean, default=False)
-
+    
     categoria_id = db.Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
 
     # Relación uno a muchos con las imágenes adicionales
@@ -53,6 +53,8 @@ class Pedido(db.Model):
     estado = db.Column(db.String(50), default='pendiente')  # pendiente, enviado, entregado...
     total = db.Column(db.Numeric(10, 2), nullable=False)
 
+    es_viejo = db.Column(db.Boolean, default=False)
+
     items = db.relationship('PedidoItem', backref='pedido', lazy=True)
 
 # ----------------- ITEMS DE CADA PEDIDO ----------------- #
@@ -75,6 +77,12 @@ class Usuario(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     contraseña_hash = db.Column(db.String(255), nullable=False)
     es_admin = db.Column(db.Boolean, default=True)
+
+    def set_password(self, password):
+        self.contraseña_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.contraseña_hash, password)
 
 # ----------------- GALERÍA ----------------- #
 class Galeria(db.Model):

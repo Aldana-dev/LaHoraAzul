@@ -12,6 +12,14 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/admin.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_productos.css') }}"
+    />
+    <link
+      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
+      rel="stylesheet"
+    />
   </head>
   <body class="pagina">
     <section class="admin-panel">
@@ -27,29 +35,37 @@
       <div class="tarjeta form-producto">
         <h3>Agregar nuevo producto</h3>
         <form
-          action="{{ url_for('agregar_producto') }}"
+          action="{{ url_for('admin.agregar_producto') }}"
           method="post"
           enctype="multipart/form-data"
           class="form-upload"
         >
-          <input
-            type="text"
-            name="nombre"
-            placeholder="Nombre del producto"
-            required
-          />
-          <input
-            type="number"
-            name="precio"
-            placeholder="Precio"
-            step="0.01"
-            required
-          />
-          <textarea
-            name="descripcion"
-            placeholder="Descripción"
-            rows="3"
-          ></textarea>
+          <div class="campo">
+            <span class="simbolo">#</span>
+            <input
+              type="text"
+              name="nombre"
+              placeholder="Nombre del producto"
+              required
+            />
+          </div>
+          <!-- Precio sin flechas -->
+          <div class="campo">
+            <span class="simbolo">$</span>
+            <input
+              type="number"
+              name="precio"
+              placeholder="Precio en ARS"
+              step="0.01"
+              required
+              style="appearance: none; -moz-appearance: textfield"
+              onwheel="this.blur()"
+            />
+          </div>
+
+          <!-- Editor enriquecido para descripción -->
+          <div id="editor-container" style="height: 150px"></div>
+          <input type="hidden" name="descripcion" id="descripcion-hidden" />
 
           <select name="categoria_id" id="categoria" required>
             <option value="" disabled selected>Seleccioná una categoría</option>
@@ -58,17 +74,31 @@
             {% endfor %}
           </select>
 
-          <!-- Campo para subir imagen -->
-          <label for="imagen">Imagen del producto:</label>
-          <input
-            type="file"
-            name="imagen"
-            id="imagen"
-            accept="image/*"
-            required
-          />
-
-          <button type="submit" class="btn boton">Agregar Producto</button>
+          <!-- Imagen principal -->
+          <div>
+            <label for="imagen_principal">Imagen principal del producto:</label>
+            <input
+              type="file"
+              name="imagen_principal"
+              id="imagen_principal"
+              accept="image/*"
+              required
+            />
+          </div>
+          <!-- Imágenes secundarias -->
+          <div>
+            <label for="imagenes_secundarias">Imágenes secundarias:</label>
+            <input
+              type="file"
+              name="imagenes_secundarias"
+              id="imagenes_secundarias"
+              accept="image/*"
+              multiple
+            />
+          </div>
+          <button type="submit" class="btn_large boton">
+            Agregar Producto
+          </button>
         </form>
       </div>
 
@@ -77,50 +107,60 @@
       <div class="galeria-preview-grid">
         <div class="galeria-grid">
           {% if productos|length == 0 %}
-            <p>No hay productos cargados aún.</p>
-          {% else %}
-            {% for producto in productos %}
-            <div class="galeria-item">
-              {% if producto.imagen %}
-                <img src="{{ url_for('static', filename=producto.imagen) }}" alt="Producto" />
-              {% else %}
-                <img src="{{ url_for('static', filename='img/placeholder.png') }}" alt="Sin imagen" />
-              {% endif %}
+          <p>No hay productos cargados aún.</p>
+          {% else %} {% for producto in productos %}
+          <div class="galeria-item">
+            {% if producto.imagen %}
+            <img
+              src="{{ url_for('static', filename=producto.imagen) }}"
+              alt="Producto"
+            />
+            {% else %}
+            <img
+              src="{{ url_for('static', filename='img/placeholder.png') }}"
+              alt="Sin imagen"
+            />
+            {% endif %}
 
-              <p>{{ producto.nombre }} - ${{ producto.precio }}</p>
+            <p>{{ producto.nombre }} - ${{ producto.precio }}</p>
 
-              <div class="botones-producto">
+            <div class="botones-producto">
+              <button
+                class="boton small-btn edit-btn"
+                data-id="{{ producto.id }}"
+                data-nombre="{{ producto.nombre }}"
+                data-precio="{{ producto.precio }}"
+                data-descripcion="{{ producto.descripcion }}"
+                data-categoria="{{ producto.categoria_id }}"
+                data-imagen="{{ producto.imagen }}"
+                data-imagenes='{{ producto.imagenes|map(attribute="imagen")|list|tojson }}'
+              >
+                Editar
+              </button>
+
+              <form
+                action="{{ url_for('admin.eliminar_producto', producto_id=producto.id) }}"
+                method="post"
+                style="display: inline"
+              >
                 <button
-                  class="btn boton edit-btn"
-                  data-id="{{ producto.id }}"
-                  data-nombre="{{ producto.nombre }}"
-                  data-precio="{{ producto.precio }}"
-                  data-descripcion="{{ producto.descripcion }}"
-                  data-categoria="{{ producto.categoria_id }}"
-                  data-imagen="{{ producto.imagen }}"
-                  data-imagenes='{{ producto.imagenes|map(attribute="imagen")|list|tojson }}'
+                  class="boton small-btn"
+                  type="submit"
+                  onclick="return confirm('¿Eliminar este producto?');"
                 >
-                  Editar
+                  Eliminar
                 </button>
-
-                <form action="{{ url_for('eliminar_producto', producto_id=producto.id) }}" method="post" style="display:inline;">
-                  <button
-                    class="btn boton"
-                    type="submit"
-                    onclick="return confirm('¿Eliminar este producto?');"
-                  >
-                    Eliminar
-                  </button>
-                </form>
-              </div>
+              </form>
             </div>
-            {% endfor %}
-          {% endif %}
+          </div>
+          {% endfor %} {% endif %}
         </div>
       </div>
 
       <div class="text-center mt-5">
-        <a href="{{ url_for('admin') }}" class="btn boton">Volver al Panel</a>
+        <a href="{{ url_for('admin.admin') }}" class="btn boton"
+          >Volver al Panel</a
+        >
       </div>
     </section>
 
@@ -133,8 +173,10 @@
           method="post"
           enctype="multipart/form-data"
           class="form-upload"
+          action="{{ url_for('admin.editar_producto', producto_id=0) }}"
         >
           <input type="hidden" name="producto_id" id="edit-id" />
+
           <input
             type="text"
             name="nombre"
@@ -150,14 +192,12 @@
             placeholder="Precio"
             required
           />
-          <textarea
-            name="descripcion"
-            id="edit-descripcion"
-            placeholder="Descripción"
-            rows="3"
-          ></textarea>
 
-          <label for="edit-categoria">Categoría:</label>
+          <!-- Editor enriquecido -->
+          <div id="editor-container-edit" style="height: 150px"></div>
+          <input type="hidden" name="descripcion" id="edit-descripcion" />
+
+          <!-- Select de categoría sin título -->
           <select name="categoria_id" id="edit-categoria" required>
             <option value="" disabled>Seleccioná una categoría</option>
             {% for cat in categorias %}
@@ -165,23 +205,44 @@
             {% endfor %}
           </select>
 
-          <label>Imagen principal actual:</label><br />
+          <label>Imagen principal actual:</label>
           <img
             id="img-principal-edit"
             src=""
             alt="Imagen principal"
-            style="max-width: 200px; margin-bottom: 10px;"
-          /><br />
+            style="max-width: 200px; margin-bottom: 10px"
+          />
           <label for="imagen-principal-nueva">Cambiar imagen principal:</label>
-          <input type="file" name="imagen" id="imagen-principal-nueva" accept="image/*" />
+          <input
+            type="file"
+            name="imagen"
+            id="imagen-principal-nueva"
+            accept="image/*"
+          />
 
-          <hr />
-          <label>Imágenes adicionales:</label>
-          <div id="imagenes-adicionales-edit" style="display:flex; flex-wrap: wrap; gap:10px; margin-bottom:10px;">
-            <!-- Aquí JS inyectará miniaturas con opción a eliminar -->
+          <label>Imágenes adicionales actuales:</label>
+          <div
+            id="imagenes-adicionales-edit"
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 10px;
+              margin-bottom: 10px;
+            "
+          >
+            <!-- JS inyectará aquí las imágenes con botón X -->
           </div>
 
-          <label for="imagenes-adicionales-nuevas">Subir nuevas imágenes adicionales:</label>
+          <!-- Campo oculto para registrar imágenes eliminadas -->
+          <input
+            type="hidden"
+            name="imagenes_a_eliminar"
+            id="imagenes-a-eliminar"
+          />
+
+          <label for="imagenes-adicionales-nuevas"
+            >Subir nuevas imágenes adicionales:</label
+          >
           <input
             type="file"
             name="imagenes_adicionales"
@@ -200,62 +261,75 @@
       const formEditar = document.getElementById("form-editar-producto");
       const cerrarEditar = modalEditar.querySelector(".cerrar");
       const imgPrincipalEdit = document.getElementById("img-principal-edit");
-      const imagenesAdicionalesEdit = document.getElementById("imagenes-adicionales-edit");
+      const imagenesAdicionalesEdit = document.getElementById(
+        "imagenes-adicionales-edit"
+      );
+      const inputImagenesAEliminar = document.getElementById(
+        "imagenes-a-eliminar"
+      );
 
-      // Abrir modal al click en editar
       document.querySelectorAll(".edit-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           modalEditar.style.display = "block";
 
-          // Setear datos básicos
+          // Reset de imágenes a eliminar
+          inputImagenesAEliminar.value = "";
+
+          // Setear datos
           document.getElementById("edit-id").value = btn.dataset.id;
           document.getElementById("edit-nombre").value = btn.dataset.nombre;
           document.getElementById("edit-precio").value = btn.dataset.precio;
-          document.getElementById("edit-descripcion").value = btn.dataset.descripcion;
-          document.getElementById("edit-categoria").value = btn.dataset.categoria;
+          document.getElementById("edit-descripcion").value =
+            btn.dataset.descripcion;
+          document.getElementById("edit-categoria").value =
+            btn.dataset.categoria;
+
           formEditar.action = `/admin/productos/editar/${btn.dataset.id}`;
 
-          // Imagen principal
           const imagenPrincipal = btn.dataset.imagen;
-          imgPrincipalEdit.src = imagenPrincipal ? `/static/${imagenPrincipal}` : `/static/img/placeholder.png`;
+          imgPrincipalEdit.src = imagenPrincipal
+            ? `/static/${imagenPrincipal}`
+            : `/static/img/placeholder.png`;
 
-          // Imágenes adicionales
-          const imagenesJSON = btn.dataset.imagenes || '[]';
-          const imagenes = JSON.parse(imagenesJSON);
+          const imagenes = JSON.parse(btn.dataset.imagenes || "[]");
+          imagenesAdicionalesEdit.innerHTML = "";
 
-          // Limpiar contenedor
-          imagenesAdicionalesEdit.innerHTML = '';
-
-          // Mostrar miniaturas con botón eliminar para cada imagen adicional
           imagenes.forEach((imgNombre) => {
-            const contenedor = document.createElement('div');
-            contenedor.style.position = 'relative';
+            const contenedor = document.createElement("div");
+            contenedor.style.position = "relative";
 
-            const img = document.createElement('img');
+            const img = document.createElement("img");
             img.src = `/static/${imgNombre}`;
             img.alt = "Imagen adicional";
             img.style.maxWidth = "100px";
-            img.style.marginRight = "5px";
+            img.style.borderRadius = "4px";
             contenedor.appendChild(img);
 
-            // Botón eliminar
-            const btnEliminar = document.createElement('button');
-            btnEliminar.textContent = 'Eliminar';
-            btnEliminar.type = 'button';
-            btnEliminar.style.position = 'absolute';
-            btnEliminar.style.top = '0';
-            btnEliminar.style.right = '0';
-            btnEliminar.style.background = 'red';
-            btnEliminar.style.color = 'white';
-            btnEliminar.style.border = 'none';
-            btnEliminar.style.cursor = 'pointer';
+            const btnEliminar = document.createElement("button");
+            btnEliminar.textContent = "✖";
+            btnEliminar.type = "button";
+            btnEliminar.title = "Eliminar imagen";
+            btnEliminar.style.position = "absolute";
+            btnEliminar.style.top = "-5px";
+            btnEliminar.style.right = "-5px";
+            btnEliminar.style.background = "#c0392b";
+            btnEliminar.style.color = "#fff";
+            btnEliminar.style.border = "none";
+            btnEliminar.style.borderRadius = "50%";
+            btnEliminar.style.width = "22px";
+            btnEliminar.style.height = "22px";
+            btnEliminar.style.cursor = "pointer";
+            btnEliminar.style.fontSize = "14px";
 
             btnEliminar.onclick = () => {
-              if(confirm('¿Eliminar esta imagen adicional?')) {
-                // Aquí deberías implementar la lógica para eliminar la imagen en backend
-                // Por ahora solo la remuevo del DOM para efecto visual:
+              if (confirm("¿Eliminar esta imagen adicional?")) {
                 contenedor.remove();
-                // También podrías llevar un array de imágenes a eliminar y enviarlo al backend en el submit del formulario
+                // Agregar nombre de imagen al campo oculto
+                const nombresAEliminar = inputImagenesAEliminar.value
+                  ? inputImagenesAEliminar.value.split(",")
+                  : [];
+                nombresAEliminar.push(imgNombre);
+                inputImagenesAEliminar.value = nombresAEliminar.join(",");
               }
             };
 
@@ -269,6 +343,47 @@
       window.onclick = (e) => {
         if (e.target == modalEditar) modalEditar.style.display = "none";
       };
+    </script>
+
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+    <script>
+      // Editor para agregar producto
+      const quill = new Quill("#editor-container", {
+        theme: "snow",
+        placeholder: "Escribí la descripción del producto...",
+      });
+
+      document
+        .querySelector(".form-producto form")
+        .addEventListener("submit", function () {
+          const html = quill.root.innerHTML;
+          document.getElementById("descripcion-hidden").value = html;
+        });
+
+      // Editor para editar producto
+      const quillEdit = new Quill("#editor-container-edit", {
+        theme: "snow",
+        placeholder: "Editar descripción...",
+      });
+
+      // Al abrir el modal, insertar contenido actual en Quill
+      document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // ...otros campos...
+
+          const descripcion = btn.dataset.descripcion || "";
+          quillEdit.root.innerHTML = descripcion;
+        });
+      });
+
+      // Al enviar formulario de edición, pasar contenido Quill a campo oculto
+      document
+        .getElementById("form-editar-producto")
+        .addEventListener("submit", function () {
+          const html = quillEdit.root.innerHTML;
+          document.getElementById("edit-descripcion").value = html;
+        });
     </script>
   </body>
 </html>

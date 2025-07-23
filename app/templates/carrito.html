@@ -1,45 +1,98 @@
-{% extends "base.html" %}
-{% block title %}Carrito - La Hora Azul{% endblock %}
-
+{% extends "base.html" %} {% block title %}Carrito - La Hora Azul{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/carrito.css') }}">
-{% endblock %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/carrito.css') }}"
+/>
 
-{% block content %}
+{% endblock %} {% block content %}
 <section class="lista-carrito">
-  {% if carrito %}
-    {% for item in carrito %}
-      <div class="item-carrito">
-        <img src="{{ url_for('static', filename=item.imagen) }}" alt="{{ item.nombre }}" />
+  {% if carrito %} {% for item in carrito %}
+  <div class="item-carrito">
+    <img
+      src="{{ url_for('static', filename=item.imagen) }}"
+      alt="{{ item.nombre }}"
+    />
+    <div class="detalle-producto">
+      <h3 class="nombre-producto">{{ item.nombre }}</h3>
+      <div class="precio-quitar">
+        <p class="precio">Precio: ${{ item.precio }}</p>
+      </div>
+      <form
+        method="POST"
+        action="{{ url_for('main.quitar_del_carrito', producto_id=item.id) }}"
 
-        <div class="detalle-producto">
-          <h3 class="nombre-producto">{{ item.nombre }}</h3>
-          <div class="precio-quitar">
-            <p class="precio">Precio: ${{ item.precio }}</p>
-          </div>
-          <form method="POST" action="{{ url_for('quitar_del_carrito', producto_id=item.id) }}">
-            <button class="btn boton-quitar" type="submit">X</button>
-          </form>
+      >
+        <button class="btn boton-quitar" type="submit">X</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="resumen-carrito">
+    <div class="envio">
+      <span>Costo de envío:</span>
+      <span>${{ costo_envio }}</span>
+    </div>
+    <div class="total">
+      <span>Total:</span>
+      <span>${{ total }}</span>
+    </div>
+  </div>
+
+  <div class="finalizar-compra-container">
+    <button class="btn boton" id="btn-finalizar">Finalizar compra</button>
+  </div>
+
+  <!-- Modal para el formulario de correo de contacto -->
+  <div id="modal-confirmacion" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" id="close-modal">&larr; Salir</button>
+      <h2 class="modal-title">Confirmación de Pedido</h2>
+      <hr class="modal-divider" />
+      <form
+        action="{{ url_for('main.confirmar_pedido') }}"
+
+        method="post"
+        class="modal-form"
+      >
+        <label for="email_contacto">Tu correo de contacto:</label>
+        <input
+          type="email"
+          name="email_contacto"
+          required
+          placeholder="ejemplo@correo.com"
+        />
+        <div class="finalizar-compra-container">
+          <button class="btn boton" id="btn-finalizar">Finalizar compra</button>
         </div>
-      </div>
-    {% endfor %}
-
-    <div class="resumen-carrito">
-      <div class="envio">
-        <span>Costo de envío:</span>
-        <span>${{ costo_envio }}</span>
-      </div>
-      <div class="total">
-        <span>Total:</span>
-        <span>${{ total }}</span>
-      </div>
+      </form>
     </div>
+  </div>
 
-    <div class="finalizar-compra-container">
-      <button class="btn boton">Finalizar Compra</button>
-    </div>
+  <script>
+    // JavaScript para mostrar y ocultar el modal
+    var modal = document.getElementById("modal-confirmacion");
+    var btnFinalizar = document.getElementById("btn-finalizar");
+    var closeModal = document.getElementById("close-modal");
+
+    btnFinalizar.onclick = function () {
+      modal.style.display = "block";
+    };
+
+    closeModal.onclick = function () {
+      modal.style.display = "none";
+    };
+
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    };
+  </script>
+
   {% else %}
-    <p class="mensaje-vacio">Tu carrito está vacío.</p>
+  <p class="mensaje-vacio">Tu carrito está vacío</p>
   {% endif %}
 </section>
 {% endblock %}

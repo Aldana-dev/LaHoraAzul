@@ -2,6 +2,7 @@
 .producto-detalle {
   margin: 5rem auto;
   padding: 0 1rem;
+  max-width: 1200px;
 }
 
 /* ───────────── Header: nombre a la izquierda, botón a la derecha ───────────── */
@@ -33,31 +34,49 @@
   gap: 2rem;
   margin-bottom: 4rem;
   align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
+/* Imagen principal centrada y contenida */
 .imagen-principal {
-  flex: 1 1 65%;
-}
-
-.imagen-principal img {
-  width: 100%;
-  height: auto;
+  width: 50vw; /* máximo 50% del ancho de la pantalla */
+  max-height: 400px;
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
   border-radius: 6px;
-  object-fit: cover;
-  max-height: 500px;
+  overflow: hidden;
 }
 
+/* Imagen adaptada sin cortes */
+.imagen-principal img {
+  min-height: 400px;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  display: block;
+}
+
+/* Miniaturas */
 .galeria-miniaturas {
-  flex: 1 1 35%;
+  flex: 1 1 300px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
+  gap: 5px;
   align-self: flex-start;
+  max-height: 400px; /* Aproximadamente 2 filas de 2 miniaturas */
+  overflow-y: auto;
+  padding-right: 5px; /* para no ocultar borde derecho al hacer scroll */
 }
 
 .galeria-miniaturas img {
+  max-height: 195px;
   width: 100%;
-  
   border-radius: 4px;
   object-fit: cover;
   aspect-ratio: 1 / 1;
@@ -71,6 +90,20 @@
   border: 2px solid #153f6c;
 }
 
+/* Scroll solo si hay muchas miniaturas */
+.galeria-miniaturas::-webkit-scrollbar {
+  width: 6px;
+}
+
+.galeria-miniaturas::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 3px;
+}
+
+.galeria-miniaturas::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 /* ───────────── Responsive (max-width: 480px) ───────────── */
 @media (max-width: 480px) {
   .producto-detalle {
@@ -79,13 +112,17 @@
 
   .producto-galeria {
     flex-direction: column;
+    align-items: center;
+  }
+
+  .imagen-principal {
+    width: 100%;
   }
 
   .imagen-principal img {
-    max-width: 100%; /* Ajusta imagen al ancho móvil */
+    max-height: 60vh;
   }
 
-  /* Ajuste padding y tamaño botón en móvil */
   .precio-boton .boton {
     padding: 8px 30px;
     font-size: 0.9rem;
