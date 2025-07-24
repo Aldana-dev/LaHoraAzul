@@ -553,13 +553,13 @@ def admin_pedidos():
     if filtro == "nuevos":
         pedidos = Pedido.query.filter_by(
             es_viejo=False).order_by(Pedido.fecha.desc()).all()
-    elif filtro == "viejos":
+    elif filtro == "historial":
         pedidos = Pedido.query.filter_by(
             es_viejo=True).order_by(Pedido.fecha.desc()).all()
     else:
         pedidos = Pedido.query.order_by(Pedido.fecha.desc()).all()
 
-    return render_template("admin_pedidos.html", pedidos=pedidos, filtro=filtro)
+    return render_template("admin_pedidos.html", pedidos=pedidos, filtro=filtro, current_time=datetime.now())
 
 
 @admin_bp.route('/admin/pedidos/toggle_estado/<int:pedido_id>', methods=['POST'])
@@ -567,7 +567,7 @@ def admin_pedidos():
 def toggle_estado_pedido(pedido_id):
     pedido = Pedido.query.get_or_404(pedido_id)
     if pedido.es_viejo:
-        flash("No se puede cambiar el estado de un pedido viejo.", "warning")
+        flash("No se puede cambiar el estado de un pedido en historial.", "warning")
         return redirect(url_for('admin.admin_pedidos', filtro='nuevos'))
 
     if pedido.estado == 'nuevo':
@@ -589,12 +589,12 @@ def toggle_estado_pedido(pedido_id):
     return redirect(url_for('admin.admin_pedidos', filtro='nuevos'))
 
 
-@admin_bp.route('/admin/pedidos/marcar_como_viejos', methods=['POST'])
+@admin_bp.route('/admin/pedidos/marcar_como_historial', methods=['POST'])
 @admin_required
-def marcar_como_viejos():
+def marcar_como_historial():
     ids = request.form.getlist('pedido_ids')
     if not ids:
-        flash("No seleccionaste pedidos para marcar como viejos.", "warning")
+        flash("No seleccionaste pedidos para marcar como historial.", "warning")
         return redirect(url_for('admin.admin_pedidos', filtro='nuevos'))
 
     pedidos = Pedido.query.filter(Pedido.id.in_(
@@ -604,41 +604,9 @@ def marcar_como_viejos():
 
     try:
         db.session.commit()
-        flash(f"Se marcaron {len(pedidos)} pedidos como viejos.", "success")
+        flash(f"Se marcaron {len(pedidos)} pedidos como historial.", "success")
     except Exception as e:
         db.session.rollback()
-        flash(f"Error al marcar pedidos como viejos: {str(e)}", "danger")
+        flash(f"Error al marcar pedidos como historial: {str(e)}", "danger")
 
     return redirect(url_for('admin.admin_pedidos', filtro='nuevos'))
-
-
-@admin_bp.route('/admin/pedidos/eliminar_viejos', methods=['POST'])
-@admin_required
-def eliminar_pedidos_viejos():
-    ids_json = request.form.get('pedido_ids')
-    if not ids_json:
-        flash("No seleccionaste pedidos para eliminar.", "warning")
-        return redirect(url_for('admin.admin_pedidos', filtro='viejos'))
-
-    try:
-        ids = json.loads(ids_json)
-    except Exception as e:
-        flash(f"Error procesando pedidos seleccionados: {str(e)}", "danger")
-        return redirect(url_for('admin.admin_pedidos', filtro='viejos'))
-
-    pedidos = Pedido.query.filter(
-        Pedido.id.in_(ids), Pedido.es_viejo == True).all()
-    if not pedidos:
-        flash("No se encontraron pedidos viejos para eliminar.", "warning")
-        return redirect(url_for('admin.admin_pedidos', filtro='viejos'))
-
-    try:
-        for pedido in pedidos:
-            db.session.delete(pedido)
-        db.session.commit()
-        flash(f"Se eliminaron {len(pedidos)} pedidos viejos.", "success")
-    except Exception as e:
-        db.session.rollback()
-        flash(f"Error al eliminar pedidos viejos: {str(e)}", "danger")
-
-    return redirect(url_for('admin.admin_pedidos', filtro='viejos'))

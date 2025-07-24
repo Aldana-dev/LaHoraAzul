@@ -112,11 +112,10 @@ def tienda():
 
     # Filtra los productos por categoría si hay un ID; si no, trae todos
     if categoria_id:
-        productos = Producto.query.filter_by(
-            categoria_id=categoria_id).order_by(Producto.id.desc()).all()
+        productos = Producto.query.filter_by(categoria_id=categoria_id, vendido=False).order_by(Producto.id.desc()).all() 
     else:
-        productos = Producto.query.filter_by(
-            vendido=False).order_by(Producto.id.desc()).all()
+        productos = Producto.query.filter_by(vendido=False).order_by(Producto.id.desc()).all()
+
 
     # Prepara los datos de los productos para la plantilla
     productos_data = []
@@ -133,7 +132,6 @@ def tienda():
 
     # Renderiza la plantilla 'tienda.html' con los datos de categorías y productos
     return render_template('tienda.html', categorias=categorias, productos=productos_data, categoria_id=categoria_id)
-
 
 # Ruta para la página de detalle de un producto individual
 @main_bp.route('/producto/<int:producto_id>')

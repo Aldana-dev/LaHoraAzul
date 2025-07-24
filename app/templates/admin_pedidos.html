@@ -4,11 +4,19 @@
     <meta charset="UTF-8" />
     <title>Administrar Pedidos - La Hora Azul</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_pedidos.css') }}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/estilos.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/admin_pedidos.css') }}"
+    />
     <style>
-      /* Podés agregar estilos para .sr-only si querés ocultar visualmente el label */
       .sr-only {
         position: absolute;
         width: 1px;
@@ -16,7 +24,7 @@
         padding: 0;
         margin: -1px;
         overflow: hidden;
-        clip: rect(0,0,0,0);
+        clip: rect(0, 0, 0, 0);
         border: 0;
       }
     </style>
@@ -26,17 +34,25 @@
       <h2 class="titulo-admin">Administrar Pedidos</h2>
       <hr class="separador" />
 
-      <!-- FILTROS ACTUALIZADOS: nuevos y viejos -->
+      <!-- FILTROS ACTUALIZADOS: nuevos e historial -->
       <div class="estado-tabla">
-        <a href="{{ url_for('admin.admin_pedidos', filtro='nuevos') }}" class="btn_large boton filtro-btn {% if filtro == 'nuevos' %}activo{% endif %}">Nuevos</a>
-        <a href="{{ url_for('admin.admin_pedidos', filtro='viejos') }}" class="btn_large boton filtro-btn {% if filtro == 'viejos' %}activo{% endif %}">Viejos</a>
+        <a
+          href="{{ url_for('admin.admin_pedidos', filtro='nuevos') }}"
+          class="btn_large boton filtro-btn {% if filtro == 'nuevos' %}activo{% endif %}"
+          >Nuevos</a
+        >
+        <a
+          href="{{ url_for('admin.admin_pedidos', filtro='historial') }}"
+          class="btn_large boton filtro-btn {% if filtro == 'historial' %}activo{% endif %}"
+          >Historial</a
+        >
       </div>
 
-      <!-- FORMULARIO -->
+      <!-- Formulario para marcar pedidos como historial SOLO en filtro 'nuevos' -->
       {% if filtro == 'nuevos' %}
-      <form method="POST" action="{{ url_for('admin.marcar_como_viejos') }}">
+      <form method="POST" action="{{ url_for('admin.marcar_como_historial') }}">
       {% else %}
-      <form id="form-viejos"> <!-- Sin action ni método, solo para manejo checkbox -->
+      <form id="form-historial"> <!-- Sin action ni método para filtro historial -->
       {% endif %}
 
         <table class="tabla-admin">
@@ -48,75 +64,64 @@
               </th>
               <th>ID</th>
               <th>Cliente</th>
+              {% if filtro == 'nuevos' %}
               <th>Estado</th>
+              {% endif %}
               <th>Fecha</th>
-              <th>Acciones</th>
+              <th>Precio Total</th>
+              <th>Productos</th>
             </tr>
           </thead>
           <tbody>
             {% if pedidos|length == 0 %}
             <tr>
-              <td colspan="6" style="text-align: center; font-style: italic; color: #666;">
+              <td
+                colspan="{% if filtro == 'nuevos' %}7{% else %}6{% endif %}"
+                style="text-align: center; font-style: italic; color: #666"
+              >
                 No hay pedidos {{ filtro }} para mostrar.
               </td>
             </tr>
             {% else %}
-            {% for pedido in pedidos %}
-            <tr>
-              <td style="text-align: center">
-                <input type="checkbox" name="pedido_ids" value="{{ pedido.id }}" />
-              </td>
-              <td>{{ pedido.id }}</td>
-              <td>{{ pedido.email_contacto }}</td>
-              <td>
+              {% for pedido in pedidos %}
+              <tr>
+                <td style="text-align: center">
+                  <input
+                    type="checkbox"
+                    name="pedido_ids"
+                    value="{{ pedido.id }}"
+                  />
+                </td>
+                <td>{{ pedido.id }}</td>
+                <td>{{ pedido.email_contacto }}</td>
                 {% if filtro == 'nuevos' %}
-                  <form
-                    id="form-toggle-{{ pedido.id }}"
-                    method="POST"
-                    action="{{ url_for('admin.toggle_estado_pedido', pedido_id=pedido.id) }}"
-                    style="display:inline"
+                <td>
+                  {% set dias = (current_time.date() - pedido.fecha.date()).days %}
+                  <span
+                    class="indicador-estado {% if dias == 0 %}verde {% elif dias >= 7 %}rojo {% else %}amarillo {% endif %}"
                   >
-                    <button
-                      type="submit"
-                      class="btn-link estado-{{ pedido.estado }}"
-                      title="Click para cambiar estado"
-                    >
-                      {{ pedido.estado|capitalize }}
-                    </button>
-                  </form>
-                {% else %}
-                  {{ pedido.estado|capitalize }}
+                  </span>
+                </td>
                 {% endif %}
-              </td>
-              <td>{{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
-              <td>
-                <button
-                  class="btn boton small-btn"
-                  type="button"
-                  onclick="abrirModal('{{ pedido.id }}')"
-                >
-                  Ver
-                </button>
-              </td>
-            </tr>
-
-            <!-- Modal oculto para detalles del pedido -->
-            <tr id="modal-{{ pedido.id }}" class="fila-modal" style="display: none">
-              <td colspan="6">
-                <div class="productos-modal-container">
+                <td>{{ pedido.fecha.strftime('%d/%m/%Y') }}</td>
+                <td>${{ pedido.total }}</td>
+                <td>
                   {% for item in pedido.items %}
-                  <div class="producto-modal">
-                    <img src="{{ url_for('static', filename=item.producto.imagen) }}" alt="{{ item.producto.nombre }}" />
-                    <div class="detalle-producto-modal">
-                      <p><strong>{{ item.producto.nombre }}</strong></p>
-                      <p>Precio unitario: ${{ item.precio_unitario }}</p>
+                  <div class="producto-resumen">
+                    <img
+                      src="{{ url_for('static', filename=item.producto.imagen) }}"
+                      alt="{{ item.producto.nombre }}"
+                    />
+                    <div>
+                      <p>{{ item.producto.nombre }}</p>
+                      <p>${{ item.precio_unitario }}</p>
                     </div>
                   </div>
                   {% endfor %}
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
+                </td>
+              </tr>
+              <!-- Aquí va el modal, sin cambios -->
+              {% endfor %}
             {% endif %}
           </tbody>
         </table>
@@ -124,91 +129,35 @@
         {% if filtro == 'nuevos' %}
         <div class="text-center" style="margin-top: 1rem">
           <button type="submit" class="btn_large boton">
-            Marcar como viejos
+            Pasar a Historial
           </button>
         </div>
         {% endif %}
       </form>
 
-      <!-- Solo botón para abrir modal eliminar en filtro 'viejos' -->
-      {% if filtro == 'viejos' %}
-              <div class="text-center" style="margin-top: 1rem">
-
-      <button type="button" class="btn_large boton" onclick="abrirModalEliminar()">
-        Eliminar pedidos seleccionados
-      </button>
-              </div>
-
-      {% endif %}
-
-      <!-- Modal eliminar pedidos viejos -->
-      <div id="modal-eliminar" class="modal" style="display:none;">
-        <div class="modal-content">
-          <span class="cerrar" onclick="cerrarModalEliminar()">&times;</span>
-          <h4>¿Estás seguro que querés eliminar estos pedidos viejos?</h4>
-          <p>Esta acción no se puede deshacer.</p>
-          <form method="POST" action="{{ url_for('admin.eliminar_pedidos_viejos') }}">
-            <input type="hidden" name="pedido_ids" id="ids-a-eliminar" />
-            <div class="text-center" style="margin-top: 1rem;">
-              <button type="submit" class="btn boton">Confirmar eliminación</button>
-              <button type="button" class="btn boton" onclick="cerrarModalEliminar()">Cancelar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
       <div class="text-center mt-5">
-        <a href="{{ url_for('admin.admin') }}" class="btn boton">Volver al Panel</a>
+        <a href="{{ url_for('admin.admin') }}" class="btn boton">
+          Volver al Panel
+        </a>
       </div>
     </section>
 
-    <!-- Modal flotante para ver pedido -->
-    <div id="modal-pedido" class="modal" style="display:none;">
-      <div class="modal-content" id="modal-contenido">
-        <span class="cerrar" onclick="cerrarModal()">&times;</span>
-        <!-- Contenido dinámico cargado con JS -->
-      </div>
-    </div>
-
     <script>
       // Select/Deselect all checkboxes
-      document.getElementById('select-todos').addEventListener('change', function () {
-        const checked = this.checked;
-        document.querySelectorAll('input[name="pedido_ids"]').forEach(cb => cb.checked = checked);
-      });
-
-      // Modal abrir/cerrar detalles pedido
-      function abrirModal(id) {
-        const modal = document.getElementById("modal-pedido");
-        const contenido = document.getElementById("modal-contenido");
-        const original = document.getElementById("modal-" + id);
-
-        if (original) {
-          const productos = original.querySelector(".productos-modal-container").cloneNode(true);
-          contenido.innerHTML = `<span class="cerrar" onclick="cerrarModal()">&times;</span><h4>Productos del pedido #${id}</h4>`;
-          contenido.appendChild(productos);
-          modal.style.display = "flex";
-        }
-      }
+      document
+        .getElementById("select-todos")
+        .addEventListener("change", function () {
+          const checked = this.checked;
+          document
+            .querySelectorAll('input[name="pedido_ids"]')
+            .forEach((cb) => (cb.checked = checked));
+        });
 
       function cerrarModal() {
         document.getElementById("modal-pedido").style.display = "none";
       }
 
-      // Modal abrir/cerrar para eliminar
-      function abrirModalEliminar() {
-        const checkboxes = document.querySelectorAll('input[name="pedido_ids"]:checked');
-        const ids = Array.from(checkboxes).map(cb => cb.value);
-        if (ids.length === 0) {
-          alert("Seleccioná al menos un pedido para eliminar.");
-          return;
-        }
-        document.getElementById('ids-a-eliminar').value = JSON.stringify(ids);
-        document.getElementById('modal-eliminar').style.display = 'flex';
-      }
-      function cerrarModalEliminar() {
-        document.getElementById('modal-eliminar').style.display = 'none';
-      }
+      // Eliminamos todo JS relacionado a modal eliminar pedidos
     </script>
   </body>
 </html>
