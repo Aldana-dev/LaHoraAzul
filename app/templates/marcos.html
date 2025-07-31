@@ -48,13 +48,18 @@
 
       <div class="carrusel-contenedor">
         <div class="carrusel-imagenes" id="carruselMarcos">
-          {% set nombres_marcos = [ "Marco directo L", "Marco L con
+          {% set nombres_marcos = [ "Marco con
           passepartout", "Marco Box simple", "Marco box flotante", "Marco doble
-          vidrio", "Marcos de colores" ] %} {% for nombre in nombres_marcos %}
+          vidrio", "Marcos de colores", "Marco directo" ] %} {% set rutas_imagenes = [
+          'img/marcos/marco_directo.jpg', 'img/marcos/marco_passepartout.jpg',
+          'img/marcos/marco_box_simple.jpg',
+          'img/marcos/marco_box_flotante.jpg',
+          'img/marcos/marco_doble_vidrio.jpg', 'img/marcos/marco_colores.jpg' ]
+          %} {% for i in range(nombres_marcos|length) %}
           <img
-            src="{{ url_for('static', filename='ejemplo.jpg') }}"
-            alt="{{ nombre }}"
-            data-titulo="{{ nombre }}"
+            src="{{ url_for('static', filename=rutas_imagenes[i]) }}"
+            alt="{{ nombres_marcos[i] }}"
+            data-titulo="{{ nombres_marcos[i] }}"
           />
           {% endfor %}
         </div>
@@ -63,7 +68,7 @@
       <button id="btn-next" class="carrusel-btn">&#10095;</button>
     </div>
 
-    <div class="titulo-marco mt-3" id="titulo-marco">Marco 1</div>
+    <div class="titulo-marco " id="titulo-marco">Marco 1</div>
   </section>
 </section>
 {% endblock %} {% block extra_js %}
