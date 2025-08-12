@@ -100,6 +100,10 @@ header {
   color: #153f6c;
 }
 
+.material-symbols-outlined:hover {
+  color: #1E5A99;
+}
+
 .carrito-icono {
   width: 65px;
   height: 65px;
@@ -130,7 +134,7 @@ nav a {
 }
 
 nav a:hover {
-  color: #4f7ca5;
+  color: #1E5A99;
   text-decoration: none;
 }
 

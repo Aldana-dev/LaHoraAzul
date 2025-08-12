@@ -1,25 +1,63 @@
-/* ───────────── Ítem del carrito ───────────── */
+/* ───────────── Layout principal ───────────── */
+.lista-carrito {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  margin-top: 5rem;
+}
+
+.items-carrito {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.resumen-y-confirmacion {
+  flex: 1;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  align-items: center;
+  text-align: center;
+}
+
+.resumen-y-confirmacion > * {
+  width: 100%;
+}
+
+/* ───────────── Ítems del carrito ───────────── */
 .item-carrito {
+  max-width: 700px;
+  width: 100%;
   display: flex;
   gap: 1.5rem;
-  padding-bottom: 1rem;
-  margin-top: 2rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
   align-items: stretch;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
 .item-carrito img {
   width: 120px;
   height: 120px;
-  object-fit: cover; /* La imagen llena el contenedor sin deformarse */
+  object-fit: cover;
   border-radius: 8px;
-  flex-shrink: 0; /* Evita que la imagen se reduzca en flexbox */
+  flex-shrink: 0;
 }
 
 .detalle-producto {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .nombre-producto {
@@ -28,17 +66,11 @@
   font-weight: 600;
 }
 
-.precio-quitar {
+.header-detalle {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-}
-
-.precio {
-  font-weight: bold;
-  font-size: 1rem;
-  color: #153f6c;
+  margin-bottom: 0.5rem;
 }
 
 .boton-quitar {
@@ -50,7 +82,6 @@
   border-radius: 0;
   cursor: pointer;
   font-size: 0.85rem;
-  margin-left: auto;
   display: block;
 }
 
@@ -59,28 +90,141 @@
   color: #ffffff;
 }
 
+.precio {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #153f6c;
+  align-self: center;
+}
 
+/* ───────────── Cotización y envío ───────────── */
+.cotizacion-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
 
+.cotizacion-horizontal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
+}
 
-/* ───────────── Resumen final del carrito ───────────── */
-.resumen-carrito {
-  margin-top: 3rem;
+.cotizacion-horizontal input,
+.cotizacion-horizontal button {
+  border: 1px solid #153f6c;
+  border-radius: 0;
+  height: 40px;
+  font-size: 1rem;
+}
+
+.cotizacion-horizontal input {
+  padding: 0 1rem;
+  width: 220px;
+  outline: none;
+  border-right: none;
+}
+
+.cotizacion-horizontal button {
+  background-color: #153f6c;
+  color: white;
+  padding: 0 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cotizacion-horizontal button:hover {
+  background-color: #153f6c;
+}
+
+.resultado-envio {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.tarjetas-envio {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tarjeta-envio {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+  transition: box-shadow 0.3s ease;
+  text-align: left;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.tarjeta-envio.selected {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: #007bff;
+  background-color: #e7f1ff;
+}
+
+.tarjeta-envio input[type="radio"] {
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.tarjeta-envio strong {
+  font-weight: 400;
+}
+
+/* Opciones de envío */
+.opciones-envio {
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.opciones-envio label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f7f9fc;
+  border: 1px solid #d1d9e6;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.opciones-envio input[type="radio"] {
+  accent-color: #153f6c;
+  transform: scale(1.2);
+}
+
+.opciones-envio label:hover {
+  border-color: #153f6c;
+}
+
+.opciones-envio .precio-opcion {
+  font-weight: bold;
+  color: #153f6c;
   margin-left: auto;
-  margin-right: auto;
-  border-top: 2px solid #153f6c;
-  padding-top: 1.5rem;
+}
+
+/* ───────────── Resumen de costos ───────────── */
+.resumen-carrito {
+  width: 100%;
   font-weight: 600;
   font-size: 1.2rem;
   color: #153f6c;
-  width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.resumen-carrito > div {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
+  padding: 0 1rem;
 }
 
 .resumen-carrito > div span:last-child {
@@ -88,15 +232,22 @@
   text-align: right;
 }
 
-/* ───────────── Botón Finalizar centrado ───────────── */
-.finalizar-compra-container {
+.costos {
   display: flex;
-  justify-content: center;
-  margin-top: 3rem;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 16px;
+  margin-top: 1rem;
 }
 
+/* ───────────── Botón Finalizar compra ───────────── */
+.finalizar-compra-container {
+  margin-top: 0;
+  justify-content: center;
+  display: flex;
+}
 
-/* ───────────── Modal responsive y amplio ───────────── */
+/* ───────────── Modal ───────────── */
 .modal {
   display: none;
   position: fixed;
@@ -115,12 +266,11 @@
   width: 90%;
   max-width: 800px;
   height: auto;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   position: relative;
   border-radius: 10px;
 }
 
-/* ───────────── Botón cerrar arriba a la izquierda ───────────── */
 .modal-close {
   position: absolute;
   top: 1rem;
@@ -137,7 +287,6 @@
   text-decoration: underline;
 }
 
-/* ───────────── Título y línea ───────────── */
 .modal-title {
   margin-top: 2rem;
   font-size: 1.6rem;
@@ -153,7 +302,7 @@
   opacity: 1 !important;
 }
 
-/* ───────────── Formulario dentro del modal ───────────── */
+/* ───────────── Formulario del modal ───────────── */
 .modal-form {
   display: flex;
   flex-direction: column;
@@ -190,12 +339,12 @@
   background-color: #0e2e4d;
 }
 
-
-/* ───────────── Responsive (max-width 600px) ───────────── */
+/* ───────────── Responsive ───────────── */
 @media (max-width: 600px) {
   .item-carrito {
     gap: 1rem;
     padding: 1rem 0;
+    margin-top: 1rem;
   }
 
   .item-carrito img {

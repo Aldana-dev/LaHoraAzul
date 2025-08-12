@@ -116,13 +116,11 @@ def admin():
 
 # ----------------- Administración de Banners ----------------- #
 
-
 @admin_bp.route("/admin/banner")  # Ruta para administrar los banners del sitio
 @admin_required
 def admin_banner():
     banners = Banner.query.all()  # Obtiene todos los banners existentes
     return render_template("admin_banner.html", banners=banners)
-
 
 # Sube un nuevo banner desde el panel de administración
 @admin_bp.route('/admin/banner/subir', methods=['POST'])
@@ -152,8 +150,6 @@ def subir_banner():
     return redirect(url_for('admin.admin_banner'))
 
 # Elimina un banner desde el panel admin
-
-
 @admin_bp.route('/admin/banner/eliminar/<int:banner_id>', methods=['POST'])
 @admin_required
 def eliminar_banner(banner_id):
@@ -179,7 +175,6 @@ def eliminar_banner(banner_id):
 
 # ----------------- Administración de Galería ----------------- #
 
-
 # Ruta para administrar la galería de imágenes
 @admin_bp.route("/admin/galeria")
 @admin_required
@@ -187,7 +182,6 @@ def admin_galeria():
     imagenes = Galeria.query.order_by(
         Galeria.fecha_creacion).all()  # Imágenes ordenadas por fecha
     return render_template("admin_galeria.html", imagenes=imagenes)
-
 
 # Sube una imagen a la galería desde el panel admin
 @admin_bp.route('/admin/galeria/subir', methods=['POST'])
@@ -197,7 +191,6 @@ def subir_galeria():
     if not archivos or archivos == []:
         flash('No seleccionaste ningún archivo')
         return redirect(url_for('admin.admin_galeria'))
-
     exitos = 0
     for file in archivos:
         if file and file.filename != '':
@@ -206,7 +199,6 @@ def subir_galeria():
                 nueva_imagen = Galeria(imagen=filepath)
                 db.session.add(nueva_imagen)
                 exitos += 1
-
     if exitos > 0:
         try:
             db.session.commit()
@@ -218,7 +210,6 @@ def subir_galeria():
         flash('No se pudieron subir las imágenes (formatos no válidos)')
 
     return redirect(url_for('admin.admin_galeria'))
-
 
 # Elimina una imagen de la galería desde el panel admin
 @admin_bp.route('/admin/galeria/eliminar/<int:imagen_id>', methods=['POST'])
@@ -245,7 +236,6 @@ def eliminar_galeria(imagen_id):
 
 # ----------------- Administración de Productos ----------------- #
 
-
 # Ruta para administrar productos en la tienda
 @admin_bp.route("/admin/productos")
 @admin_required
@@ -256,8 +246,6 @@ def admin_productos():
     return render_template("admin_productos.html", categorias=categorias, productos=productos)
 
 # Agrega un nuevo producto desde el panel admin
-
-
 @admin_bp.route('/admin/productos/agregar', methods=['POST'])
 @admin_required
 def agregar_producto():
@@ -317,7 +305,6 @@ def agregar_producto():
 
     return redirect(url_for('admin.admin_productos'))
 
-
 # Edita un producto existente y sus imágenes desde el panel admin
 @admin_bp.route('/admin/productos/editar/<int:producto_id>', methods=['POST'])
 @admin_required
@@ -375,7 +362,8 @@ def editar_producto(producto_id):
                 nueva_imagen = ProductoImagen(
                     producto_id=producto.id,
                     imagen=f'{carpeta_relativa}/{filename}',
-                    orden=producto.imagenes.count() + 1
+                    orden=len(producto.imagenes) + 1
+
                 )
                 db.session.add(nueva_imagen)
 
@@ -401,7 +389,6 @@ def editar_producto(producto_id):
         logging.error(f'Error actualizando producto: {e}')
 
     return redirect(url_for('admin.admin_productos'))
-
 
 # Sube imágenes adicionales para un producto específico
 @admin_bp.route('/admin/productos/<int:producto_id>/imagenes/subir', methods=['POST'])
@@ -440,7 +427,6 @@ def subir_imagen_producto(producto_id):
         logging.error(f'Error guardando imágenes: {e}')
 
     return redirect(url_for('admin.admin_productos'))
-
 
 # Edita/actualiza una imagen adicional existente de un producto
 @admin_bp.route('/admin/productos/imagenes/editar/<int:imagen_id>', methods=['POST'])
@@ -484,7 +470,6 @@ def editar_imagen_producto(imagen_id):
 
     return redirect(url_for('admin.admin_productos'))
 
-
 # Elimina un producto y todas sus imágenes (físicas y BD)
 @admin_bp.route('/admin/productos/eliminar/<int:producto_id>', methods=['POST'])
 @admin_required
@@ -516,7 +501,6 @@ def eliminar_producto(producto_id):
         logging.error(f'Error eliminando producto: {e}')
 
     return redirect(url_for('admin.admin_productos'))
-
 
 # Elimina una imagen adicional de producto (física y base de datos)
 @admin_bp.route('/admin/productos/imagenes/eliminar/<int:imagen_id>', methods=['POST'])
