@@ -1,11 +1,11 @@
 # ----------------- Importaciones ----------------- #
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session, jsonify
 from app.models import db, Banner, Galeria, Producto, Categoria, ProductoImagen, Pedido, PedidoItem
 from werkzeug.utils import secure_filename
 from functools import wraps
 import os
 import logging
-from flask import current_app
+import os
 
 main_bp = Blueprint('main', __name__)
 
@@ -14,6 +14,7 @@ UPLOAD_FOLDER = 'app/static/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 # ----------------- Funciones auxiliares ----------------- #
+
 
 def allowed_file(filename):
     """Valida que el archivo tenga una extensión permitida."""
@@ -82,6 +83,8 @@ def nosotras():
     return render_template('nosotras.html')
 
 # Ruta para inicializar manualmente las categorías del catálogo
+
+
 @main_bp.route('/init_categorias')
 def init_categorias():
     # Lista de nombres de categorías predeterminadas
@@ -102,6 +105,8 @@ def init_categorias():
     return "Categorías inicializadas correctamente."
 
 # Ruta para la tienda. Muestra todos los productos o filtra por categoría.
+
+
 @main_bp.route('/tienda')
 def tienda():
     # Obtiene el ID de categoría desde los parámetros de la URL (si se especifica)
@@ -112,10 +117,11 @@ def tienda():
 
     # Filtra los productos por categoría si hay un ID; si no, trae todos
     if categoria_id:
-        productos = Producto.query.filter_by(categoria_id=categoria_id, vendido=False).order_by(Producto.id.desc()).all() 
+        productos = Producto.query.filter_by(
+            categoria_id=categoria_id, vendido=False).order_by(Producto.id.desc()).all()
     else:
-        productos = Producto.query.filter_by(vendido=False).order_by(Producto.id.desc()).all()
-
+        productos = Producto.query.filter_by(
+            vendido=False).order_by(Producto.id.desc()).all()
 
     # Prepara los datos de los productos para la plantilla
     productos_data = []
@@ -134,6 +140,8 @@ def tienda():
     return render_template('tienda.html', categorias=categorias, productos=productos_data, categoria_id=categoria_id)
 
 # Ruta para la página de detalle de un producto individual
+
+
 @main_bp.route('/producto/<int:producto_id>')
 def producto(producto_id):
     # Obtiene el producto desde la base de datos o lanza un error 404 si no existe
@@ -161,21 +169,20 @@ def galeria():
     # Renderiza la plantilla 'galeria.html' pasando las imágenes como contexto
     return render_template('galeria.html', imagenes=imagenes)
 
-
 # ----------------- Carrito ----------------- #
 @main_bp.route('/carrito')  # Ruta para visualizar el carrito de compras
 def carrito():
     # Obtiene los IDs de productos almacenados en la sesión del usuario
     carrito_ids = session.get('carrito', [])
 
-    # Consulta los productos correspondientes a esos IDs
+    # Consulta los productos correspondientes a esos IDs desde la base de datos
     productos = Producto.query.filter(Producto.id.in_(carrito_ids)).all()
 
-    # Arma la lista de productos con los datos necesarios para la vista
+    # Construye una lista con los datos necesarios para mostrar en la vista
     carrito_data = []
-    total = 0
+    subtotal = 0  # Variable para almacenar el subtotal de productos
     for p in productos:
-        total += p.precio  # Suma el precio de cada producto al total general
+        subtotal += p.precio  # Suma el precio de cada producto al subtotal
         carrito_data.append({
             'id': p.id,
             'nombre': p.nombre,
@@ -183,15 +190,22 @@ def carrito():
             'imagen': p.imagen
         })
 
-    # Define un costo fijo de envío
-    costo_envio = 150
+    # Define un costo de envío inicial en cero
+    # Se actualizará dinámicamente mediante la API y JavaScript en el frontend
+    costo_envio = 0
 
-    # Si hay productos en el carrito, suma el envío al total final
-    total_final = total + costo_envio if carrito_data else 0
+    # Calcula el total como suma de subtotal y costo de envío (por ahora igual al subtotal)
+    total = subtotal + costo_envio
 
-    # Renderiza la plantilla 'carrito.html' con los datos del carrito
-    return render_template('carrito.html', carrito=carrito_data, costo_envio=costo_envio, total=total_final)
-
+    # Renderiza la plantilla 'carrito.html' enviando los datos del carrito,
+    # subtotal, costo_envio y total para que se usen en la vista y JS
+    return render_template(
+        'carrito.html',
+        carrito=carrito_data,
+        subtotal=subtotal,
+        costo_envio=costo_envio,
+        total=total
+    )
 
 # Ruta para agregar un producto al carrito
 @main_bp.route('/carrito/agregar/<int:producto_id>', methods=['POST'])

@@ -1,5 +1,6 @@
 {% extends "base.html" %} {% block title %}Carrito - La Hora Azul{% endblock %}
 {% block extra_css %}
+
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/carrito.css') }}"
@@ -58,6 +59,14 @@
             <strong>Envío a domicilio</strong><br />
             <span class="precio-opcion" id="precio-domicilio">--</span>
           </label>
+          <label
+            class="tarjeta-envio"
+            for="envio-retiro-sucursal"
+            data-precio="0"
+          >
+            <strong>Retiro en sucursal</strong><br />
+            <span class="precio-opcion" id="precio-sucursal">--</span>
+          </label>
         </div>
       </div>
       <div class="costos">
@@ -107,7 +116,7 @@
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre completo</label>
+              <label for="nombre" class="form-label">Nombre</label>
               <input
                 type="text"
                 class="form-control"
@@ -116,6 +125,100 @@
                 required
               />
             </div>
+            <div class="mb-3">
+              <label for="apellido" class="form-label">Apellido</label>
+              <input
+                type="text"
+                class="form-control"
+                id="apellido"
+                name="apellido"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="provincia" class="form-label">Provincia</label>
+              <input
+                type="text"
+                class="form-control"
+                id="provincia"
+                name="provincia"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="localidad" class="form-label">Localidad</label>
+              <input
+                type="text"
+                class="form-control"
+                id="localidad"
+                name="localidad"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="ciudad" class="form-label">Ciudad</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ciudad"
+                name="ciudad"
+                required
+              />
+            </div>
+            <div class="mb-3" id="campo-direccion">
+              <label for="direccion" class="form-label">Dirección</label>
+              <input
+                type="text"
+                class="form-control"
+                id="direccion"
+                name="direccion"
+              />
+            </div>
+
+            <div class="mb-3" id="modal-tarjetas-envio">
+              <label
+                class="tarjeta-envio-modal"
+                data-tipo="local"
+                data-precio="0"
+              >
+                <strong>Retiro en el local</strong><br />
+                <span class="precio-opcion-modal">$0.00 (sin costo)</span>
+              </label>
+
+              <label
+                class="tarjeta-envio-modal"
+                data-tipo="domicilio"
+                data-precio="0"
+              >
+                <strong>Envío a domicilio</strong><br />
+                <span class="precio-opcion-modal" id="precio-domicilio-modal"
+                  >--</span
+                >
+              </label>
+
+              <label
+                class="tarjeta-envio-modal"
+                data-tipo="sucursal"
+                data-precio="0"
+              >
+                <strong>Retiro en sucursal</strong><br />
+                <span class="precio-opcion-modal" id="precio-sucursal-modal"
+                  >--</span
+                >
+              </label>
+            </div>
+
+            <div class="mb-3" id="campo-sucursal" style="display: none">
+              <label for="selector-sucursal" class="form-label"
+                >Seleccionar sucursal</label
+              >
+              <select id="selector-sucursal" class="form-control"></select>
+              <small
+                id="horarios-sucursal"
+                class="form-text text-muted"
+              ></small>
+            </div>
+
             <div class="mb-3">
               <label for="email" class="form-label">Correo electrónico</label>
               <input
@@ -136,25 +239,6 @@
                 required
               />
             </div>
-            <div class="mb-3" id="campo-direccion" style="display: none">
-              <label for="direccion" class="form-label">Dirección</label>
-              <input
-                type="text"
-                class="form-control"
-                id="direccion"
-                name="direccion"
-              />
-            </div>
-            <div class="mb-3" id="campo-sucursal" style="display: none">
-              <label for="selector-sucursal" class="form-label"
-                >Seleccionar sucursal</label
-              >
-              <select id="selector-sucursal" class="form-control"></select>
-              <small
-                id="horarios-sucursal"
-                class="form-text text-muted"
-              ></small>
-            </div>
             <div class="mb-3">
               <label for="comentarios" class="form-label"
                 >Comentarios adicionales</label
@@ -168,17 +252,16 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn boton">Confirmar pedido</button>
+            <button type="submit" class="btn boton">Pagar</button>
           </div>
         </form>
       </div>
     </div>
   </div>
-
   {% else %}
   <p class="mensaje-vacio">Tu carrito está vacío</p>
   {% endif %}
-
   <script src="{{ url_for('static', filename='js/carrito.js') }}"></script>
 </section>
+
 {% endblock %}
