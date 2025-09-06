@@ -30,16 +30,24 @@ def get_auth_token():
         print(f"Error obteniendo token: {e}")
         return None
 
-@correo_bp.route("/cotizar_envio", methods=["POST"])
-def cotizar_envio():
-    """Recibe datos del envío, consulta la API MiCorreo y devuelve la cotización."""
-    global auth_token
-    datos = request.json
 
+def ensure_token():
+    """Renueva el token si no existe."""
+    global auth_token
     if not auth_token:
         auth_token = get_auth_token()
         if not auth_token:
-            return jsonify({"error": "No se pudo obtener token"}), 500
+            return False
+    return True
+
+
+@correo_bp.route("/cotizar_envio", methods=["POST"])
+def cotizar_envio():
+    """Recibe datos del envío, consulta la API MiCorreo y devuelve la cotización."""
+    datos = request.json
+
+    if not ensure_token():
+        return jsonify({"error": "No se pudo obtener token"}), 500
 
     headers = {
         "Authorization": f"Bearer {auth_token}",
@@ -51,9 +59,9 @@ def cotizar_envio():
     try:
         response = requests.post(url, json=datos, headers=headers)
 
-        # Si el token expiró, lo renovamos y reintentamos
         if response.status_code == 401:
-            auth_token = get_auth_token()
+            # Renovar token y reintentar
+            get_auth_token()
             headers["Authorization"] = f"Bearer {auth_token}"
             response = requests.post(url, json=datos, headers=headers)
 
@@ -62,73 +70,88 @@ def cotizar_envio():
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
 
+
 @correo_bp.route("/sucursales", methods=["GET"])
 def consultar_sucursales():
     """Devuelve la lista de sucursales de MiCorreo."""
-    global auth_token
-    if not auth_token:
-        auth_token = get_auth_token()
-        if not auth_token:
-            return jsonify({"error": "No se pudo obtener token"}), 500
+    if not ensure_token():
+        return jsonify({"error": "No se pudo obtener token"}), 500
+
+    customer_id = request.args.get("customerId")
+    province_code = request.args.get("provinceCode")
+
+    if not customer_id or not province_code:
+        return jsonify({"error": "Se requiere customerId y provinceCode"}), 400
 
     headers = {"Authorization": f"Bearer {auth_token}"}
-    url = f"{BASE_URL}/branches"
+    url = f"{BASE_URL}/agencies"
 
     try:
-        response = requests.get(url, headers=headers)
+        params = {"customerId": customer_id, "provinceCode": province_code}
+        response = requests.get(url, headers=headers, params=params)
+
         if response.status_code == 401:
-            auth_token = get_auth_token()
+            get_auth_token()
             headers["Authorization"] = f"Bearer {auth_token}"
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, params=params)
+
         return jsonify(response.json()), response.status_code
+
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
+
 
 @correo_bp.route("/importar_envio", methods=["POST"])
 def importar_envio():
     """Recibe los datos del envío y lo registra en MiCorreo."""
-    global auth_token
     datos = request.json
 
-    if not auth_token:
-        auth_token = get_auth_token()
-        if not auth_token:
-            return jsonify({"error": "No se pudo obtener token"}), 500
+    if not ensure_token():
+        return jsonify({"error": "No se pudo obtener token"}), 500
 
     headers = {
         "Authorization": f"Bearer {auth_token}",
         "Content-Type": "application/json"
     }
-    url = f"{BASE_URL}/shipments"
+    url = f"{BASE_URL}/shipping/import"
 
     try:
         response = requests.post(url, json=datos, headers=headers)
+
         if response.status_code == 401:
-            auth_token = get_auth_token()
+            get_auth_token()
             headers["Authorization"] = f"Bearer {auth_token}"
             response = requests.post(url, json=datos, headers=headers)
+
         return jsonify(response.json()), response.status_code
+
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
 
-@correo_bp.route("/seguimiento/<tracking_number>", methods=["GET"])
-def obtener_seguimiento(tracking_number):
+
+@correo_bp.route("/seguimiento", methods=["GET"])
+def obtener_seguimiento():
     """Devuelve el estado de un envío por su número de tracking."""
-    global auth_token
-    if not auth_token:
-        auth_token = get_auth_token()
-        if not auth_token:
-            return jsonify({"error": "No se pudo obtener token"}), 500
+    tracking_number = request.args.get("shippingId")
+    if not tracking_number:
+        return jsonify({"error": "Se requiere shippingId"}), 400
+
+    if not ensure_token():
+        return jsonify({"error": "No se pudo obtener token"}), 500
 
     headers = {"Authorization": f"Bearer {auth_token}"}
-    url = f"{BASE_URL}/tracking/{tracking_number}"
+    url = f"{BASE_URL}/shipping/tracking"
+    payload = {"shippingId": tracking_number}
 
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, json=payload)
+
         if response.status_code == 401:
-            auth_token = get_auth_token()
+            get_auth_token()
             headers["Authorization"] = f"Bearer {auth_token}"
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers, json=payload)
+
         return jsonify(response.json()), response.status_code
+
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500

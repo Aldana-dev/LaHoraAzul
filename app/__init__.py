@@ -19,9 +19,13 @@ def create_app():
     # Importar y registrar Blueprints
     from app.routes.admin_routes import admin_bp
     from app.routes.main_routes import main_bp
+    from app.routes.correo_api import correo_bp
+
 
     app.register_blueprint(admin_bp)
     app.register_blueprint(main_bp)
+    app.register_blueprint(correo_bp)
+
 
     # ---------------- Crear tablas (si no existen) ----------------
     with app.app_context():
