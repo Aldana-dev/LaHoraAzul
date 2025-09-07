@@ -67,3 +67,45 @@ document.getElementById("btn-cotizar-envio").addEventListener("click", () => {
     const cpDestino = document.getElementById("cp_destino").value.trim();
     calcularCotizacion(cpDestino);
 });
+
+document.getElementById("btn-guardar-pedido").addEventListener("click", async () => {
+    const form = document.getElementById("form-datos-usuario");
+    const formData = new FormData(form);
+
+    // Convertimos FormData a objeto JSON
+    const datos = {};
+    formData.forEach((value, key) => {
+        datos[key] = value;
+    });
+
+    // Total del pedido (subtotal + envío)
+    const subtotal = parseFloat(document.getElementById("subtotal").textContent.replace("$", "")) || 0;
+    const costoEnvio = parseFloat(document.getElementById("costo-envio").textContent.replace("$", "")) || 0;
+    datos.total = subtotal + costoEnvio;
+
+    // Aquí opcionalmente agregamos los productos del carrito
+    const productos = [];
+    document.querySelectorAll(".item-carrito").forEach(item => {
+        productos.push({
+            nombre: item.querySelector(".nombre-producto").textContent,
+            precio: parseFloat(item.querySelector(".precio").textContent.replace("$", ""))
+        });
+    });
+    datos.productos = productos;
+
+    try {
+        const resp = await fetch("/guardar_pedido", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos),
+        });
+
+        if (!resp.ok) throw new Error("Error guardando pedido");
+
+        const result = await resp.json();
+        alert(`Pedido guardado con ID ${result.id}`);
+    } catch (error) {
+        console.error(error);
+        alert("No se pudo guardar el pedido.");
+    }
+});

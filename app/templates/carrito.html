@@ -60,7 +60,6 @@
             <strong>Envío a domicilio</strong><br />
             <span class="precio-opcion" id="precio-domicilio">--</span>
           </label>
-
         </div>
       </div>
       <div class="costos">
@@ -109,6 +108,7 @@
             ></button>
           </div>
           <div class="modal-body">
+            <!-- Datos personales -->
             <div class="mb-3">
               <label for="nombre" class="form-label">Nombre</label>
               <input
@@ -159,6 +159,16 @@
                 required
               />
             </div>
+            <div class="mb-3">
+              <label for="cp_usuario" class="form-label">Código Postal</label>
+              <input
+                type="text"
+                class="form-control"
+                id="cp_usuario"
+                name="cp_usuario"
+                required
+              />
+            </div>
             <div class="mb-3" id="campo-direccion">
               <label for="direccion" class="form-label">Dirección</label>
               <input
@@ -168,14 +178,27 @@
                 name="direccion"
               />
             </div>
+            <div class="mb-3">
+              <label for="referencias" class="form-label"
+                >Piso / Departamento / Referencias</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="referencias"
+                name="referencias"
+              />
+            </div>
 
+            <!-- Tipo de envío -->
             <div class="mb-3" id="modal-tarjetas-envio">
               <label
                 class="tarjeta-envio-modal"
                 data-tipo="local"
                 data-precio="0"
               >
-                <strong>Retiro en el local</strong><br />
+                <input type="radio" name="tipo_envio" value="local" required />
+                <strong>Retiro en el local</strong>
                 <span class="precio-opcion-modal">$0.00 (sin costo)</span>
               </label>
 
@@ -184,7 +207,13 @@
                 data-tipo="domicilio"
                 data-precio="0"
               >
-                <strong>Envío a domicilio</strong><br />
+                <input
+                  type="radio"
+                  name="tipo_envio"
+                  value="domicilio"
+                  required
+                />
+                <strong>Envío a domicilio</strong>
                 <span class="precio-opcion-modal" id="precio-domicilio-modal"
                   >--</span
                 >
@@ -195,13 +224,20 @@
                 data-tipo="sucursal"
                 data-precio="0"
               >
-                <strong>Retiro en sucursal</strong><br />
+                <input
+                  type="radio"
+                  name="tipo_envio"
+                  value="sucursal"
+                  required
+                />
+                <strong>Retiro en sucursal</strong>
                 <span class="precio-opcion-modal" id="precio-sucursal-modal"
                   >--</span
                 >
               </label>
             </div>
 
+            <!-- Selector de sucursal solo visible si se elige sucursal -->
             <div class="mb-3" id="campo-sucursal" style="display: none">
               <label for="selector-sucursal" class="form-label"
                 >Seleccionar sucursal</label
@@ -213,6 +249,7 @@
               ></small>
             </div>
 
+            <!-- Contacto -->
             <div class="mb-3">
               <label for="email" class="form-label">Correo electrónico</label>
               <input
@@ -244,14 +281,51 @@
                 rows="3"
               ></textarea>
             </div>
+
+            <!-- Términos -->
+            <div class="mb-3 form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="acepto"
+                required
+              />
+              <label class="form-check-label" for="acepto"
+                >Acepto los términos y condiciones</label
+              >
+            </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn boton">Pagar</button>
+            <!-- Botón Guardar Pedido (provisional) -->
+            <button type="button" class="btn boton" id="btn-guardar-pedido">
+              Guardar Pedido
+            </button>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn boton" id="btn-pagar" disabled>
+              Pagar
+            </button>
           </div>
         </form>
       </div>
     </div>
   </div>
+
+  <script>
+    // Habilitar botón Pagar solo si se selecciona un tipo de envío
+    document.querySelectorAll('input[name="tipo_envio"]').forEach((radio) => {
+      radio.addEventListener("change", () => {
+        document.getElementById("btn-pagar").disabled = false;
+
+        // Mostrar selector de sucursal solo si se eligió sucursal
+        const campoSucursal = document.getElementById("campo-sucursal");
+        campoSucursal.style.display =
+          radio.value === "sucursal" ? "block" : "none";
+      });
+    });
+  </script>
+
   {% else %}
   <p class="mensaje-vacio">Tu carrito está vacío</p>
   {% endif %}

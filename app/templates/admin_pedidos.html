@@ -57,73 +57,75 @@
 
         <table class="tabla-admin">
           <thead>
-            <tr>
-              <th>
-                <label for="select-todos" class="sr-only">Seleccionar todos</label>
-                <input type="checkbox" id="select-todos" />
-              </th>
-              <th>ID</th>
-              <th>Cliente</th>
-              {% if filtro == 'nuevos' %}
-              <th>Estado</th>
-              {% endif %}
-              <th>Fecha</th>
-              <th>Precio Total</th>
-              <th>Productos</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% if pedidos|length == 0 %}
-            <tr>
-              <td
-                colspan="{% if filtro == 'nuevos' %}7{% else %}6{% endif %}"
-                style="text-align: center; font-style: italic; color: #666"
-              >
-                No hay pedidos {{ filtro }} para mostrar.
-              </td>
-            </tr>
-            {% else %}
-              {% for pedido in pedidos %}
-              <tr>
-                <td style="text-align: center">
-                  <input
-                    type="checkbox"
-                    name="pedido_ids"
-                    value="{{ pedido.id }}"
-                  />
-                </td>
-                <td>{{ pedido.id }}</td>
-                <td>{{ pedido.email_contacto }}</td>
-                {% if filtro == 'nuevos' %}
-                <td>
-                  {% set dias = (current_time.date() - pedido.fecha.date()).days %}
-                  <span
-                    class="indicador-estado {% if dias == 0 %}verde {% elif dias >= 7 %}rojo {% else %}amarillo {% endif %}"
-                  >
-                  </span>
-                </td>
-                {% endif %}
-                <td>{{ pedido.fecha.strftime('%d/%m/%Y') }}</td>
-                <td>${{ pedido.total }}</td>
-                <td>
-                  {% for item in pedido.items %}
-                  <div class="producto-resumen">
-                    <img
-                      src="{{ url_for('static', filename=item.producto.imagen) }}"
-                      alt="{{ item.producto.nombre }}"
-                    />
-                    <div>
-                      <p>{{ item.producto.nombre }}</p>
-                      <p>${{ item.precio_unitario }}</p>
-                    </div>
-                  </div>
-                  {% endfor %}
-                </td>
-              </tr>
-              <!-- Aquí va el modal, sin cambios -->
-              {% endfor %}
-            {% endif %}
-          </tbody>
+  <tr>
+    <th>
+      <label for="select-todos" class="sr-only">Seleccionar todos</label>
+      <input type="checkbox" id="select-todos" />
+    </th>
+    <th>ID</th>
+    <th>Cliente</th>
+    {% if filtro == 'nuevos' %}
+    <th>Estado</th>
+    {% endif %}
+    <th>Fecha</th>
+    <th>Precio Total</th>
+    <th>Productos</th>
+    <th>Datos de Envío</th> <!-- Nueva columna -->
+  </tr>
+</thead>
+<tbody>
+  {% if pedidos|length == 0 %}
+  <tr>
+    <td colspan="{% if filtro == 'nuevos' %}8{% else %}7{% endif %}"
+        style="text-align: center; font-style: italic; color: #666">
+      No hay pedidos {{ filtro }} para mostrar.
+    </td>
+  </tr>
+  {% else %}
+    {% for pedido in pedidos %}
+    <tr>
+      <td style="text-align: center">
+        <input type="checkbox" name="pedido_ids" value="{{ pedido.id }}" />
+      </td>
+      <td>{{ pedido.id }}</td>
+      <td>{{ pedido.nombre }} {{ pedido.apellido }}</td>
+      {% if filtro == 'nuevos' %}
+      <td>
+        {% set dias = (current_time.date() - pedido.fecha.date()).days %}
+        <span class="indicador-estado {% if dias == 0 %}verde {% elif dias >= 7 %}rojo {% else %}amarillo {% endif %}">
+        </span>
+      </td>
+      {% endif %}
+      <td>{{ pedido.fecha.strftime('%d/%m/%Y') }}</td>
+      <td>${{ pedido.total }}</td>
+      <td>
+        {% for item in pedido.items %}
+        <div class="producto-resumen">
+          <img src="{{ url_for('static', filename=item.producto.imagen) }}" alt="{{ item.producto.nombre }}" />
+          <div>
+            <p>{{ item.producto.nombre }}</p>
+            <p>${{ item.precio_unitario }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </td>
+      <td>
+        <p><strong>Email:</strong> {{ pedido.email_contacto }}</p>
+        <p><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
+        <p><strong>Provincia:</strong> {{ pedido.provincia }}</p>
+        <p><strong>Localidad:</strong> {{ pedido.localidad }}</p>
+        <p><strong>Ciudad:</strong> {{ pedido.ciudad }}</p>
+        <p><strong>Código Postal:</strong> {{ pedido.cp_usuario }}</p>
+        <p><strong>Dirección:</strong> {{ pedido.direccion }}</p>
+        <p><strong>Referencias:</strong> {{ pedido.referencias }}</p>
+        <p><strong>Tipo de envío:</strong> {{ pedido.tipo_envio }}</p>
+        <p><strong>Comentarios:</strong> {{ pedido.comentarios }}</p>
+      </td>
+    </tr>
+    {% endfor %}
+  {% endif %}
+</tbody>
+
         </table>
 
         {% if filtro == 'nuevos' %}
