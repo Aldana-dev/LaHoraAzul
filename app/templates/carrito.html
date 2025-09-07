@@ -95,7 +95,11 @@
   >
     <div class="modal-dialog">
       <div class="modal-content">
-        <form id="form-datos-usuario">
+        <form
+          id="form-datos-usuario"
+          method="POST"
+          action="{{ url_for('main.confirmar_pedido') }}"
+        >
           <div class="modal-header">
             <h5 class="modal-title" id="modalCompraLabel">
               Datos para la compra
@@ -281,6 +285,12 @@
                 rows="3"
               ></textarea>
             </div>
+            <input
+              type="hidden"
+              name="costo_envio"
+              id="costo_envio_hidden"
+              value="0"
+            />
 
             <!-- Términos -->
             <div class="mb-3 form-check">

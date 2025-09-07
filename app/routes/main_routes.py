@@ -2,6 +2,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, session, jsonify
 from app.models import db, Banner, Galeria, Producto, Categoria, ProductoImagen, Pedido, PedidoItem
 from werkzeug.utils import secure_filename
+from datetime import datetime
 from functools import wraps
 import os
 import logging
@@ -169,14 +170,20 @@ def galeria():
     # Renderiza la plantilla 'galeria.html' pasando las imágenes como contexto
     return render_template('galeria.html', imagenes=imagenes)
 
+import logging
+
 # ----------------- Carrito ----------------- #
 @main_bp.route('/carrito')  # Ruta para visualizar el carrito de compras
 def carrito():
+    logging.info("Accediendo a la página del carrito")
+
     # Obtiene los IDs de productos almacenados en la sesión del usuario
     carrito_ids = session.get('carrito', [])
+    logging.info(f"IDs en carrito de sesión: {carrito_ids}")
 
     # Consulta los productos correspondientes a esos IDs desde la base de datos
     productos = Producto.query.filter(Producto.id.in_(carrito_ids)).all()
+    logging.info(f"Productos encontrados en DB: {[p.id for p in productos]}")
 
     # Construye una lista con los datos necesarios para mostrar en la vista
     carrito_data = []
@@ -189,16 +196,14 @@ def carrito():
             'precio': p.precio,
             'imagen': p.imagen
         })
+    logging.info(f"Subtotal calculado: {subtotal}")
 
     # Define un costo de envío inicial en cero
-    # Se actualizará dinámicamente mediante la API y JavaScript en el frontend
     costo_envio = 0
-
-    # Calcula el total como suma de subtotal y costo de envío (por ahora igual al subtotal)
     total = subtotal + costo_envio
+    logging.info(f"Total calculado (subtotal + envío): {total}")
 
-    # Renderiza la plantilla 'carrito.html' enviando los datos del carrito,
-    # subtotal, costo_envio y total para que se usen en la vista y JS
+    # Renderiza la plantilla
     return render_template(
         'carrito.html',
         carrito=carrito_data,
@@ -207,89 +212,131 @@ def carrito():
         total=total
     )
 
+
 # Ruta para agregar un producto al carrito
 @main_bp.route('/carrito/agregar/<int:producto_id>', methods=['POST'])
 def agregar_al_carrito(producto_id):
-    # Obtiene la lista actual del carrito desde la sesión
     carrito = obtener_carrito()
+    logging.info(f"Agregando producto {producto_id} al carrito. Carrito previo: {carrito}")
 
-    # Si el producto no está ya en el carrito, lo agrega
     if producto_id not in carrito:
         carrito.append(producto_id)
-        # Guarda el carrito actualizado en la sesión
         session['carrito'] = carrito
-        flash('Producto agregado al carrito')  # Muestra un mensaje temporal
+        logging.info(f"Producto {producto_id} agregado. Carrito actualizado: {carrito}")
+        flash('Producto agregado al carrito')
 
-    # Redirige de vuelta a la página del producto
     return redirect(url_for('main.producto', producto_id=producto_id))
 
 
 # Ruta para quitar un producto del carrito
 @main_bp.route('/carrito/quitar/<int:producto_id>', methods=['POST'])
 def quitar_del_carrito(producto_id):
-    # Obtiene el carrito actual desde la sesión
     carrito = session.get('carrito', [])
+    logging.info(f"Intentando quitar producto {producto_id} del carrito. Carrito previo: {carrito}")
 
-    # Si el producto está en el carrito, lo elimina
     if producto_id in carrito:
         carrito.remove(producto_id)
-        session['carrito'] = carrito  # Actualiza el carrito en la sesión
-        flash('Producto eliminado del carrito')  # Mensaje de confirmación
+        session['carrito'] = carrito
+        logging.info(f"Producto {producto_id} eliminado. Carrito actualizado: {carrito}")
+        flash('Producto eliminado del carrito')
 
-    # Redirige a la página del carrito
     return redirect(url_for('main.carrito'))
 
 
-# Ruta para confirmar el pedido desde el carrito
+# Ruta para confirmar el pedido
 @main_bp.route('/carrito/confirmar', methods=['POST'])
 def confirmar_pedido():
-    # Obtiene los IDs de productos en el carrito
-    carrito_ids = session.get('carrito', [])
-
-    if not carrito_ids:
-        # Muestra mensaje si el carrito está vacío
-        flash('Tu carrito está vacío')
-        return redirect(url_for('main.carrito'))
-
-    # Obtiene el email de contacto del formulario
-    email_contacto = request.form.get('email_contacto')
-    if not email_contacto:
-        # Valida que se haya ingresado el email
-        flash('Debés ingresar un email')
-        return redirect(url_for('main.carrito'))
-
-    productos = Producto.query.filter(Producto.id.in_(
-        carrito_ids)).all()  # Obtiene los productos del carrito
-
-    total = sum([p.precio for p in productos])  # Calcula el total del pedido
-    nuevo_pedido = Pedido(email_contacto=email_contacto,
-                          total=total)  # Crea el nuevo pedido
-
-    db.session.add(nuevo_pedido)
-    db.session.flush()  # Obtiene el ID del pedido antes del commit
-
-    # Crea un PedidoItem por cada producto en el carrito
-    for p in productos:
-        item = PedidoItem(
-            pedido_id=nuevo_pedido.id,
-            producto_id=p.id,
-            precio_unitario=p.precio
-        )
-        db.session.add(item)
-
-        # Marca el producto como vendido
-        p.vendido = True
-        db.session.add(p)
-
-    # Intenta guardar todo en la base de datos
+    logging.info("Inicio del proceso de confirmación de pedido")
     try:
+        # --- Datos del formulario ---
+        nombre = request.form.get("nombre")
+        apellido = request.form.get("apellido")
+        email_contacto = request.form.get("email")
+        telefono = request.form.get("telefono")
+        provincia = request.form.get("provincia")
+        localidad = request.form.get("localidad")
+        ciudad = request.form.get("ciudad")
+        cp_usuario = request.form.get("cp_usuario")
+        direccion = request.form.get("direccion")
+        referencias = request.form.get("referencias")
+        tipo_envio = request.form.get("tipo_envio")
+        comentarios = request.form.get("comentarios")
+
+        logging.info(f"Datos recibidos del formulario: {request.form.to_dict()}")
+
+        # Validaciones básicas
+        if not email_contacto:
+            logging.warning("No se ingresó email")
+            flash("Debés ingresar un email")
+            return redirect(url_for("main.carrito"))
+
+        carrito_ids = session.get("carrito", [])
+        logging.info(f"IDs en carrito para confirmación: {carrito_ids}")
+        if not carrito_ids:
+            logging.warning("Carrito vacío al intentar confirmar pedido")
+            flash("Tu carrito está vacío")
+            return redirect(url_for("main.carrito"))
+
+        # --- Obtener productos del carrito ---
+        productos = Producto.query.filter(Producto.id.in_(carrito_ids)).all()
+        logging.info(f"Productos obtenidos para el pedido: {[p.id for p in productos]}")
+        subtotal = sum([p.precio for p in productos])
+        logging.info(f"Subtotal calculado: {subtotal}")
+
+        # Costo de envío
+        try:
+            costo_envio = float(request.form.get("costo_envio", 0))
+        except ValueError:
+            logging.error("Costo de envío inválido recibido del formulario")
+            costo_envio = 0
+        total = subtotal + costo_envio
+        logging.info(f"Costo de envío: {costo_envio}, Total final: {total}")
+
+        # --- Crear pedido ---
+        nuevo_pedido = Pedido(
+            nombre=nombre,
+            apellido=apellido,
+            email_contacto=email_contacto,
+            telefono=telefono,
+            provincia=provincia,
+            localidad=localidad,
+            ciudad=ciudad,
+            cp_usuario=cp_usuario,
+            direccion=direccion,
+            referencias=referencias,
+            tipo_envio=tipo_envio,
+            comentarios=comentarios,
+            total=total,
+            fecha=datetime.utcnow()
+        )
+        db.session.add(nuevo_pedido)
+        db.session.flush()
+        logging.info(f"Pedido creado con ID temporal: {nuevo_pedido.id}")
+
+        # --- Crear items del pedido ---
+        for p in productos:
+            item = PedidoItem(
+                pedido_id=nuevo_pedido.id,
+                producto_id=p.id,
+                precio_unitario=p.precio
+            )
+            db.session.add(item)
+            p.vendido = True
+            db.session.add(p)
+            logging.info(f"Item agregado al pedido: Producto {p.id}, Precio {p.precio}")
+
         db.session.commit()
-        session.pop('carrito', None)  # Vacía el carrito
-        flash('Pedido realizado con éxito')  # Mensaje de éxito
+        logging.info(f"Pedido confirmado y guardado con ID: {nuevo_pedido.id}")
+
+        # Vaciar carrito
+        session.pop("carrito", None)
+        logging.info("Carrito de sesión vaciado después de guardar el pedido")
+
+        flash("Pedido guardado con éxito ✅")
+        return redirect(url_for("main.index"))
+
     except Exception as e:
         db.session.rollback()
-        logging.error(f"Error al guardar pedido: {e}")  # Loguea el error
-        flash('Ocurrió un error al confirmar el pedido')  # Mensaje de error
-
-    return redirect(url_for('main.index'))  # Redirige al inicio
-
+        logging.exception(f"Error al guardar pedido: {e}")
+        flash("Ocurrió un error al confirmar el pedido ❌")
+        return redirect(url_for("main.carrito"))

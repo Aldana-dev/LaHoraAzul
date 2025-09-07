@@ -94,7 +94,7 @@ document.getElementById("btn-guardar-pedido").addEventListener("click", async ()
     datos.productos = productos;
 
     try {
-        const resp = await fetch("/guardar_pedido", {
+        const resp = await fetch("/carrito/confirmar", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datos),
@@ -108,4 +108,17 @@ document.getElementById("btn-guardar-pedido").addEventListener("click", async ()
         console.error(error);
         alert("No se pudo guardar el pedido.");
     }
+});
+// Actualiza el campo oculto costo_envio antes de enviar el formulario
+const btnPagar = document.getElementById("btn-pagar");
+const inputCostoEnvio = document.getElementById("costo_envio_hidden");
+const spanCostoEnvio = document.getElementById("costo-envio"); // desde tu resumen
+
+btnPagar.addEventListener("click", () => {
+    // Obtener valor del costo de envío (sin $ y convertir a float)
+    let costo = parseFloat(spanCostoEnvio.textContent.replace('$','')) || 0;
+    inputCostoEnvio.value = costo;
+
+    // Enviar formulario
+    document.getElementById("form-datos-usuario").submit();
 });
