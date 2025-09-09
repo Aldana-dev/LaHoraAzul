@@ -1,7 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
+# Primero instanciamos los objetos sin app
 db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -10,22 +13,19 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://aldana_dev:devadmin@localhost/lahoraazul_db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = 'app/static/uploads'
-    app.secret_key = 'clave_super_secreta'  # Cambiala por una segura en producción
+    app.secret_key = 'clave_super_secreta'  # ⚠️ Cambiar en producción
 
-    # ---------------- Inicializar DB ----------------
+    # ---------------- Inicializar DB y Migraciones ----------------
     db.init_app(app)
+    migrate.init_app(app, db)  # <- Ahora sí conectamos migrate con app y db
 
     # ---------------- Registrar Blueprints ----------------
-    # Importar y registrar Blueprints
     from app.routes.admin_routes import admin_bp
     from app.routes.main_routes import main_bp
+    from app.routes.correo_api import correo_bp
 
     app.register_blueprint(admin_bp)
     app.register_blueprint(main_bp)
-
-    # ---------------- Crear tablas (si no existen) ----------------
-    with app.app_context():
-        from . import models
-        db.create_all()
+    app.register_blueprint(correo_bp)
 
     return app

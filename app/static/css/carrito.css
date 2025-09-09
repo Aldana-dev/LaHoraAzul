@@ -1,25 +1,59 @@
-/* ───────────── Ítem del carrito ───────────── */
+/* ───────────── Layout principal ───────────── */
+.lista-carrito {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-top: 5rem;
+  flex-wrap: nowrap;
+}
+
+.items-carrito {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.resumen-y-confirmacion {
+  flex: 1;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  align-items: center;
+  text-align: center;
+}
+
+.resumen-y-confirmacion > * { width: 100%; }
+
+/* ───────────── Ítems del carrito ───────────── */
 .item-carrito {
   display: flex;
   gap: 1.5rem;
-  padding-bottom: 1rem;
-  margin-top: 2rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
   align-items: stretch;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  max-width: 700px;
+  width: 100%;
 }
 
 .item-carrito img {
-  width: 120px;
-  height: 120px;
-  object-fit: cover; /* La imagen llena el contenedor sin deformarse */
+  width: 120px; height: 120px;
+  object-fit: cover;
   border-radius: 8px;
-  flex-shrink: 0; /* Evita que la imagen se reduzca en flexbox */
+  flex-shrink: 0;
 }
 
 .detalle-producto {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .nombre-producto {
@@ -28,59 +62,158 @@
   font-weight: 600;
 }
 
-.precio-quitar {
+.header-detalle {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-}
-
-.precio {
-  font-weight: bold;
-  font-size: 1rem;
-  color: #153f6c;
+  margin-bottom: 0.5rem;
 }
 
 .boton-quitar {
   padding: 6px 20px;
-  background-color: #ffffff;
+  background: #fff;
   color: #153f6c;
   border: 2px solid #153f6c;
   font-weight: bold;
-  border-radius: 0;
-  cursor: pointer;
   font-size: 0.85rem;
-  margin-left: auto;
-  display: block;
+  cursor: pointer;
 }
 
 .boton-quitar:hover {
-  background-color: #153f6c;
-  color: #ffffff;
+  background: #153f6c;
+  color: #fff;
 }
 
+.precio { font-weight: bold; color: #153f6c; }
 
+/* ───────────── Cotización y envío ───────────── */
+.cotizacion-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
 
+.cotizacion-horizontal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
+}
 
-/* ───────────── Resumen final del carrito ───────────── */
-.resumen-carrito {
-  margin-top: 3rem;
+.cotizacion-horizontal input,
+.cotizacion-horizontal button {
+  border: 1px solid #153f6c;
+  border-radius: 0;
+  height: 40px;
+  font-size: 1rem;
+}
+
+.cotizacion-horizontal input {
+  padding: 0 1rem;
+  width: 220px;
+  outline: none;
+  border-right: none;
+}
+
+.cotizacion-horizontal button {
+  background-color: #153f6c;
+  color: white;
+  padding: 0 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cotizacion-horizontal button:hover {
+  background-color: #153f6c;
+}
+
+.resultado-envio {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.tarjetas-envio {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tarjeta-envio {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+  transition: box-shadow 0.3s ease;
+  text-align: left;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.tarjeta-envio.selected {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: #007bff;
+  background-color: #e7f1ff;
+}
+
+.tarjeta-envio input[type="radio"] {
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.tarjeta-envio strong {
+  font-weight: 400;
+}
+
+/* Opciones de envío */
+.opciones-envio {
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.opciones-envio label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f7f9fc;
+  border: 1px solid #d1d9e6;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.opciones-envio input[type="radio"] {
+  accent-color: #153f6c;
+  transform: scale(1.2);
+}
+
+.opciones-envio label:hover {
+  border-color: #153f6c;
+}
+
+.opciones-envio .precio-opcion {
+  font-weight: bold;
+  color: #153f6c;
   margin-left: auto;
-  margin-right: auto;
-  border-top: 2px solid #153f6c;
-  padding-top: 1.5rem;
+}
+
+/* ───────────── Resumen de costos ───────────── */
+.resumen-carrito {
+  width: 100%;
   font-weight: 600;
   font-size: 1.2rem;
   color: #153f6c;
-  width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.resumen-carrito > div {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
+  padding: 0 1rem;
 }
 
 .resumen-carrito > div span:last-child {
@@ -88,139 +221,106 @@
   text-align: right;
 }
 
-/* ───────────── Botón Finalizar centrado ───────────── */
-.finalizar-compra-container {
+.costos {
   display: flex;
-  justify-content: center;
-  margin-top: 3rem;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 16px;
+  margin-top: 1rem;
 }
 
+/* ───────────── Botón Finalizar compra ───────────── */
+.finalizar-compra-container {
+  margin-top: 0;
+  justify-content: center;
+  display: flex;
+}
 
-/* ───────────── Modal responsive y amplio ───────────── */
+/* ───────────── Modal ───────────── */
+
+.modal-dialog{
+  max-width: 800px;       /* ancho máximo */
+  margin: 1.75rem auto;
+}
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;    /* centra verticalmente */
+  min-height: calc(100% - 1rem);
+}
+
 .modal {
   display: none;
-  position: fixed;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
   z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
 }
+
+.modal.open { display: flex; }
 
 .modal-content {
-  background-color: #fff;
-  margin: 5% auto;
+  background: #fff;
   padding: 2rem;
-  width: 90%;
-  max-width: 800px;
-  height: auto;
+  width: 100%;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  position: relative;
   border-radius: 10px;
+  position: relative;
 }
 
-/* ───────────── Botón cerrar arriba a la izquierda ───────────── */
 .modal-close {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: none;
-  border: none;
-  color: #153f6c;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
+  position: absolute; top: 1rem; left: 1rem;
+  background: none; border: none;
+  color: #153f6c; font-weight: bold; cursor: pointer;
 }
+.modal-close:hover { text-decoration: underline; }
 
-.modal-close:hover {
-  text-decoration: underline;
-}
-
-/* ───────────── Título y línea ───────────── */
 .modal-title {
   margin-top: 2rem;
   font-size: 1.6rem;
   color: #153f6c;
   text-align: center;
 }
-
-.modal-divider {
-  border: none;
-  border-top: 2px solid #153f6c;
-  margin: 1rem auto 2rem auto;
-  width: 100%;
-  opacity: 1 !important;
-}
-
-/* ───────────── Formulario dentro del modal ───────────── */
-.modal-form {
+/* Contenedor de las tarjetas */
+#modal-tarjetas-envio {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 1rem;
 }
 
-.modal-form label {
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #153f6c;
-}
-
-.modal-form input {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  width: 100%;
-  max-width: 400px;
-  border: 1px solid #153f6c;
-  border-radius: 4px;
-  margin-bottom: 1.5rem;
-}
-
-.confirmar-compra {
-  background-color: #153f6c;
-  color: white;
-  border: none;
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-  border-radius: 4px;
+/* Tarjetas de envío */
+.tarjeta-envio-modal {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  text-align: center;
   cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #f8f8f8;
 }
 
-.confirmar-compra:hover {
-  background-color: #0e2e4d;
+/* Efecto hover */
+.tarjeta-envio-modal:hover {
+  border-color: #007bff;
+  background-color: #e6f0ff;
 }
 
+/* Tarjeta seleccionada */
+.tarjeta-envio-modal.seleccionada {
+  border-color: #007bff;
+  background-color: #cce0ff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
 
-/* ───────────── Responsive (max-width 600px) ───────────── */
+/* ───────────── Responsive ───────────── */
 @media (max-width: 600px) {
-  .item-carrito {
-    gap: 1rem;
-    padding: 1rem 0;
-  }
-
-  .item-carrito img {
-    width: 90px;
-    height: 90px;
-  }
-
-  .detalle-producto {
-    min-width: 140px;
-  }
-
-  .nombre-producto {
-    font-size: 1rem;
-  }
-
-  .precio {
-    font-size: 0.95rem;
-  }
-
-  .boton-quitar {
-    padding: 5px 16px;
-    font-size: 0.8rem;
-  }
-
-  .resumen-carrito {
-    font-size: 1.05rem;
-  }
+  .item-carrito { gap: 1rem; padding: 1rem 0; margin-top: 1rem; }
+  .item-carrito img { width: 90px; height: 90px; }
+  .detalle-producto { min-width: 140px; }
+  .nombre-producto { font-size: 1rem; }
+  .precio { font-size: 0.95rem; }
+  .boton-quitar { padding: 5px 16px; font-size: 0.8rem; }
+  .resumen-carrito { font-size: 1.05rem; }
 }

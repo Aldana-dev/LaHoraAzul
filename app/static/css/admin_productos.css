@@ -15,6 +15,7 @@
   margin: 3rem auto 1.5rem auto;
 }
 
+
 /* ───────────── Formularios ───────────── */
 .form-producto {
   margin: 0 auto;
@@ -57,13 +58,12 @@
 
 
 /* ────── Editor Quill adaptado al estilo del formulario ────── */
-
 .ql-container,
 .ql-container .ql-editor {
   font-family: 'Libre Franklin', sans-serif !important;
   font-size: 1rem;
   background-color: white;
-  border: 0px solid #ccc;
+  border: 0;
   border-radius: 4px;
   box-sizing: border-box;
   color: #153f6c;
@@ -85,13 +85,12 @@
   border-top: 1px solid #ccc !important;
 }
 
-
-/* Bordes similares al resto de campos cuando enfocado */
 .ql-container:focus-within,
 .ql-toolbar:focus-within {
   border-color: #073763;
   outline: none;
 }
+
 
 /* ───────────── Inputs con símbolo $ ───────────── */
 .campo {
@@ -103,6 +102,7 @@
   margin-right: 8px;
   font-size: 1.2rem;
 }
+
 
 /* ───────────── Galería ───────────── */
 .galeria-preview-grid {
@@ -146,6 +146,7 @@
   box-sizing: border-box;
 }
 
+
 /* ───────────── Botones productos ───────────── */
 .botones-producto {
   display: flex;
@@ -162,12 +163,14 @@
 .edit-btn {
   background-color: #153f6c;
   color: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .edit-btn:hover {
   background-color: white;
   color: #153f6c;
 }
+
 
 /* ───────────── Modal ───────────── */
 .modal {
@@ -212,6 +215,41 @@
 .cerrar:hover {
   color: #be2a88;
 }
+
+
+/* ───────────── Imágenes adicionales en edición ───────────── */
+.contenedor-imagen-adicional {
+  position: relative;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.imagen-adicional {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+
+.btn-eliminar-imagen {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: center;
+  padding: 0;
+}
+
 
 /* ───────────── Responsive ───────────── */
 @media (max-width: 768px) {

@@ -66,7 +66,7 @@
 
 .carrusel-imagenes img {
   width: 300px;
-  height: 300px;
+  height: 400px;
   object-fit: cover;
   opacity: 0.4; /* Imagenes no centrales más transparentes */
   transition: transform 0.4s ease, opacity 0.4s ease; /* Animación para escala y opacidad */
@@ -88,8 +88,8 @@
 }
 
 .titulo-marco {
-  margin-top: 1rem;
   font-weight: bold;
+  font-size: 20px;
 }
 
 /* ───────────── Responsive ───────────── */
