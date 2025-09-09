@@ -1,124 +1,134 @@
-// Función para calcular cotización
+// ==========================
+// 📦 1. Cotización de envío
+// ==========================
 async function calcularCotizacion(cpDestino) {
-    if (!cpDestino) {
-        alert("Por favor ingrese un Código Postal de destino.");
-        return;
+  if (!cpDestino) {
+    alert("Por favor ingrese un Código Postal de destino.");
+    return;
+  }
+
+  const datosCotizacion = {
+    customerId: "0001079998", // ID proporcionado por MiCorreo
+    postalCodeOrigin: "8407",
+    postalCodeDestination: cpDestino,
+    deliveredType: "D",
+    dimensions: { weight: 1000, height: 10, width: 20, length: 30 },
+  };
+
+  try {
+    const resp = await fetch("/cotizar_envio", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datosCotizacion),
+    });
+
+    if (!resp.ok) throw new Error(`Error en la cotización: ${resp.status}`);
+
+    const data = await resp.json();
+    const tarifaDomicilio = data.rates?.find(r => r.deliveredType === "D");
+
+    if (tarifaDomicilio) {
+      const precio = tarifaDomicilio.price.toFixed(2);
+      document.getElementById("precio-domicilio").textContent = `$${precio}`;
+      document.getElementById("costo-envio").textContent = `$${precio}`;
+
+      const subtotal = parseFloat(document.getElementById("subtotal").textContent.replace('$', '')) || 0;
+      document.getElementById("total-compra").textContent = `$${(subtotal + tarifaDomicilio.price).toFixed(2)}`;
+    } else {
+      alert("No se encontró tarifa para entrega a domicilio.");
     }
-
-    const datosCotizacion = {
-        customerId: "0001079998", // ID proporcionado por MiCorreo
-        postalCodeOrigin: "8407", // CP de tu tienda/origen
-        postalCodeDestination: cpDestino,
-        deliveredType: "D", // "D" a domicilio, "S" a sucursal
-        dimensions: {
-            weight: 1000, // en gramos
-            height: 10, // cm
-            width: 20, // cm
-            length: 30, // cm
-        },
-    };
-
-    try {
-        const resp = await fetch("/cotizar_envio", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(datosCotizacion),
-        });
-
-        if (!resp.ok) {
-            throw new Error(`Error en la cotización: ${resp.status}`);
-        }
-
-        const data = await resp.json();
-
-        if (data.rates && data.rates.length > 0) {
-            const tarifaDomicilio = data.rates.find(r => r.deliveredType === "D");
-            if (tarifaDomicilio) {
-                const precio = tarifaDomicilio.price.toFixed(2);
-                document.getElementById("precio-domicilio").textContent = `$${precio}`;
-                document.getElementById("costo-envio").textContent = `$${precio}`;
-
-                const subtotalElem = document.getElementById("subtotal");
-                const subtotal = subtotalElem ? parseFloat(subtotalElem.textContent.replace('$', '')) : 0;
-
-                document.getElementById("total-compra").textContent = `$${(
-                    subtotal + tarifaDomicilio.price
-                ).toFixed(2)}`;
-
-            } else {
-                alert("No se encontró tarifa para entrega a domicilio.");
-            }
-        } else {
-            alert("No se obtuvieron tarifas para este destino.");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        alert("No se pudo calcular el costo de envío.");
-    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("No se pudo calcular el costo de envío.");
+  }
 }
 
-// Ejecutar cotización inicial al cargar la página con CP 8300
 document.addEventListener("DOMContentLoaded", () => {
-    calcularCotizacion("8300");
+  calcularCotizacion("8300"); // cotiza por defecto
+  document.getElementById("btn-cotizar-envio").addEventListener("click", () => {
+    calcularCotizacion(document.getElementById("cp_destino").value.trim());
+  });
 });
 
-// Asignar el botón para que el usuario pueda recalcular
-document.getElementById("btn-cotizar-envio").addEventListener("click", () => {
-    const cpDestino = document.getElementById("cp_destino").value.trim();
-    calcularCotizacion(cpDestino);
+// ==================================
+// 💳 2. Configuración de Payway
+// ==================================
+const publicApiKey = "TU_API_KEY_PUBLICA"; // sandbox
+const urlSandbox = "https://developers.decidir.com/api/v2";
+const decidir = new Decidir(urlSandbox);
+decidir.setPublishableKey(publicApiKey);
+decidir.setTimeout(5000);
+
+// Formulario del modal
+const form = document.querySelector("#form-datos-usuario");
+
+form.addEventListener("submit", function (event) {
+  const metodo = document.getElementById("metodo_pago").value;
+
+  if (metodo === "tarjeta") {
+    event.preventDefault();
+    decidir.createToken(form, sdkResponseHandler);
+  }
 });
 
-document.getElementById("btn-guardar-pedido").addEventListener("click", async () => {
-    const form = document.getElementById("form-datos-usuario");
-    const formData = new FormData(form);
+function sdkResponseHandler(status, response) {
+  if (status !== 200 && status !== 201) {
+    console.error("Error al generar token:", response);
+    alert("Hubo un problema con la tarjeta. Revisá los datos.");
+  } else {
+    console.log("Token generado:", response.token);
 
-    // Convertimos FormData a objeto JSON
-    const datos = {};
-    formData.forEach((value, key) => {
-        datos[key] = value;
-    });
+    fetch("/confirmar_pedido", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token: response.token,
+        nombre: document.getElementById("nombre").value,
+        apellido: document.getElementById("apellido").value,
+        email: document.getElementById("email").value,
+        telefono: document.getElementById("telefono").value,
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        alert("Compra realizada con éxito 🎉");
+        console.log("Respuesta backend:", data);
+      })
+      .catch(err => {
+        console.error("Error en el backend:", err);
+        alert("No se pudo procesar el pago.");
+      });
+  }
+}
 
-    // Total del pedido (subtotal + envío)
-    const subtotal = parseFloat(document.getElementById("subtotal").textContent.replace("$", "")) || 0;
-    const costoEnvio = parseFloat(document.getElementById("costo-envio").textContent.replace("$", "")) || 0;
-    datos.total = subtotal + costoEnvio;
+// ==================================
+// 🧭 3. Navegación de pasos en modal
+// ==================================
+let pasoActual = 1;
+const pasos = document.querySelectorAll(".paso");
+const btnAnterior = document.getElementById("btn-anterior");
+const btnSiguiente = document.getElementById("btn-siguiente");
+const btnConfirmar = document.getElementById("btn-confirmar");
+const metodoPago = document.getElementById("metodo_pago");
+const pagoTarjeta = document.getElementById("pago-tarjeta");
 
-    // Aquí opcionalmente agregamos los productos del carrito
-    const productos = [];
-    document.querySelectorAll(".item-carrito").forEach(item => {
-        productos.push({
-            nombre: item.querySelector(".nombre-producto").textContent,
-            precio: parseFloat(item.querySelector(".precio").textContent.replace("$", ""))
-        });
-    });
-    datos.productos = productos;
+function mostrarPaso(paso) {
+  pasos.forEach((p, i) => p.classList.toggle("d-none", i !== paso - 1));
+  btnAnterior.disabled = paso === 1;
+  btnSiguiente.classList.toggle("d-none", paso === pasos.length);
+  btnConfirmar.classList.toggle("d-none", paso !== pasos.length);
+}
 
-    try {
-        const resp = await fetch("/carrito/confirmar", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(datos),
-        });
-
-        if (!resp.ok) throw new Error("Error guardando pedido");
-
-        const result = await resp.json();
-        alert(`Pedido guardado con ID ${result.id}`);
-    } catch (error) {
-        console.error(error);
-        alert("No se pudo guardar el pedido.");
-    }
+btnAnterior.addEventListener("click", () => {
+  if (pasoActual > 1) mostrarPaso(--pasoActual);
 });
-// Actualiza el campo oculto costo_envio antes de enviar el formulario
-const btnPagar = document.getElementById("btn-pagar");
-const inputCostoEnvio = document.getElementById("costo_envio_hidden");
-const spanCostoEnvio = document.getElementById("costo-envio"); // desde tu resumen
 
-btnPagar.addEventListener("click", () => {
-    // Obtener valor del costo de envío (sin $ y convertir a float)
-    let costo = parseFloat(spanCostoEnvio.textContent.replace('$','')) || 0;
-    inputCostoEnvio.value = costo;
-
-    // Enviar formulario
-    document.getElementById("form-datos-usuario").submit();
+btnSiguiente.addEventListener("click", () => {
+  if (pasoActual < pasos.length) mostrarPaso(++pasoActual);
 });
+
+metodoPago.addEventListener("change", e => {
+  pagoTarjeta.classList.toggle("d-none", e.target.value !== "tarjeta");
+});
+
+mostrarPaso(pasoActual);
