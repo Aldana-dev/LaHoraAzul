@@ -171,6 +171,18 @@
   color: #153f6c;
 }
 
+.delete-btn {
+  background-color: #3b3b3b;
+  border-color: #3b3b3b;
+  color: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: white;
+  color: #3b3b3b;
+}
+
 
 /* ───────────── Modal ───────────── */
 .modal {

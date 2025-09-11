@@ -3,6 +3,10 @@
   position: relative;
   z-index: 0;
 }
+.carousel-control-next, .carousel-control-prev {
+  width: 10%;
+}
+
 
 /* ──────── Texto de Bienvenida ──────── */
 .contenido {
