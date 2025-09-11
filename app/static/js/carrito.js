@@ -1,17 +1,21 @@
-// ==========================
-// 📦 1. Cotización de envío
-// ==========================
-async function calcularCotizacion(cpDestino) {
-  if (!cpDestino) {
-    alert("Por favor ingrese un Código Postal de destino.");
-    return;
-  }
+// Actualiza todos los spans del mismo tipo de envío
+function mostrarCotizacion(tipo, precio, minDias, maxDias) {
+  const texto = precio
+    ? `$${precio.toFixed(2)} (${minDias} a ${maxDias} días hábiles)`
+    : "No disponible";
 
+  document.querySelectorAll(`[data-tipo="${tipo}"] span`).forEach(span => {
+    span.textContent = texto;
+  });
+}
+
+// Cotizar envío (puede ser D = domicilio, S = sucursal)
+async function cotizarEnvio(cpDestino, tipo) {
   const datosCotizacion = {
-    customerId: "0001079998", // ID proporcionado por MiCorreo
+    customerId: "0001079998",
     postalCodeOrigin: "8407",
     postalCodeDestination: cpDestino,
-    deliveredType: "D",
+    deliveredType: tipo === "domicilio" ? "D" : "S",
     dimensions: { weight: 1000, height: 10, width: 20, length: 30 },
   };
 
@@ -23,32 +27,38 @@ async function calcularCotizacion(cpDestino) {
     });
 
     if (!resp.ok) throw new Error(`Error en la cotización: ${resp.status}`);
-
     const data = await resp.json();
-    const tarifaDomicilio = data.rates?.find(r => r.deliveredType === "D");
 
-    if (tarifaDomicilio) {
-      const precio = tarifaDomicilio.price.toFixed(2);
-      document.getElementById("precio-domicilio").textContent = `$${precio}`;
-      document.getElementById("costo-envio").textContent = `$${precio}`;
-
-      const subtotal = parseFloat(document.getElementById("subtotal").textContent.replace('$', '')) || 0;
-      document.getElementById("total-compra").textContent = `$${(subtotal + tarifaDomicilio.price).toFixed(2)}`;
+    const tarifa = data.rates?.find(r => r.deliveredType === datosCotizacion.deliveredType);
+    if (tarifa) {
+      mostrarCotizacion(tipo, tarifa.price, tarifa.deliveryTimeMin, tarifa.deliveryTimeMax);
     } else {
-      alert("No se encontró tarifa para entrega a domicilio.");
+      mostrarCotizacion(tipo, null);
     }
   } catch (error) {
     console.error("Error:", error);
-    alert("No se pudo calcular el costo de envío.");
+    mostrarCotizacion(tipo, null);
   }
 }
 
+// Ejecutar ambas cotizaciones
+function calcularCotizaciones(cpDestino) {
+  if (!cpDestino) {
+    alert("Por favor ingrese un Código Postal de destino.");
+    return;
+  }
+  cotizarEnvio(cpDestino, "domicilio");
+  cotizarEnvio(cpDestino, "sucursal");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  calcularCotizacion("8300"); // cotiza por defecto
+  calcularCotizaciones("8300"); // por defecto
   document.getElementById("btn-cotizar-envio").addEventListener("click", () => {
-    calcularCotizacion(document.getElementById("cp_destino").value.trim());
+    calcularCotizaciones(document.getElementById("cp_destino").value.trim());
   });
 });
+
+
 
 // ==================================
 // 💳 2. Configuración de Payway

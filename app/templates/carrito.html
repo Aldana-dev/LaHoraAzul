@@ -40,7 +40,7 @@
     <div class="resumen-carrito">
       <div class="envio">
         <div class="cotizacion-wrapper">
-          <p>Ingresá tu Código Postal para calcular el costo de envío:</p>
+          <p>Ingresá tu Código Postal:</p>
           <div class="cotizacion-horizontal">
             <input
               type="text"
@@ -51,27 +51,50 @@
             />
             <button type="button" id="btn-cotizar-envio">Cotizar</button>
           </div>
+          <a
+            href="https://www.correoargentino.com.ar/formularios/cpa"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="acotacion"
+          >
+            Buscar mi código postal
+          </a>
         </div>
 
         <div class="tarjetas-envio">
           <label class="tarjeta-envio" for="envio-retiro-local" data-precio="0">
-            <strong>Retiro en el local</strong><br />
-            <span class="precio-opcion">$0.00 (sin costo)</span>
+            <strong>Retiro en el local - Sin costo</strong><br />
+            <span class="precio-opcion"
+              >Av. Arrayanes 282 - local 8 - Villa la Angostura - Lunes a sábado
+              de 11 a 21 hs.</span
+            >
           </label>
 
-          <label class="tarjeta-envio" for="envio-domicilio" data-precio="0">
+          <label class="tarjeta-envio" data-tipo="domicilio">
             <strong>Envío a domicilio</strong><br />
             <span class="precio-opcion" id="precio-domicilio">--</span>
+          </label>
+
+          <label class="tarjeta-envio" data-tipo="sucursal">
+            <strong>Retiro en sucursal</strong><br />
+            <span class="precio-opcion" id="precio-sucursal">--</span>
           </label>
         </div>
       </div>
       <div class="costos">
-        <div>
-          <span>Productos:</span><span id="subtotal">${{ subtotal }}</span>
-        </div>
-        <div><span>Envío:</span><span id="costo-envio">$0.00</span></div>
-        <div>
-          <span>Total:</span><span id="total-compra">${{ subtotal }}</span>
+        <div class="resumen-costos">
+          <div class="fila">
+            <span class="etiqueta">Productos:</span>
+            <span class="valor" id="subtotal">${{ subtotal }}</span>
+          </div>
+          <div class="fila">
+            <span class="etiqueta">Envío:</span>
+            <span class="valor" id="costo-envio">$0.00</span>
+          </div>
+          <div class="fila total">
+            <span class="etiqueta">Total:</span>
+            <span class="valor" id="total-compra">${{ subtotal }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -88,192 +111,334 @@
     </div>
   </div>
 
-<!-- Modal -->
-<div
-  class="modal fade"
-  id="modalCompra"
-  tabindex="-1"
-  aria-labelledby="modalCompraLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <form
-        id="form-datos-usuario"
-        method="POST"
-        action="{{ url_for('main.confirmar_pedido') }}"
-      >
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalCompraLabel">
-            Proceso de compra
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Cerrar"
-          ></button>
-        </div>
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="modalCompra"
+    tabindex="-1"
+    aria-labelledby="modalCompraLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <form
+          id="form-datos-usuario"
+          method="POST"
+          action="{{ url_for('main.confirmar_pedido') }}"
+        >
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalCompraLabel">Proceso de compra</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
 
-        <div class="modal-body">
-          <!-- Paso 1: Datos de envío -->
-          <div class="paso" id="paso-1">
-            <h5>Datos de envío</h5>
-            <div class="mb-3">
-              <label for="nombre" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="nombre" name="nombre" required />
-            </div>
-            <div class="mb-3">
-              <label for="apellido" class="form-label">Apellido</label>
-              <input type="text" class="form-control" id="apellido" name="apellido" required />
-            </div>
-            <div class="mb-3">
-              <label for="provincia" class="form-label">Provincia</label>
-              <input type="text" class="form-control" id="provincia" name="provincia" required />
-            </div>
-            <div class="mb-3">
-              <label for="localidad" class="form-label">Localidad</label>
-              <input type="text" class="form-control" id="localidad" name="localidad" required />
-            </div>
-            <div class="mb-3">
-              <label for="ciudad" class="form-label">Ciudad</label>
-              <input type="text" class="form-control" id="ciudad" name="ciudad" required />
-            </div>
-            <div class="mb-3">
-              <label for="cp_usuario" class="form-label">Código Postal</label>
-              <input type="text" class="form-control" id="cp_usuario" name="cp_usuario" required />
-            </div>
-            <div class="mb-3" id="campo-direccion">
-              <label for="direccion" class="form-label">Dirección</label>
-              <input type="text" class="form-control" id="direccion" name="direccion" />
-            </div>
-            <div class="mb-3">
-              <label for="referencias" class="form-label">Piso / Departamento / Referencias</label>
-              <input type="text" class="form-control" id="referencias" name="referencias" />
+          <div class="modal-body">
+            <!-- Paso 1: Datos de envío -->
+            <div class="paso" id="paso-1">
+              <h5>Datos de envío</h5>
+              <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nombre"
+                  name="nombre"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="apellido"
+                  name="apellido"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="provincia" class="form-label">Provincia</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="provincia"
+                  name="provincia"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="localidad" class="form-label">Localidad</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="localidad"
+                  name="localidad"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="ciudad" class="form-label">Ciudad</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ciudad"
+                  name="ciudad"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="cp_usuario" class="form-label">Código Postal</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="cp_usuario"
+                  name="cp_usuario"
+                  required
+                />
+              </div>
+              <div class="mb-3" id="campo-direccion">
+                <label for="direccion" class="form-label">Dirección</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="direccion"
+                  name="direccion"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="referencias" class="form-label"
+                  >Piso / Departamento / Referencias</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="referencias"
+                  name="referencias"
+                />
+              </div>
+
+              <!-- Tipo de envío -->
+              <div class="mb-3" id="modal-tarjetas-envio">
+                <label class="tarjeta-envio-modal">
+                  <input
+                    type="radio"
+                    name="tipo_envio"
+                    value="local"
+                    required
+                  />
+                  <strong>Retiro en el local</strong>
+                  <span class="precio-opcion-modal">$0.00 (sin costo)</span>
+                  <small class="texto-envio">Disponible inmediatamente</small>
+                </label>
+
+                <label class="tarjeta-envio-modal" data-tipo="domicilio">
+                  <input
+                    type="radio"
+                    name="tipo_envio"
+                    value="domicilio"
+                    required
+                  />
+                  <strong>Envío a domicilio</strong>
+                  <span class="precio-opcion-modal" id="precio-domicilio-modal"
+                    >--</span
+                  >
+                  <small class="texto-envio" id="dias-domicilio"></small>
+                </label>
+
+                <label class="tarjeta-envio-modal" data-tipo="sucursal">
+                  <input
+                    type="radio"
+                    name="tipo_envio"
+                    value="sucursal"
+                    required
+                  />
+                  <strong>Retiro en sucursal</strong>
+                  <span
+                    class="precio-opcion-modal"
+                    id="precio-sucursal-modal"
+                  ></span>
+                  <small class="texto-envio" id="dias-sucursal"></small>
+                </label>
+              </div>
+
+              <!-- Selector de sucursal -->
+              <div class="mb-3" id="campo-sucursal" style="display: none">
+                <label for="selector-sucursal" class="form-label"
+                  >Seleccionar sucursal</label
+                >
+                <select id="selector-sucursal" class="form-control"></select>
+                <small
+                  id="horarios-sucursal"
+                  class="form-text text-muted"
+                ></small>
+              </div>
+
+              <!-- Contacto -->
+              <div class="mb-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="telefono"
+                  name="telefono"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="comentarios" class="form-label"
+                  >Comentarios adicionales</label
+                >
+                <textarea
+                  class="form-control"
+                  id="comentarios"
+                  name="comentarios"
+                  rows="3"
+                ></textarea>
+              </div>
             </div>
 
-            <!-- Tipo de envío -->
-            <div class="mb-3" id="modal-tarjetas-envio">
-              <label class="tarjeta-envio-modal">
-                <input type="radio" name="tipo_envio" value="local" required />
-                <strong>Retiro en el local</strong>
-                <span class="precio-opcion-modal">$0.00 (sin costo)</span>
-              </label>
+            <!-- Paso 2: Datos de pago -->
+            <div class="paso d-none" id="paso-2">
+              <h5>Datos de pago</h5>
+              <div class="mb-3">
+                <label for="metodo_pago" class="form-label"
+                  >Método de pago</label
+                >
+                <select
+                  id="metodo_pago"
+                  name="metodo_pago"
+                  class="form-control"
+                  required
+                >
+                  <option value="">Seleccione...</option>
+                  <option value="tarjeta">Tarjeta de crédito/débito</option>
+                  <option value="transferencia">Transferencia bancaria</option>
+                  <option value="mercadopago">MercadoPago</option>
+                </select>
+              </div>
 
-              <label class="tarjeta-envio-modal">
-                <input type="radio" name="tipo_envio" value="domicilio" required />
-                <strong>Envío a domicilio</strong>
-                <span class="precio-opcion-modal" id="precio-domicilio-modal">--</span>
-              </label>
-
-              <label class="tarjeta-envio-modal">
-                <input type="radio" name="tipo_envio" value="sucursal" required />
-                <strong>Retiro en sucursal</strong>
-                <span class="precio-opcion-modal" id="precio-sucursal-modal">--</span>
-              </label>
+              <!-- Campos de tarjeta -->
+              <div id="pago-tarjeta" class="d-none">
+                <div class="mb-3">
+                  <label for="numero_tarjeta" class="form-label"
+                    >Número de tarjeta</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="numero_tarjeta"
+                    data-decidir="card_number"
+                  />
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label for="vencimiento" class="form-label"
+                      >Vencimiento</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="vencimiento"
+                      placeholder="MM/AA"
+                      data-decidir="card_expiration_month"
+                      oninput="if(this.value.length===2) this.nextElementSibling.focus();"
+                      maxlength="2"
+                    />
+                    <input
+                      type="text"
+                      class="form-control mt-2"
+                      placeholder="AA"
+                      data-decidir="card_expiration_year"
+                      maxlength="2"
+                    />
+                  </div>
+                  <div class="col">
+                    <label for="cvv" class="form-label">CVV</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="cvv"
+                      maxlength="4"
+                      data-decidir="security_code"
+                    />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="titular" class="form-label"
+                    >Titular de la tarjeta</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="titular"
+                    data-decidir="card_holder_name"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="dni" class="form-label">Documento</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="dni"
+                    data-decidir="card_holder_doc_number"
+                  />
+                </div>
+              </div>
             </div>
 
-            <!-- Selector de sucursal -->
-            <div class="mb-3" id="campo-sucursal" style="display: none">
-              <label for="selector-sucursal" class="form-label">Seleccionar sucursal</label>
-              <select id="selector-sucursal" class="form-control"></select>
-              <small id="horarios-sucursal" class="form-text text-muted"></small>
-            </div>
+            <!-- Paso 3: Confirmación -->
+            <div class="paso d-none" id="paso-3">
+              <h5>Confirmación de compra</h5>
+              <p>Revisa que tus datos sean correctos antes de confirmar:</p>
+              <ul id="resumen-compra">
+                <!-- Aquí puedes llenar dinámicamente con JS los datos -->
+              </ul>
 
-            <!-- Contacto -->
-            <div class="mb-3">
-              <label for="email" class="form-label">Correo electrónico</label>
-              <input type="email" class="form-control" id="email" name="email" required />
-            </div>
-            <div class="mb-3">
-              <label for="telefono" class="form-label">Teléfono</label>
-              <input type="tel" class="form-control" id="telefono" name="telefono" required />
-            </div>
-            <div class="mb-3">
-              <label for="comentarios" class="form-label">Comentarios adicionales</label>
-              <textarea class="form-control" id="comentarios" name="comentarios" rows="3"></textarea>
+              <!-- Términos -->
+              <div class="mb-3 form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="acepto"
+                  required
+                />
+                <label class="form-check-label" for="acepto">
+                  Acepto los términos y condiciones
+                </label>
+              </div>
             </div>
           </div>
 
-          <!-- Paso 2: Datos de pago -->
-          <div class="paso d-none" id="paso-2">
-            <h5>Datos de pago</h5>
-            <div class="mb-3">
-              <label for="metodo_pago" class="form-label">Método de pago</label>
-              <select id="metodo_pago" name="metodo_pago" class="form-control" required>
-                <option value="">Seleccione...</option>
-                <option value="tarjeta">Tarjeta de crédito/débito</option>
-                <option value="transferencia">Transferencia bancaria</option>
-                <option value="mercadopago">MercadoPago</option>
-              </select>
-            </div>
-
-            <!-- Campos de tarjeta -->
-<div id="pago-tarjeta" class="d-none">
-  <div class="mb-3">
-    <label for="numero_tarjeta" class="form-label">Número de tarjeta</label>
-    <input type="text" class="form-control" id="numero_tarjeta" data-decidir="card_number" />
-  </div>
-  <div class="row">
-    <div class="col">
-      <label for="vencimiento" class="form-label">Vencimiento</label>
-      <input type="text" class="form-control" id="vencimiento" placeholder="MM/AA"
-             data-decidir="card_expiration_month"
-             oninput="if(this.value.length===2) this.nextElementSibling.focus();" maxlength="2" />
-      <input type="text" class="form-control mt-2" placeholder="AA"
-             data-decidir="card_expiration_year" maxlength="2" />
-    </div>
-    <div class="col">
-      <label for="cvv" class="form-label">CVV</label>
-      <input type="text" class="form-control" id="cvv" maxlength="4" data-decidir="security_code" />
-    </div>
-  </div>
-  <div class="mb-3">
-    <label for="titular" class="form-label">Titular de la tarjeta</label>
-    <input type="text" class="form-control" id="titular" data-decidir="card_holder_name" />
-  </div>
-  <div class="mb-3">
-    <label for="dni" class="form-label">Documento</label>
-    <input type="text" class="form-control" id="dni" data-decidir="card_holder_doc_number" />
-  </div>
-</div>
-
+          <!-- Footer con navegación -->
+          <div class="modal-footer">
+            <button type="button" class="btn boton" id="btn-anterior" disabled>
+              Anterior
+            </button>
+            <button type="button" class="btn boton" id="btn-siguiente">
+              Siguiente
+            </button>
+            <button type="submit" class="btn boton" id="btn-confirmar">
+              Confirmar compra
+            </button>
           </div>
-
-          <!-- Paso 3: Confirmación -->
-          <div class="paso d-none" id="paso-3">
-            <h5>Confirmación de compra</h5>
-            <p>Revisa que tus datos sean correctos antes de confirmar:</p>
-            <ul id="resumen-compra">
-              <!-- Aquí puedes llenar dinámicamente con JS los datos -->
-            </ul>
-
-            <!-- Términos -->
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="acepto" required />
-              <label class="form-check-label" for="acepto">
-                Acepto los términos y condiciones
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Footer con navegación -->
-        <div class="modal-footer">
-          <button type="button" class="btn boton" id="btn-anterior" disabled>
-            Anterior
-          </button>
-          <button type="button" class="btn boton" id="btn-siguiente">
-            Siguiente
-          </button>
-          <button type="submit" class="btn boton" id="btn-confirmar">
-            Confirmar compra
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 
   {% else %}
   <p class="mensaje-vacio">Tu carrito está vacío</p>

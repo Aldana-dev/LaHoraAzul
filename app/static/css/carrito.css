@@ -87,13 +87,29 @@
 .precio { font-weight: bold; color: #153f6c; }
 
 /* ───────────── Cotización y envío ───────────── */
-.cotizacion-wrapper {
+
+.acotacion{
   display: flex;
+  color: rgb(77, 77, 77);
+  font-size: 1rem;
+  font-weight: 100;
+  text-decoration: none;
+  
+}
+
+.cotizacion-wrapper {
   flex-direction: column;
   align-items: center;
   text-align: center;
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+.cotizacion-wrapper .acotacionfd{
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 0.5rem;
+
 }
 
 .cotizacion-horizontal {
@@ -312,6 +328,28 @@
   border-color: #007bff;
   background-color: #cce0ff;
   box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+.resumen-costos {
+  width: 100%;
+  margin-top: 1rem;
+  font-size: 16px;
+}
+
+.resumen-costos .fila {
+  display: flex;
+  justify-content: space-between; /* izquierda - derecha */
+  padding: 4px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.resumen-costos .fila:last-child {
+  border-bottom: none;
+}
+
+.resumen-costos .total {
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 8px;
 }
 
 /* ───────────── Responsive ───────────── */
