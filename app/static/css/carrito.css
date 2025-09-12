@@ -20,14 +20,16 @@
   flex-direction: column;
   gap: 1.5rem;
   background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 1.5rem;
   align-items: center;
   text-align: center;
 }
 
-.resumen-y-confirmacion > * { width: 100%; }
+.resumen-y-confirmacion > * {
+  width: 100%;
+}
 
 /* ───────────── Ítems del carrito ───────────── */
 .item-carrito {
@@ -37,14 +39,15 @@
   margin-bottom: 2rem;
   align-items: stretch;
   background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   max-width: 700px;
   width: 100%;
 }
 
 .item-carrito img {
-  width: 120px; height: 120px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
   border-radius: 8px;
   flex-shrink: 0;
@@ -57,44 +60,51 @@
 }
 
 .nombre-producto {
-  margin-bottom: 0.3rem;
   font-size: 1.1rem;
   font-weight: 600;
+  margin-bottom: 0rem;
 }
 
 .header-detalle {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  padding-top: 0.5rem;
 }
 
 .boton-quitar {
   padding: 6px 20px;
+  padding-top: 0px;
   background: #fff;
   color: #153f6c;
-  border: 2px solid #153f6c;
+  border: 0px solid #153f6c;
   font-weight: bold;
-  font-size: 0.85rem;
+  font-size: 1.7rem;
   cursor: pointer;
 }
 
 .boton-quitar:hover {
-  background: #153f6c;
-  color: #fff;
+  color: #313131;
 }
 
-.precio { font-weight: bold; color: #153f6c; }
+.precio {
+  font-weight: bold;
+  color: #515151;
+  margin-left: 20px;
+}
 
 /* ───────────── Cotización y envío ───────────── */
 
-.acotacion{
+legend {
+  font-size: 20px;
+}
+
+.acotacion {
   display: flex;
   color: rgb(77, 77, 77);
   font-size: 1rem;
   font-weight: 100;
   text-decoration: none;
-  
 }
 
 .cotizacion-wrapper {
@@ -105,11 +115,10 @@
   margin-bottom: 1rem;
 }
 
-.cotizacion-wrapper .acotacionfd{
+.cotizacion-wrapper .acotacionfd {
   display: flex;
   justify-content: flex-start;
   margin-left: 0.5rem;
-
 }
 
 .cotizacion-horizontal {
@@ -235,6 +244,8 @@
 .resumen-carrito > div span:last-child {
   min-width: 80px;
   text-align: right;
+  font-size: 15px;
+  color: #505050;
 }
 
 .costos {
@@ -254,42 +265,52 @@
 
 /* ───────────── Modal ───────────── */
 
-.modal-dialog{
-  max-width: 800px;       /* ancho máximo */
+.modal-dialog {
+  max-width: 70rem; /* ancho máximo */
   margin: 1.75rem auto;
 }
 .modal-dialog-centered {
   display: flex;
-  align-items: center;    /* centra verticalmente */
+  align-items: center; /* centra verticalmente */
   min-height: calc(100% - 1rem);
 }
 
 .modal {
   display: none;
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.5);
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 9999;
   justify-content: center;
   align-items: center;
 }
 
-.modal.open { display: flex; }
+.modal.open {
+  display: flex;
+}
 
 .modal-content {
   background: #fff;
   padding: 2rem;
   width: 100%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   position: relative;
 }
 
 .modal-close {
-  position: absolute; top: 1rem; left: 1rem;
-  background: none; border: none;
-  color: #153f6c; font-weight: bold; cursor: pointer;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  color: #153f6c;
+  font-weight: bold;
+  cursor: pointer;
 }
-.modal-close:hover { text-decoration: underline; }
+.modal-close:hover {
+  text-decoration: underline;
+}
 
 .modal-title {
   margin-top: 2rem;
@@ -354,11 +375,29 @@
 
 /* ───────────── Responsive ───────────── */
 @media (max-width: 600px) {
-  .item-carrito { gap: 1rem; padding: 1rem 0; margin-top: 1rem; }
-  .item-carrito img { width: 90px; height: 90px; }
-  .detalle-producto { min-width: 140px; }
-  .nombre-producto { font-size: 1rem; }
-  .precio { font-size: 0.95rem; }
-  .boton-quitar { padding: 5px 16px; font-size: 0.8rem; }
-  .resumen-carrito { font-size: 1.05rem; }
+  .item-carrito {
+    gap: 1rem;
+    padding: 1rem 0;
+    margin-top: 1rem;
+  }
+  .item-carrito img {
+    width: 90px;
+    height: 90px;
+  }
+  .detalle-producto {
+    min-width: 140px;
+  }
+  .nombre-producto {
+    font-size: 1rem;
+  }
+  .precio {
+    font-size: 0.95rem;
+  }
+  .boton-quitar {
+    padding: 5px 16px;
+    font-size: 0.8rem;
+  }
+  .resumen-carrito {
+    font-size: 1.05rem;
+  }
 }
