@@ -1,15 +1,47 @@
-// Actualiza todos los spans del mismo tipo de envío
-function mostrarCotizacion(tipo, precio, minDias, maxDias) {
-  const texto = precio
-    ? `$${precio.toFixed(2)} (${minDias} a ${maxDias} días hábiles)`
-    : "No disponible";
+// ===============================
+// 🚚 Cotización de envíos
+// ===============================
+function mostrarCotizacionGlobal(tipo, precio, minDias, maxDias) {
+  // Actualizar sección principal
+  const labelPrincipal = document.querySelector(`.tarjeta-envio[data-tipo="${tipo}"]`);
+  if (labelPrincipal) actualizarLabel(labelPrincipal, precio, minDias, maxDias);
 
-  document.querySelectorAll(`[data-tipo="${tipo}"] span`).forEach(span => {
-    span.textContent = texto;
-  });
+  // Actualizar sección modal
+  const labelModal = document.querySelector(`#modal-tarjetas-envio label[data-tipo="${tipo}"]`);
+  if (labelModal) actualizarLabel(labelModal, precio, minDias, maxDias);
 }
 
-// Cotizar envío (puede ser D = domicilio, S = sucursal)
+// Función helper para actualizar cualquier label de envío
+// Función helper para actualizar cualquier label de envío
+function actualizarLabel(label, precio, minDias, maxDias) {
+  const spanPrecio = label.querySelector(".precio-opcion, .precio-opcion-modal");
+  const spanTiempo = label.querySelector(".texto-envio");
+
+  if (precio != null) {
+    // Precio SOLO en el span de precio
+    spanPrecio.textContent = `$${precio.toFixed(2)}`;
+    label.dataset.precio = precio;
+
+    // Tiempo SOLO en el span de tiempo
+    if (spanTiempo) spanTiempo.textContent = `${minDias} a ${maxDias} días hábiles`;
+
+    // Habilitar input
+    const input = label.querySelector("input");
+    if (input) input.disabled = false;
+  } else {
+    spanPrecio.textContent = "No disponible";
+    if (spanTiempo) spanTiempo.textContent = "";
+
+    label.dataset.precio = 0;
+
+    // Deshabilitar input
+    const input = label.querySelector("input");
+    if (input) input.disabled = true;
+  }
+}
+
+
+// Cotizar envío (D = domicilio, S = sucursal)
 async function cotizarEnvio(cpDestino, tipo) {
   const datosCotizacion = {
     customerId: "0001079998",
@@ -30,18 +62,13 @@ async function cotizarEnvio(cpDestino, tipo) {
     const data = await resp.json();
 
     const tarifa = data.rates?.find(r => r.deliveredType === datosCotizacion.deliveredType);
-    if (tarifa) {
-      mostrarCotizacion(tipo, tarifa.price, tarifa.deliveryTimeMin, tarifa.deliveryTimeMax);
-    } else {
-      mostrarCotizacion(tipo, null);
-    }
+    mostrarCotizacionGlobal(tipo, tarifa?.price ?? null, tarifa?.deliveryTimeMin, tarifa?.deliveryTimeMax);
   } catch (error) {
     console.error("Error:", error);
-    mostrarCotizacion(tipo, null);
+    mostrarCotizacionGlobal(tipo, null);
   }
 }
 
-// Ejecutar ambas cotizaciones
 function calcularCotizaciones(cpDestino) {
   if (!cpDestino) {
     alert("Por favor ingrese un Código Postal de destino.");
@@ -51,14 +78,42 @@ function calcularCotizaciones(cpDestino) {
   cotizarEnvio(cpDestino, "sucursal");
 }
 
+// ===============================
+// 💰 Resumen de costos
+// ===============================
+function parseCurrency(str) {
+  return parseFloat(str.replace(/[^0-9.-]+/g, "")) || 0;
+}
+
+function actualizarResumen() {
+  const seleccionado = document.querySelector('input[name="tipo_envio"]:checked, input[name="opcion-envio"]:checked');
+  if (!seleccionado) return;
+
+  const label = seleccionado.closest("label");
+  const precioEnvio = parseFloat(label.dataset.precio || 0);
+
+  const subtotal = parseCurrency(document.getElementById("subtotal").textContent);
+  document.getElementById("costo-envio").textContent = `$${precioEnvio.toFixed(2)}`;
+  document.getElementById("total-compra").textContent = `$${(subtotal + precioEnvio).toFixed(2)}`;
+}
+
+// ===============================
+// 🚀 Inicialización
+// ===============================
 document.addEventListener("DOMContentLoaded", () => {
-  calcularCotizaciones("8300"); // por defecto
+  // Cotización inicial
+  calcularCotizaciones("8300");
   document.getElementById("btn-cotizar-envio").addEventListener("click", () => {
     calcularCotizaciones(document.getElementById("cp_destino").value.trim());
   });
+
+  // Escuchar todos los radios de envío (modal + principal)
+  document.querySelectorAll('input[name="tipo_envio"], input[name="opcion-envio"]').forEach(radio => {
+    radio.addEventListener("change", actualizarResumen);
+  });
+
+  actualizarResumen(); // inicializar
 });
-
-
 
 // ==================================
 // 💳 2. Configuración de Payway

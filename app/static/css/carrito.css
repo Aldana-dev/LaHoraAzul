@@ -97,6 +97,13 @@
 
 legend {
   font-size: 20px;
+  margin-bottom: 0px;
+}
+
+legend + * {
+  clear: left;
+  font-size: smaller;
+  font-weight: normal;
 }
 
 .acotacion {
@@ -105,6 +112,7 @@ legend {
   font-size: 1rem;
   font-weight: 100;
   text-decoration: none;
+  margin-left: 0.5rem;
 }
 
 .cotizacion-wrapper {
@@ -318,6 +326,12 @@ legend {
   color: #153f6c;
   text-align: center;
 }
+
+.form-label {
+  margin-bottom: 0px;
+  font-size: 16px;
+}
+
 /* Contenedor de las tarjetas */
 #modal-tarjetas-envio {
   display: flex;
@@ -340,16 +354,69 @@ legend {
 
 /* Efecto hover */
 .tarjeta-envio-modal:hover {
-  border-color: #007bff;
+  border-color: #153f6c;
   background-color: #e6f0ff;
 }
 
 /* Tarjeta seleccionada */
 .tarjeta-envio-modal.seleccionada {
-  border-color: #007bff;
+  border-color: #153f6c;
   background-color: #cce0ff;
   box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
 }
+
+/* Ocultar radios */
+#modal-tarjetas-envio input[type="radio"] {
+  display: none;
+}
+
+/* Tarjeta base */
+.tarjeta-envio-modal {
+  flex: 1;
+  padding: 1.25rem 1rem;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 14px;
+  background-color: #fff;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+/* Hover */
+.tarjeta-envio-modal:hover {
+  border-color: #153f6c;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+}
+
+/* Texto */
+.tarjeta-envio-modal strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #153f6c;
+}
+
+.tarjeta-envio-modal .precio-opcion-modal {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #153f6c;
+  margin-bottom: 0.25rem;
+}
+
+.tarjeta-envio-modal .texto-envio {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Seleccionada usando :has (si tu navegador lo soporta) */
+.tarjeta-envio-modal:has(input[type="radio"]:checked) {
+  border-color: #153f6c;
+  background-color: #f7faff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+}
+
 .resumen-costos {
   width: 100%;
   margin-top: 1rem;
