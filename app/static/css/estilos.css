@@ -6,7 +6,7 @@
   font-style: normal;
 }
 
-/* ───────────── Estilos globales y reset ───────────── */
+/* ───────────── Reset y estilos globales ───────────── */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -22,6 +22,7 @@ body {
   line-height: 1.6;
   scroll-padding-top: 80px;
 }
+
 .mensaje-vacio {
   text-align: center;
   font-size: 1.3rem;
@@ -29,61 +30,72 @@ body {
   margin: 8rem;
   font-weight: 500;
 }
-/* ───────────── Tipografía por jerarquía ───────────── */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+
+.ico-decorador {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ───────────── Tipografía ───────────── */
+h1, h2, h3, h4, h5, h6 {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   line-height: 1.3;
   margin-bottom: 1rem;
 }
 
-h1 {
-  font-size: 2.5rem;
-}
-h2 {
-  font-size: 2rem;
-}
-h3 {
-  font-size: 1.75rem;
-}
-h4 {
-  font-size: 1.5rem;
-}
-h5 {
-  font-size: 1.25rem;
-}
-h6 {
-  font-size: 1.1rem;
-}
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1.1rem; }
 
 p {
   font-size: 1rem;
   margin-bottom: 1rem;
 }
 
-/* ───────────── Logo título con fuente especial ───────────── */
 .logo-titulo {
   font-family: "Macaroni", cursive;
   font-size: 3.5rem;
 }
 
-/* ───────────── Botones y navegación con Poppins ───────────── */
-button,
-.btn,
-.boton,
-nav a {
+/* ───────────── Botones y navegación ───────────── */
+button, .btn, .boton, nav a {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
 }
 
+.boton {
+  display: inline-block;
+  padding: 10px 100px;
+  background-color: #ffffff;
+  color: #153f6c;
+  border: 2px solid #153f6c;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+}
+
+.boton:hover {
+  background-color: #153f6c;
+  color: #ffffff;
+}
+
+.small-btn {
+  padding: 8px 0;
+  width: 200px;
+  font-size: 0.9rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ───────────── Layout principal ───────────── */
-.pagina,
-main {
+.pagina, main {
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem;
@@ -95,29 +107,11 @@ header {
   text-align: center;
 }
 
-.material-symbols-outlined {
-  font-size: 45px;
-  color: #153f6c;
-}
-
-.material-symbols-outlined:hover {
-  color:#727272;
-}
-
-.carrito-icono {
-  width: 65px;
-  height: 65px;
-  padding: 0;
-  text-decoration: none;
-
-}
-
 nav {
   display: flex;
   justify-content: center;
   font-family: "Poppins", sans-serif;
   font-weight: 600;
-
   gap: 100px;
   padding: 15px 10px;
   background-color: white;
@@ -135,37 +129,27 @@ nav a {
 
 nav a:hover {
   color: #727272;
+}
+
+/* ───────────── Carrito ───────────── */
+.carrito-icono {
+  width: 65px;
+  height: 65px;
+  padding: 0;
   text-decoration: none;
 }
 
-/* ───────────── Botones comunes ───────────── */
-.boton {
-  display: inline-block;
-  padding: 10px 100px;
-  background-color: #ffffff;
+.carrito-icono-i {
+  font-size: 40px;
   color: #153f6c;
-  border: 2px solid #153f6c;
-  border-radius: 0;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  text-decoration: none;
-}
-.small-btn {
-  padding: 8px 0;
-  width: 200px;
-  font-size: 0.9rem;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  transition: color 0.2s;
 }
 
-.boton:hover {
-  background-color: #153f6c;
-  color: #ffffff;
+.carrito-icono-i:hover {
+  color: #727272;
 }
 
-/* ───────────── Diseño de columnas flexibles ───────────── */
+/* ───────────── Columnas flexibles ───────────── */
 .dos-columnas {
   display: flex;
   flex-wrap: wrap;
@@ -201,14 +185,12 @@ nav a:hover {
 .footer-left,
 .footer-right {
   flex: 1;
-  text-align: left;
 }
 
-.footer-right {
-  text-align: right;
-}
+.footer-left { text-align: left; }
+.footer-right { text-align: right; }
 
-/* ───────────── Trigger admin (solo para debug) ───────────── */
+/* ───────────── Admin trigger ───────────── */
 #admin-trigger {
   cursor: pointer;
   user-select: none;
@@ -218,7 +200,7 @@ nav a:hover {
   text-decoration: underline dashed;
 }
 
-/* ───────────── Botón flotante de WhatsApp ───────────── */
+/* ───────────── Botón flotante WhatsApp ───────────── */
 .btn-whatsapp {
   position: fixed;
   bottom: 20px;
@@ -226,7 +208,6 @@ nav a:hover {
   width: 60px;
   height: 60px;
   background-color: #25D366;
-  /* background-color: #153f6c; */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -239,7 +220,7 @@ nav a:hover {
 .btn-whatsapp img {
   width: 30px;
   height: 30px;
-  filter: invert(1); /* hace el ícono blanco */
+  filter: invert(1);
 }
 
 .btn-whatsapp:hover {
@@ -247,69 +228,62 @@ nav a:hover {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
-
-/* ───────────── Responsive (max-width: 768px) ───────────── */
+/* ───────────── Responsive ───────────── */
 @media (max-width: 768px) {
-  .pagina,
-  main {
-    padding: 0rem;
-  }
+  .pagina, main { padding: 0; }
 
   nav {
     width: 100%;
-    display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 0;
+    padding: 10px 0px;
   }
 
   nav a {
     flex: 1 1 25%;
     text-align: center;
-    font-size: 1rem;
+    font-size: 13px;
   }
 
-  .boton {
-    font-size: 1rem;
-  }
+  header {
+    padding-bottom: 5px;
+}
 
-  header img {
-    height: 50px;
-  }
+  .boton { font-size: 1rem; }
 
-  .logo-titulo {
-    font-size: 2rem;
-  }
-
-  .carrito-icono {
-    width: 40px;
-    height: 40px;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
+  header img { height: 50px; }
+  .logo-titulo { font-size: 2rem; }
+  .carrito-icono { width: 40px; height: 40px; }
+  h2 { font-size: 1.25rem; margin-bottom: 1rem; }
 
   .dos-columnas {
     flex-direction: column;
     padding: 2em 1em;
   }
 
-  .columna {
-    flex: 100%;
-    max-width: 100%;
-  }
+  .columna { flex: 100%; max-width: 100%; }
 
   .footer-content {
     flex-direction: column;
     text-align: center;
     gap: 1em;
   }
+  .footer {
+    margin-top: 1rem;
+    padding: 1em;
+    font-size: 0.9rem;
+    border-top: 2px solid #153f6c;
+  }
 
   .footer-left,
-  .footer-right {
+  .footer-right { text-align: center; }
+  .footer p {
+    font-size: 12px;
     text-align: center;
+    margin: 0;
   }
+  .carrito-icono-i {
+    font-size: 30px;
 }

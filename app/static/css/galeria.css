@@ -15,35 +15,54 @@
   color: #555;
 }
 
-
-
 /* ───────────── Grid de columnas para galería ───────────── */
-/* Uso de columnas CSS para crear 'efecto tipo Pinterest' */
 .grid-galeria {
-  column-count: 3; /* Número de columnas */
-  column-gap: 15px; /* Separación entre columnas */
+  column-count: 3;
+  column-gap: 15px;
 }
 
 /* ───────────── Imágenes dentro de la galería ───────────── */
 .grid-galeria img {
   width: 100%;
   height: auto;
-  object-fit: cover; /* Recorta y ajusta la imagen para cubrir el contenedor */
+  object-fit: cover;
   border-radius: 6px;
   margin-bottom: 15px;
-  break-inside: avoid; /* Evita que la imagen se divida entre columnas */
-  transition: transform 0.3s ease; /* Transición suave para hover */
+  break-inside: avoid;
+  transition: transform 0.3s ease;
   cursor: pointer;
 }
 
 /* ───────────── Efecto hover para imágenes ───────────── */
 .grid-galeria img:hover {
-  transform: scale(1.05); /* Escala la imagen ligeramente */
+  transform: scale(1.05);
 }
 
 /* ───────────── Responsive: menos columnas en pantallas pequeñas ───────────── */
 @media (max-width: 768px) {
   .grid-galeria {
     column-count: 2;
+    gap: 5px;
+  }
+  .container{
+    padding: 0px;
+  }
+
+  .grid-galeria img {
+    margin-bottom: 5px;
+  }
+  h1 {
+    font-size: 20px;
+    margin-bottom: 0px;
+  }
+  p {
+    font-size: 12px;
+    margin-bottom: 1rem;
+  }
+  .galeria-pinterest {
+    padding: 10px;
+  }
+  figure {
+    margin: 0;
   }
 }

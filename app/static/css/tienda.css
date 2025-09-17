@@ -1,21 +1,19 @@
 /* ───────────── Filtros y categorías ───────────── */
 .filtros-categorias {
   display: flex;
-  justify-content: center;
-  gap: 4.5rem;
+  justify-content: space-between; /* separa las categorías equitativamente */
+  gap: 0; /* se maneja con flex: 1 */
   margin: 4rem 0;
-  flex-wrap: wrap;
 }
 
 .categoria {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: none;
-  border: none;
-  cursor: pointer;
   text-decoration: none;
   position: relative;
+  flex: 1; /* cada categoría ocupa un espacio proporcional */
+  min-width: 0; /* evita overflow de texto */
 }
 
 .icono {
@@ -26,37 +24,35 @@
   margin-bottom: 0.5rem;
   transition: 0.3s;
   position: relative;
-  z-index: 2; /* ícono encima del círculo decorativo */
+  z-index: 2;
 }
 
 .categoria span {
   font-size: 1rem;
   font-weight: 500;
   color: #153f6c;
-  text-decoration: none;
-  position: relative;
   padding-bottom: 8px;
+  text-align: center;
 }
 
-/* Círculo decorativo detrás del ícono en hover o categoría activa */
 .categoria:hover::after,
 .categoria.activa::after {
-    content: "";
-    position: absolute;
-    top: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 126px;
-    height: 126px;
-    background-color: #153f6c;
-    border-radius: 50%;
-    z-index: 1;
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 126px;
+  height: 126px;
+  background-color: #153f6c;
+  border-radius: 50%;
+  z-index: 1;
 }
 
 /* ───────────── Lista de productos ───────────── */
 .lista-productos {
   display: grid;
-  grid-template-columns: repeat(4, minmax(160px, 1fr)); 
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
   gap: 2rem;
   padding: 0 1rem;
 }
@@ -65,18 +61,17 @@
   text-align: center;
 }
 
-.lista-productos a.producto {
-  text-decoration: none;
-  color: inherit;
+.producto a {
   display: block;
   border-radius: 5px;
-  transition: box-shadow 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.lista-productos a.producto:hover {
+.producto a:hover {
   box-shadow: 0 0 10px rgba(21, 63, 108, 0.3);
-  transform: scale(1.03); 
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transform: scale(1.03);
 }
 
 .producto img {
@@ -86,11 +81,21 @@
   border-radius: 5px;
 }
 
-.lista-productos a.producto p {
-  text-decoration: none;
-  color: inherit;
+.producto p {
   margin: 0.5rem 0;
 }
+/* Mensaje vacío centrado */
+.lista-productos .mensaje-vacio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #153f6c;
+  grid-column: 1 / -1;
+  margin: 5rem;
+}
+
 
 /* ───────────── Responsive: max-width 1200px ───────────── */
 @media (max-width: 1200px) {
@@ -102,24 +107,21 @@
 /* ───────────── Responsive: max-width 768px ───────────── */
 @media (max-width: 768px) {
   .filtros-categorias {
-    flex-wrap: nowrap;
-    justify-content: center;
-    gap: 0;
-    margin: 2rem;
+    margin: 2rem 0;
   }
 
-  .categoria {
-    flex: 0 0 25%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+  .lista-productos .mensaje-vacio {
+  margin: 3rem;
+  font-size: 13px;
+}
 
+  .producto p {
+    margin: 0.2rem 0;
+    font-size: 13px;
+  }
   .icono {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 0.5rem;
+    width: 70px;
+    height: 70px;
   }
 
   .categoria span {
@@ -127,40 +129,41 @@
   }
 
   .lista-productos {
-    grid-template-columns: repeat(2, minmax(160px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
-    padding: 0 1rem;
   }
 
   .producto img {
     height: 180px;
   }
 
-  .categoria:hover::after, .categoria.activa::after {
-    content: "";
-    position: absolute;
+  .categoria:hover::after,
+  .categoria.activa::after {
     top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 70px;
-    height: 70px;
-    background-color: #153f6c;
-    border-radius: 50%;
-    z-index: 1;
+    width: 50px;
+    height: 50px;
+  }
+
+  
 }
 
 /* ───────────── Responsive: max-width 480px ───────────── */
 @media (max-width: 480px) {
   .lista-productos {
-    grid-template-columns: repeat(1, 1fr); /* Una sola columna */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
   }
 
   .icono {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
   }
 
   .categoria span {
     font-size: 0.8rem;
+  }
+
+  .producto img {
+    height: 160px;
   }
 }

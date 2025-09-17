@@ -1,11 +1,15 @@
-/* ───────────── Ajustes generales para introducción y presupuesto ───────────── */
-.introduccion-marcos {
-  margin: 90px auto 0 auto;
+/* ───────────── Sección: Introducción y presupuesto ───────────── */
+.introduccion-marcos,
+.presupuesto-marcos {
   max-width: 700px;
+  margin: 90px auto 0;
   text-align: center;
+}
+
+.introduccion-marcos {
+  padding: 2rem 0;
   border-top: 2px solid #153f6c;
   border-bottom: 2px solid #153f6c;
-  padding: 2rem 0;
 }
 
 .introduccion-marcos p {
@@ -13,10 +17,7 @@
 }
 
 .presupuesto-marcos {
-  margin: 100px auto 0 auto;
-  max-width: 700px;
   padding: 2rem 1.2rem;
-  text-align: center;
 }
 
 .presupuesto-marcos h2 {
@@ -24,59 +25,58 @@
 }
 
 .presupuesto-marcos ol {
-  padding-left: 1.5rem;
-  text-align: left;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding-left: 1.5rem;
+  text-align: left;
 }
 
 .presupuesto-marcos li {
   line-height: 1.6;
 }
 
-/* ───────────── Carrusel general ───────────── */
+/* ───────────── Sección: Carrusel ───────────── */
 .carrusel-marcos {
-  text-align: center;
   margin-top: 100px;
+  text-align: center;
 }
 
 .carrusel {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   gap: 1rem;
-  overflow: hidden; /* Oculta imágenes fuera del contenedor */
+  position: relative;
+  overflow: hidden;
 }
 
 .carrusel-contenedor {
-  overflow: hidden;
-  width: 960px; /* Ancho fijo para desktop */
+  width: 960px; /* Desktop */
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .carrusel-imagenes {
   display: flex;
-  transition: transform 0.5s ease; /* Transición suave para el movimiento */
   gap: 30px;
-  margin-top: 60px;
-  margin-bottom: 60px;
+  margin: 60px 0;
+  transition: transform 0.5s ease;
 }
 
 .carrusel-imagenes img {
   width: 300px;
   height: 400px;
   object-fit: cover;
-  opacity: 0.4; /* Imagenes no centrales más transparentes */
-  transition: transform 0.4s ease, opacity 0.4s ease; /* Animación para escala y opacidad */
-  flex-shrink: 0;
   border-radius: 8px;
+  opacity: 0.4;
+  flex-shrink: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 .carrusel-imagenes img.centro {
-  transform: scale(1.15); /* Escala imagen central para destacar */
-  opacity: 1; /* Imagen central opaca completa */
+  transform: scale(1.15);
+  opacity: 1;
   z-index: 1;
 }
 
@@ -95,22 +95,24 @@
 /* ───────────── Responsive ───────────── */
 @media (max-width: 768px) {
   .introduccion-marcos {
-    margin: 50px auto 0 auto;
+    margin-top: 50px;
     padding: 1.2rem 0;
     max-width: 90%;
   }
 
   .presupuesto-marcos {
-    margin: 50px auto 0 auto;
+    margin-top: 50px;
     padding: 1.5rem 1rem;
   }
 
   .presupuesto-marcos h2 {
+    font-size: 20px;
     margin-bottom: 1rem;
   }
 
   .presupuesto-marcos ol {
-    gap: 1.2rem;
+    font-size: 13px;
+    gap: 1rem;
   }
 
   .carrusel-marcos {
@@ -118,15 +120,12 @@
   }
 
   .carrusel-contenedor {
-    width: 190px; /* Ancho aproximado de una imagen + gap */
-    margin: 0 auto;
-    overflow: hidden;
+    width: 190px; /* ancho de una imagen aprox */
   }
 
   .carrusel-imagenes {
-    gap: 30px; /* Se mantiene separación entre imágenes */
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin: 40px 0;
+    gap: 30px;
   }
 
   .carrusel-imagenes img {
@@ -134,40 +133,43 @@
     height: 160px;
   }
 
-  .carrusel-imagenes img.centro {
-    transform: scale(1.15);
-  }
-
   .carrusel-btn {
     font-size: 1.7rem;
+  }
+
+  .titulo-marco,
+  p {
+    font-size: 13px;
+    line-height: 1.5;
   }
 }
 
 @media (max-width: 480px) {
   .carrusel-contenedor {
-    width: 100vw; /* Ocupa todo el ancho visible */
+    width: 100vw;
     max-width: 100vw;
-    margin: 0 auto;
-    overflow: hidden;
   }
 
   .carrusel-imagenes {
+    margin: 30px 0;
     gap: 30px;
-    margin-top: 30px;
-    margin-bottom: 30px;
   }
 
   .carrusel-imagenes img {
-    width: calc(100vw - 30px); /* Resta gap para ajustar ancho */
+    width: calc(100vw - 30px);
+    max-height: 200px;
     height: auto;
-    max-height: 200px; /* Limita alto en móvil */
+  }
+
+  .carrusel-btn {
+    font-size: 1.4rem;
   }
 
   .carrusel-imagenes img.centro {
     transform: scale(1.1);
   }
-
-  .carrusel-btn {
-    font-size: 1.4rem;
+  .carrusel-imagenes img {
+    width: 200px;
+    height: 300px;
   }
 }

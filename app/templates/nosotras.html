@@ -6,45 +6,89 @@
 {% endblock %}
 
 {% block content %}
-<section id="nosotras" class="dos-columnas">
-  <div class="columna">
-    <img src="{{ url_for('static', filename='img/nosotras/image1.png') }}" alt="Michele, Gisela y Sofía" class="galeria-img">
-  </div>
-  <div class="columna">
-    <h2>Nosotras</h2>
-    <p><strong>Michele, Gisela y Sofía</strong>, creadoras de <strong>La hora azul</strong>.</p>
-    <p>Somos tres amigas que elegimos Villa La Angostura como nuestro hogar. Empezamos con un pequeño taller de enmarcación y, desde 2024, abrimos este espacio para compartir lo que amamos. En ese camino, buscamos tejer redes, acompañarnos, cultivar la empatía y generar encuentros.</p>
-  </div>
-</section>
+<main id="nosotras">
 
-<section class="dos-columnas">
-  <div class="columna">
-    <img src="{{ url_for('static', filename='img/nosotras/image2.png') }}" alt="Interior de la tienda" class="galeria-img">
-  </div>
-  <div class="columna">
-    <h2>La tienda</h2>
-    <p>Arte gráfico, cerámica, grabado, fotografía… En nuestra casa conviven objetos e imágenes de todo tipo, creados con amor y seleccionados cuidadosamente. Podés encontrar obras únicas de más de 80 artistas de distintas partes del país.</p>
-  </div>
-</section>
+  <!-- Sección: Nosotras -->
+  <section class="dos-columnas">
+    <div class="columna">
+      <img 
+        src="{{ url_for('static', filename='img/nosotras/image1.png') }}" 
+        alt="Michele, Gisela y Sofía, creadoras de La Hora Azul" 
+        class="galeria-img"
+        loading="lazy">
+    </div>
+    <div class="columna">
+      <h2>Nosotras</h2>
+      <p><strong>Michele, Gisela y Sofía</strong>, creadoras de <strong>La Hora Azul</strong>.</p>
+      <p>
+        Somos tres amigas que elegimos Villa La Angostura como nuestro hogar. 
+        Empezamos con un pequeño taller de enmarcación y, desde 2024, abrimos 
+        este espacio para compartir lo que amamos. En ese camino, buscamos 
+        tejer redes, acompañarnos, cultivar la empatía y generar encuentros.
+      </p>
+    </div>
+  </section>
 
-<section class="dos-columnas">
-  <div class="columna">
-    <img src="{{ url_for('static', filename='img/nosotras/image3.png') }}" alt="Taller de enmarcación" class="galeria-img">
-  </div>
-  <div class="columna">
-    <h2>El taller</h2>
-    <p>Nuestros marcos son artesanales y personalizados. Enmarcamos obras de artistas de todo el país, disponibles en nuestra tienda, y también realizamos marcos a pedido para lo que vos elijas destacar y proteger.</p>
-  </div>
-</section>
+  <!-- Sección: La tienda -->
+  <section class="dos-columnas">
+    <div class="columna">
+      <img 
+        src="{{ url_for('static', filename='img/nosotras/image2.png') }}" 
+        alt="Interior de la tienda La Hora Azul" 
+        class="galeria-img"
+        loading="lazy">
+    </div>
+    <div class="columna">
+      <h2>La tienda</h2>
+      <p>
+        Arte gráfico, cerámica, grabado, fotografía… 
+        En nuestra casa conviven objetos e imágenes de todo tipo, 
+        creados con amor y seleccionados cuidadosamente. 
+        Podés encontrar obras únicas de más de <strong>80 artistas de distintas partes del país</strong>.
+      </p>
+    </div>
+  </section>
 
-<section class="dos-columnas">
-  <div class="columna">
-    <img src="{{ url_for('static', filename='img/nosotras/image4.png') }}" alt="Talleres y charlas" class="galeria-img">
-  </div>
-  <div class="columna">
-    <h2>Encuentros</h2>
-    <p>Queremos que nuestro espacio sea un lugar de encuentro y aprendizaje. Por eso, organizamos talleres, charlas y actividades que invitan a crear, explorar y conectar con el arte desde distintos lugares.</p>
-    <p>En los últimos meses, nuestra casa fue sede de diversas propuestas como acuarela, astrología, tarot y escritura.</p>
-  </div>
-</section>
+  <!-- Sección: El taller -->
+  <section class="dos-columnas">
+    <div class="columna">
+      <img 
+        src="{{ url_for('static', filename='img/nosotras/image3.png') }}" 
+        alt="Taller de enmarcación artesanal en La Hora Azul" 
+        class="galeria-img"
+        loading="lazy">
+    </div>
+    <div class="columna">
+      <h2>El taller</h2>
+      <p>
+        Nuestros marcos son <strong>artesanales y personalizados</strong>. 
+        Enmarcamos obras de artistas de todo el país, disponibles en nuestra tienda, 
+        y también realizamos marcos a pedido para destacar y proteger tus piezas más valiosas.
+      </p>
+    </div>
+  </section>
+
+  <!-- Sección: Encuentros -->
+  <section class="dos-columnas">
+    <div class="columna">
+      <img 
+        src="{{ url_for('static', filename='img/nosotras/image4.png') }}" 
+        alt="Talleres y charlas en La Hora Azul" 
+        class="galeria-img"
+        loading="lazy">
+    </div>
+    <div class="columna">
+      <h2>Encuentros</h2>
+      <p>
+        Queremos que nuestro espacio sea un lugar de <strong>encuentro y aprendizaje</strong>. 
+        Por eso, organizamos talleres, charlas y actividades que invitan a crear, explorar 
+        y conectar con el arte desde distintos lugares.
+      </p>
+      <p>
+        En los últimos meses, nuestra casa fue sede de propuestas como acuarela, astrología, tarot y escritura.
+      </p>
+    </div>
+  </section>
+
+</main>
 {% endblock %}

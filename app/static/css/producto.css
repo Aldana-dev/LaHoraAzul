@@ -1,59 +1,64 @@
 /* ───────────── Contenedor detalle producto ───────────── */
 .producto-detalle {
-  margin: 5rem auto;
-  padding: 0 1rem;
   max-width: 1200px;
-}
-
-/* ───────────── Header: nombre a la izquierda, botón a la derecha ───────────── */
-.producto-header {
+  margin: 3rem auto;
+  padding: 0 1rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  border-bottom: 2px solid #153f6c;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-/* ───────────── Precio a la izquierda, botón a la derecha ───────────── */
+/* ───────────── Header ───────────── */
+.producto-header {
+  border-bottom: 2px solid #153f6c;
+  padding-bottom: 1rem;
+}
+
+.producto-nombre {
+  margin-bottom: 0px;
+}
+
+/* ───────────── Precio y botón ───────────── */
 .precio-boton {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  gap: 1rem;
 }
 
-/* ───────────── Descripción del producto ───────────── */
+.producto-precio {
+  font-size: 25px;
+  margin-bottom: 0px;
+}
+
+/* ───────────── Descripción ───────────── */
 .producto-descripcion {
-  line-height: 1.5;
-  margin-bottom: 2rem;
+  line-height: 1.6;
 }
 
-/* ───────────── Galería con imagen y miniaturas ───────────── */
+/* ───────────── Galería ───────────── */
 .producto-galeria {
   display: flex;
   gap: 2rem;
-  margin-bottom: 4rem;
-  align-items: flex-start;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: flex-start;
 }
 
-/* Imagen principal centrada y contenida */
+/* Imagen principal */
 .imagen-principal {
-  width: 50vw; /* máximo 50% del ancho de la pantalla */
-  max-height: 400px;
+  flex: 1 1 50%;
   max-width: 600px;
+  max-height: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: white;
   border-radius: 6px;
   overflow: hidden;
+  background-color: #fff;
 }
 
-/* Imagen adaptada sin cortes */
 .imagen-principal img {
-  min-height: 400px;
   width: auto;
   height: auto;
   max-width: 100%;
@@ -64,22 +69,19 @@
 
 /* Miniaturas */
 .galeria-miniaturas {
-  flex: 1 1 300px;
+  flex: 1 1 200px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
-  align-self: flex-start;
-  max-height: 400px; /* Aproximadamente 2 filas de 2 miniaturas */
+  gap: 0.5rem;
+  max-height: 400px;
   overflow-y: auto;
-  padding-right: 5px; /* para no ocultar borde derecho al hacer scroll */
 }
 
 .galeria-miniaturas img {
-  max-height: 195px;
   width: 100%;
-  border-radius: 4px;
-  object-fit: cover;
   aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
   cursor: pointer;
   border: 2px solid transparent;
   transition: border 0.2s ease;
@@ -87,29 +89,23 @@
 
 .galeria-miniaturas img:hover,
 .galeria-miniaturas img.seleccionada {
-  border: 2px solid #153f6c;
+  border-color: #153f6c;
 }
 
-/* Scroll solo si hay muchas miniaturas */
+/* Scroll personalizado */
 .galeria-miniaturas::-webkit-scrollbar {
   width: 6px;
 }
-
 .galeria-miniaturas::-webkit-scrollbar-thumb {
   background-color: #999;
   border-radius: 3px;
 }
-
 .galeria-miniaturas::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* ───────────── Responsive (max-width: 480px) ───────────── */
-@media (max-width: 480px) {
-  .producto-detalle {
-    padding: 0 0.5rem;
-  }
-
+/* ───────────── Responsive ───────────── */
+@media (max-width: 768px) {
   .producto-galeria {
     flex-direction: column;
     align-items: center;
@@ -117,14 +113,55 @@
 
   .imagen-principal {
     width: 100%;
-  }
-
-  .imagen-principal img {
+    max-width: 100%;
     max-height: 60vh;
   }
 
+  .galeria-miniaturas {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 90%;
+  }
+
+  .precio-boton {
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .producto-detalle {
+    padding: 0 0.5rem;
+    margin-top: 2rem;
+  }
+
+  .producto-descripcion {
+    line-height: 1.6;
+    padding: 10px 10px 10px 10px;
+  }
+
+  .producto-precio {
+    font-size: 20px;
+  }
+
+  p {
+    font-size: 13px;
+  }
+
+  .producto-galeria {
+    flex-direction: column;
+  }
+
+  .galeria-miniaturas {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 100%;
+  }
+
+  .imagen-principal img {
+    max-height: 50vh;
+  }
+
   .precio-boton .boton {
-    padding: 8px 30px;
+    padding: 5px 10px;
     font-size: 0.9rem;
   }
 }

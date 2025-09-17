@@ -7,13 +7,14 @@
 {% block content %}
 <main class="pagina">
   <section class="producto-detalle">
-    <div class="producto-header">
-      <h2 class="producto-nombre">{{ producto.nombre }}</h2> <!-- Símbolo sugerido -->
-    </div>
+    <!-- Nombre del producto -->
+    <header class="producto-header">
+      <h2 class="producto-nombre">{{ producto.nombre }}</h2>
+    </header>
 
+    <!-- Galería de imágenes -->
     <div class="producto-galeria">
-      <!-- Imagen principal -->
-      <div class="imagen-principal">
+      <div class="imagen-principal" role="img" aria-label="{{ producto.nombre }}">
         <img
           id="img-principal"
           src="{{ url_for('static', filename=producto.imagen) }}"
@@ -21,9 +22,8 @@
         />
       </div>
 
-      <!-- Miniaturas -->
       {% if imagenes %}
-      <div class="galeria-miniaturas">
+      <aside class="galeria-miniaturas" aria-label="Miniaturas del producto">
         <!-- Imagen principal como primera miniatura -->
         <img
           class="miniatura seleccionada"
@@ -37,12 +37,13 @@
           alt="Miniatura {{ loop.index }}"
         />
         {% endfor %}
-      </div>
+      </aside>
       {% endif %}
     </div>
 
+    <!-- Precio y botón de compra -->
     <div class="precio-boton">
-      <h2 class="producto-precio">$ {{ "{:.2f}".format(producto.precio) }}</h2>
+      <p class="producto-precio" aria-label="Precio del producto">$ {{ "{:.2f}".format(producto.precio) }}</p>
       <form
         method="POST"
         action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}"
@@ -54,13 +55,14 @@
     </div>
 
     <!-- Descripción con formato enriquecido -->
-    <div class="producto-descripcion">
+    <article class="producto-descripcion">
       {{ producto.descripcion | safe }}
-    </div>
+    </article>
   </section>
 </main>
 
 <script>
+  // Cambiar imagen principal al hacer click en miniatura
   const miniaturas = document.querySelectorAll(".miniatura");
   const imgPrincipal = document.getElementById("img-principal");
 

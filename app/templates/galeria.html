@@ -1,22 +1,43 @@
-{% extends "base.html" %} {% block title %}Galería - La Hora Azul{% endblock %}
+{% extends "base.html" %}
+
+{% block title %}Galería - La Hora Azul{% endblock %}
+
 {% block extra_css %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/galeria.css') }}"
 />
-{% endblock %} {% block content %}
-<section class="galeria-pinterest">
-  <div class="grid-galeria">
-{% if imagenes %}
-  {% for img in imagenes %}
-    <img src="{{ url_for('static', filename=img.imagen) }}" alt="Imagen galería {{ loop.index }}" />
-  {% endfor %}
-{% else %}
-  <p>No hay imágenes cargadas en la galería.</p>
-{% endif %}
+{% endblock %}
 
+{% block content %}
+<section class="galeria-pinterest" aria-labelledby="titulo-galeria">
+  <div class="container">
+    <header class="galeria-header">
+      <h1 id="titulo-galeria">Galería</h1>
+      <p class="galeria-descripcion">
+        Cada obra tiene algo para contarte, recorre nuestra galería.
+      </p>
+    </header>
+
+    <div class="grid-galeria">
+      {% if imagenes %}
+        {% for img in imagenes %}
+          <figure class="galeria-item">
+            <img
+              src="{{ url_for('static', filename=img.imagen) }}"
+              alt="Obra {{ loop.index }} de la galería La Hora Azul"
+              loading="lazy"
+            />
+          </figure>
+        {% endfor %}
+      {% else %}
+        <p class="mensaje-vacio">
+          No hay imágenes cargadas en la galería por el momento.
+        </p>
+      {% endif %}
+    </div>
   </div>
 </section>
-
-{% endblock %} {% block extra_js %}
 {% endblock %}
+
+{% block extra_js %}{% endblock %}

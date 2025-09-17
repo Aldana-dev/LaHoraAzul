@@ -8,47 +8,51 @@
 
 {% block content %}
 <section class="tienda">
-  <div class="filtros-categorias">
-    {% set iconos = { 
-      'Cuadros': 'cuadros.svg',
-      'Cerámica': 'ceramica.svg',
-      'Cuadernos': 'cuadernos.svg',
-      'Totebags': 'totebags.svg'
-    } %}
+  <!-- Filtros de categorías -->
+  <div class="filtros-categorias"> {% set iconos = { 'Cuadros': 'cuadros.svg', 'Cerámica': 'ceramica.svg', 'Cuadernos': 'cuadernos.svg', 'Totebags': 'totebags.svg' } %}
     {% for cat in categorias %}
     <a
       href="{{ url_for('main.tienda', categoria_id=cat.id) }}"
       class="categoria {% if categoria_id == cat.id %}activa{% endif %}"
       title="Filtrar por categoría {{ cat.nombre }}"
+      aria-current="{% if categoria_id == cat.id %}page{% endif %}"
     >
       <img
         src="{{ url_for('static', filename='icon/' ~ iconos.get(cat.nombre, 'default.svg')) }}"
         alt="{{ cat.nombre }}"
         class="icono"
+        loading="lazy"
       />
       <span>{{ cat.nombre }}</span>
     </a>
     {% endfor %}
   </div>
 
+  <!-- Lista de productos -->
   <div class="lista-productos">
     {% if productos %}
       {% for prod in productos %}
-      <a
-        href="{{ url_for('main.producto', producto_id=prod.id) }}"
-        class="producto"
-        title="{{ prod.nombre }}"
-      >
-        <img
-          src="{{ url_for('static', filename=prod.imagen) }}"
-          alt="{{ prod.nombre }}"
-        />
-        <p>{{ prod.nombre }}</p>
-        <p>$ {{ "%.2f"|format(prod.precio) }}</p>
-      </a>
+      <article class="producto" role="group">
+        <a
+          href="{{ url_for('main.producto', producto_id=prod.id) }}"
+          title="{{ prod.nombre }}"
+        >
+          <figure>
+            <img
+              src="{{ url_for('static', filename=prod.imagen) }}"
+              alt="{{ prod.nombre }}"
+              loading="lazy"
+            />
+            <figcaption>
+              <p class="nombre-producto">{{ prod.nombre }}</p>
+              <p class="precio-producto">$ {{ "%.2f"|format(prod.precio) }}</p>
+            </figcaption>
+          </figure>
+        </a>
+      </article>
       {% endfor %}
     {% else %}
-    <p class="mensaje-vacio">No hay productos disponibles en este momento.</p>
+      <p class="mensaje-vacio">No hay productos disponibles en este momento.</p>
     {% endif %}
   </div>
 </section>

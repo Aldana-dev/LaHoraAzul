@@ -3,36 +3,54 @@
   display: flex;
   flex-wrap: wrap;
   gap: 2em;
-  padding: 4em 4em 4em 0;
-  border-top: 0px solid #153f6c;
+  padding: 4em 2em;
+  border-top: 0; /* lo dejé 0px ya que así lo tenías */
+}
+
+.columna {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Imágenes dentro de columnas */
+.galeria-img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 0.5em;
+  object-fit: cover;
+  margin: 0 auto;
 }
 
 /* ───────────── Responsive (max-width: 768px) ───────────── */
 @media (max-width: 768px) {
   .dos-columnas {
     flex-direction: column;
-    padding: 2em 1em;
-    gap: 2em;
     align-items: center;
+    text-align: center;
+    padding: 2em 1em;
+    gap: 1em;
   }
 
   .columna {
     width: 100%;
-    text-align: center;
+    max-width: 600px;
   }
 
   .galeria-img {
-    width: 100%;
-    height: auto;
-    border-radius: 0.5em;
+    width: 90%;
   }
 
   h2 {
-    font-size: 1.4rem;
+    font-size: 1.25rem; /* ~20px */
+    margin-bottom: 0.5em;
   }
 
   p {
-    font-size: 1rem;
+    font-size: 0.85rem; /* ~13-14px */
     line-height: 1.5;
   }
 }

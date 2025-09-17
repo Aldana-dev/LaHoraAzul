@@ -1,30 +1,42 @@
-/* ───────────── Banner ───────────── */
+/* ───────────── Banner / Carrusel ───────────── */
 .carousel {
   position: relative;
   z-index: 0;
 }
-.carousel-control-next, .carousel-control-prev {
+
+.carousel-control-prev,
+.carousel-control-next {
   width: 10%;
 }
 
-
-/* ──────── Texto de Bienvenida ──────── */
+/* ───────────── Contenido principal ───────────── */
 .contenido {
   max-width: 800px;
-  margin: 6em auto 6em;
+  margin: 6em auto;
   text-align: center;
 }
 
-/* ───────────── Preview de Galería ───────────── */
+.contenido p {
+  margin-bottom: 1em;
+}
+
+/* ───────────── Galería ───────────── */
 .galeria-preview {
   background-color: white;
   margin-bottom: 6em;
   text-align: center;
 }
 
+.galeria-preview .col-6 {
+  flex: 0 0 25%;
+  max-width: 25%;
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
+
 .galeria-img {
   width: 100%;
-  aspect-ratio: 1 / 1; /* Mantiene la imagen perfectamente cuadrada sin importar el tamaño del contenedor */
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   object-position: center;
   border-radius: 0.5em;
@@ -42,6 +54,15 @@
 }
 
 .contacto-link .icono {
+  background-color: #153f6c;
+  color: white;
+  border-radius: 50%;
+  font-size: 35px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex-shrink: 0;
 }
 
@@ -49,21 +70,6 @@
   flex: 1;
   min-width: 0;
   word-break: break-word;
-}
-
-
-.material-symbols-outlined.icono {
-  background-color: #153f6c;
-  color: white;
-  border-radius: 50%;
-  padding: 8px;
-  font-size: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 56px;
-  height: 56px;
-  flex-shrink: 0; /* Evita que el ícono se reduzca cuando el contenedor es estrecho */
 }
 
 /* ───────────── Mapa iframe ───────────── */
@@ -79,49 +85,131 @@ iframe {
   margin-top: 0;
 }
 
-/* ───────────── Responsive: Mobile ───────────── */
+/* ───────────── Responsive ───────────── */
+
+/* Tablets grandes (1024px) */
+@media (max-width: 1024px) {
+  .contenido {
+    margin: 5em 2em 4em;
+    font-size: 0.95rem;
+  }
+
+  .galeria-preview .col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .dos-columnas {
+    gap: 1.5em;
+  }
+
+  iframe {
+    width: 100%;
+    height: 350px;
+  }
+}
+
+/* Tablets / móviles medianos (768px) */
 @media (max-width: 768px) {
-  
-  /* ─── Contenido principal ─── */
   .contenido {
     margin: 4em 1em 2em;
     padding: 0 1em;
     font-size: 0.9rem;
   }
 
-  /* ─── Galería ─── */
   .galeria-preview {
-    padding: 2em 1em;
+    padding: 2em 1.5em;
+    margin: 0;
+    padding-top: 0;
+  }
+
+  .galeria-preview .col-6 {
+    margin-bottom: 1em;
   }
 
   .galeria-img {
     border-radius: 0.3em;
   }
 
-  /* ─── Contacto ─── */
+  .dos-columnas {
+    flex-direction: column;
+    padding: 2em 1em;
+  }
+
   .contacto-link {
     font-size: 0.95rem;
     gap: 8px;
-    flex-wrap: wrap; /* Permite que los elementos se acomoden en varias líneas si no entran */
+    flex-wrap: wrap;
     justify-content: flex-start;
   }
 
-  .material-symbols-outlined.icono {
+  .contacto-link .icono {
     font-size: 25px;
     width: 35px;
     height: 35px;
     padding: 6px;
   }
 
-  /* ─── iframe ─── */
   iframe {
-    width: 100%;
     height: 300px;
   }
 
-  /* ─── Sección con dos columnas ─── */
-  .dos-columnas {
-    padding: 2em 1em;
-    gap: 1.5em;
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 8%;
+  }
+}
+
+/* Móviles pequeños (<480px) */
+@media (max-width: 480px) {
+  .contenido p {
+    font-size: 12px;
+  }
+
+  .galeria-preview .col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding: 5px;
+    margin: 0;
+  }
+
+  .mb-3 {
+    margin-bottom: 0 !important;
+  }
+
+  .galeria-img {
+    border-radius: 0.3em;
+  }
+
+  .contacto-link {
+    margin-left: 14px;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .contacto-link .texto-contacto {
+    font-size: 13px;
+  }
+
+  .contacto-link .icono {
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+  }
+
+  iframe {
+    height: 250px;
+  }
+
+
+  .boton {
+    font-size: 14px;
+    padding: 5px 50px;
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 8%;
   }
 }

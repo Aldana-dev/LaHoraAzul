@@ -1,15 +1,36 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <title>{% block title %}La Hora Azul{% endblock %}</title>
+
+    <!-- Favicon -->
     <link
       rel="icon"
       href="{{ url_for('static', filename='icon/logo.png') }}"
       type="image/png"
     />
+
+    <!-- SEO básico -->
+    <meta
+      name="description"
+      content="Descubrí artistas de todo el país en La Hora Azul, nuestra tienda en Villa La Angostura, con arte, artesanías y marcos únicos para tu hogar."
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="La Hora Azul" />
+    <meta
+      property="og:description"
+      content="Descubrí artistas de todo el país en La Hora Azul, nuestra tienda en Villa La Angostura, con arte, artesanías y marcos únicos para tu hogar."
+    />
+    <meta
+      property="og:image"
+      content="{{ url_for('static', filename='icon/logo.png') }}"
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Libre+Franklin:wght@300;400;600&display=swap"
       rel="stylesheet"
@@ -18,10 +39,20 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
       rel="stylesheet"
     />
+
+    <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+
+    <!-- Font Awesome CDN -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Estilos -->
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/estilos.css') }}"
@@ -31,25 +62,27 @@
   </head>
   <body class="pagina">
     <!-- Header -->
-    <header class="d-flex justify-content-between align-items-center p-3">
+    <header class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center gap-3">
         <img
           src="{{ url_for('static', filename='icon/logo.png') }}"
           alt="Logo La Hora Azul"
           height="80"
+          loading="lazy"
         />
         <h1 class="logo-titulo m-0 fs-50">la hora azul</h1>
       </div>
       <a
         href="{{ url_for('main.carrito') }}"
         class="d-flex align-items-center justify-content-center carrito-icono"
+        aria-label="Ver carrito"
       >
-        <span class="material-symbols-outlined">shopping_basket</span>
+        <i class="fa-solid fa-cart-shopping carrito-icono-i"></i>
       </a>
     </header>
 
     <!-- Nav -->
-    <nav class="navegacion-sticky bg-white">
+    <nav class="navegacion-sticky bg-white" aria-label="Navegación principal">
       <a href="{{ url_for('main.index') }}">inicio</a>
       <a href="{{ url_for('main.nosotras') }}">nosotras</a>
       <a href="{{ url_for('main.tienda') }}">tienda</a>
@@ -57,20 +90,17 @@
     </nav>
 
     <!-- Contenido dinámico -->
-    {% block content %}{% endblock %}
+    <main>{% block content %}{% endblock %}</main>
 
     <!-- Botón flotante de WhatsApp -->
     <a
       href="https://wa.me/5492944712263"
-      class="btn-whatsapp"
+      class="btn-whatsapp ico-decorador"
       target="_blank"
       rel="noopener"
       aria-label="Contactar por WhatsApp"
     >
-      <img
-        src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg"
-        alt="WhatsApp"
-      />
+      <i class="fa-brands fa-whatsapp fa-2xl" style="color: #ffffff"></i>
     </a>
 
     <!-- Footer -->
