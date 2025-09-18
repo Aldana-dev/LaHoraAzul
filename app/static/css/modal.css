@@ -1,0 +1,209 @@
+/* ───────────── Modal ───────────── */
+.modal-dialog {
+  max-width: 70rem;
+  margin: 1.75rem auto;
+}
+
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 1rem);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  color: #153f6c;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  text-decoration: underline;
+}
+
+.modal-title {
+  margin-top: 2rem;
+  font-size: 1.6rem;
+  color: #153f6c;
+  text-align: center;
+}
+
+.form-label {
+  margin-bottom: 0px;
+  font-size: 16px;
+}
+
+/* Contenedor de las tarjetas */
+#modal-tarjetas-envio {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+/* Tarjetas de envío */
+.tarjeta-envio-modal {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #f8f8f8;
+}
+
+/* Efecto hover */
+.tarjeta-envio-modal:hover {
+  border-color: #153f6c;
+  background-color: #e6f0ff;
+}
+
+/* Tarjeta seleccionada */
+.tarjeta-envio-modal.seleccionada {
+  border-color: #153f6c;
+  background-color: #cce0ff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+}
+
+/* Ocultar radios */
+#modal-tarjetas-envio input[type="radio"] {
+  display: none;
+}
+
+/* Tarjeta base */
+.tarjeta-envio-modal {
+  flex: 1;
+  padding: 1.25rem 1rem;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 14px;
+  background-color: #fff;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+/* Hover */
+.tarjeta-envio-modal:hover {
+  border-color: #153f6c;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+}
+
+/* Texto */
+.tarjeta-envio-modal strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #153f6c;
+}
+
+.tarjeta-envio-modal .precio-opcion-modal {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #153f6c;
+  margin-bottom: 0.25rem;
+}
+
+.tarjeta-envio-modal .texto-envio {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Seleccionada usando :has */
+.tarjeta-envio-modal:has(input[type="radio"]:checked) {
+  border-color: #153f6c;
+  background-color: #f7faff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+}
+
+/* ───────────── Media Queries ───────────── */
+
+/* Pantallas pequeñas y medianas: móviles y tablets (<1024px) */
+@media (max-width: 1024px) {
+  .modal-dialog {
+    max-width: 95%; /* Modal casi completo */
+    margin: 1rem auto;
+  }
+
+  .modal-content {
+    padding: 1rem;
+  }
+
+  .modal-title {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+
+  /* Apilar tarjetas de envío en columna */
+  #modal-tarjetas-envio {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .tarjeta-envio-modal {
+    flex: 1 1 100%; /* Ocupa todo el ancho del contenedor */
+    padding: 0.75rem;
+  }
+
+  .tarjeta-envio-modal strong {
+    font-size: 0.95rem;
+  }
+
+  .tarjeta-envio-modal .precio-opcion-modal {
+    font-size: 0.85rem;
+  }
+
+  .tarjeta-envio-modal .texto-envio {
+    font-size: 0.75rem;
+  }
+
+  /* Inputs y labels ocupan todo el ancho */
+  .form-label {
+    font-size: 14px;
+  }
+
+  input.form-control,
+  select.form-control,
+  textarea.form-control {
+    width: 100%;
+  }
+
+  /* Footer botones en columna */
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+}
