@@ -64,10 +64,12 @@ def admin_required(f):
 # Ruta para crear un usuario admin inicial (solo para desarrollo)
 @admin_bp.route('/init_admin')
 def init_admin():
-    if Usuario.query.filter_by(email='admin@site.com').first():
+    existing_admin = Usuario.query.filter_by(email='admin@site.com').first()
+    if existing_admin:
+        print("[INFO] Intento de crear admin, ya existe.")
         return 'El admin ya existe'  # Si ya existe, no lo crea de nuevo
 
-    # Crea un nuevo usuario administrador con credenciales por defecto, ⚠️ debe cambiarse
+    # Crea un nuevo usuario administrador con credenciales por defecto
     admin = Usuario(
         nombre='Admin',
         email='admin@site.com',
@@ -76,6 +78,7 @@ def init_admin():
     admin.set_password('123')  # ⚠️ Clave débil, debe cambiarse
     db.session.add(admin)
     db.session.commit()
+    print("[INFO] Admin creado correctamente con email 'admin@site.com' y clave '123'")
     return 'Admin creado correctamente'
 
 
@@ -85,25 +88,33 @@ def admin_login():
     if request.method == 'POST':
         email = request.form.get('username')
         clave = request.form.get('password')
+        print(f"[DEBUG] Intento de login con email: {email}")
 
         usuario = Usuario.query.filter_by(email=email).first()
-        if usuario and usuario.es_admin and usuario.check_password(clave):
-            session['admin'] = True  # Marca al usuario como admin en la sesión
-            flash('Sesión iniciada correctamente')
-            # Redirige al panel de administración
-            return redirect(url_for('admin.admin'))
+        if not usuario:
+            print("[WARN] Usuario no encontrado en la base de datos.")
+        elif not usuario.es_admin:
+            print(f"[WARN] Usuario {email} no es administrador.")
+        elif not usuario.check_password(clave):
+            print(f"[WARN] Contraseña incorrecta para usuario {email}")
         else:
-            flash('Credenciales incorrectas')  # Si falla la autenticación
+            session['admin'] = True
+            flash('Sesión iniciada correctamente')
+            print(f"[INFO] Usuario {email} autenticado correctamente. Redirigiendo al panel admin.")
+            return redirect(url_for('admin.admin'))
+
+        flash('Credenciales incorrectas')
+        print(f"[INFO] Login fallido para {email}")
 
     return render_template('login.html')  # Muestra el formulario de login
 
 
 @admin_bp.route('/logout')  # Ruta para cerrar sesión de administrador
 def admin_logout():
-    session.pop('admin', None)  # Elimina la sesión admin
+    session.pop('admin', None)
     flash('Sesión cerrada')
-    return redirect(url_for('main.index'))  # Redirige a la página principal
-
+    print("[INFO] Sesión admin cerrada")
+    return redirect(url_for('main.index'))
 
 # ----------------- Panel de Administración ----------------- #
 
