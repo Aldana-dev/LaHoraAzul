@@ -52,9 +52,10 @@
 }
 
 .carrusel-contenedor {
-  width: 960px; /* Desktop */
   margin: 0 auto;
   overflow: hidden;
+  width: auto;
+  max-width: 100%;
 }
 
 .carrusel-imagenes {
@@ -157,10 +158,9 @@
 
   .carrusel-imagenes img {
     width: calc(100vw - 30px);
-    max-height: 200px;
     height: auto;
+    max-height: 300px;
   }
-
   .carrusel-btn {
     font-size: 1.4rem;
   }
@@ -168,8 +168,4 @@
   .carrusel-imagenes img.centro {
     transform: scale(1.1);
   }
-  .carrusel-imagenes img {
-    width: 200px;
-    height: 300px;
-  }
-}
+

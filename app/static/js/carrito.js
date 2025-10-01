@@ -12,7 +12,6 @@ function mostrarCotizacionGlobal(tipo, precio, minDias, maxDias) {
 }
 
 // Función helper para actualizar cualquier label de envío
-// Función helper para actualizar cualquier label de envío
 function actualizarLabel(label, precio, minDias, maxDias) {
   const spanPrecio = label.querySelector(".precio-opcion, .precio-opcion-modal");
   const spanTiempo = label.querySelector(".texto-envio");
