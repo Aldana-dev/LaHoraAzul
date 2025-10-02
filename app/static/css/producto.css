@@ -18,6 +18,10 @@
   margin-bottom: 0px;
 }
 
+h2 {
+  text-align: start;
+}
+
 /* ───────────── Precio y botón ───────────── */
 .precio-boton {
   display: flex;
@@ -105,7 +109,11 @@
 }
 
 /* ───────────── Responsive ───────────── */
-@media (max-width: 768px) {
+@media (max-width: 1042px) {
+  h2 {
+    font-size: 2rem;
+  }
+
   .producto-galeria {
     flex-direction: column;
     align-items: center;
@@ -113,10 +121,13 @@
 
   .imagen-principal {
     width: 100%;
-    max-width: 100%;
-    max-height: 60vh;
+    max-width: 70%;
+    max-height: 80vh;
   }
 
+  .producto-detalle {
+    padding: 1px 3rem;
+  }
   .galeria-miniaturas {
     grid-template-columns: repeat(3, 1fr);
     max-width: 90%;
@@ -125,6 +136,13 @@
   .precio-boton {
     flex-direction: row;
     align-items: stretch;
+  }
+  .producto-precio {
+    font-size: 2rem;
+  }
+
+  p {
+    font-size: 1.5rem;
   }
 }
 

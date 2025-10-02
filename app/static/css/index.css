@@ -87,44 +87,54 @@ iframe {
 
 /* ───────────── Responsive ───────────── */
 
-/* Tablets grandes (1024px) */
+/* Hasta 1024px → Forzar 3 columnas en galería y ocultar desde la 7ª */
 @media (max-width: 1024px) {
   .contenido {
     margin: 5em 2em 4em;
-    font-size: 0.95rem;
+    font-size: 1.5rem;
   }
 
-  .galeria-preview .col-6 {
-    flex: 0 0 50%;
-    max-width: 50%;
+  .contenido p {
+    font-size: 1.5rem;
   }
 
+  .galeria-preview .row > [class*="col-"] {
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+  }
+
+  .galeria-preview .row > [class*="col-"]:nth-child(n + 7) {
+    display: none;
+  }
+  .galeria-preview .row > div:nth-child(n + 7) {
+    display: none;
+  }
   .dos-columnas {
+    margin: 2rem;
     gap: 1.5em;
   }
-
+  .contacto-link {
+    padding-left: 2rem;
+    font-size: 20px;
+  }
   iframe {
     width: 100%;
     height: 350px;
   }
 }
 
-/* Tablets / móviles medianos (768px) */
+/* Hasta 768px → Ajustes de tablet y mobile mediano */
 @media (max-width: 768px) {
   .contenido {
     margin: 4em 1em 2em;
     padding: 0 1em;
-    font-size: 0.9rem;
   }
 
   .galeria-preview {
-    padding: 2em 1.5em;
+    padding: 2em 1.5em 0;
     margin: 0;
-    padding-top: 0;
-  }
-
-  .galeria-preview .col-6 {
-    margin-bottom: 1em;
   }
 
   .galeria-img {
@@ -160,13 +170,13 @@ iframe {
   }
 }
 
-/* Móviles pequeños (<480px) */
+/* Hasta 480px → Ajustes móviles pequeños */
 @media (max-width: 480px) {
   .contenido p {
     font-size: 12px;
   }
 
-  .galeria-preview .col-6 {
+  .galeria-preview .row > [class*="col-"] {
     flex: 0 0 50%;
     max-width: 50%;
     padding: 5px;
@@ -177,15 +187,8 @@ iframe {
     margin-bottom: 0 !important;
   }
 
-  .galeria-img {
-    border-radius: 0.3em;
-  }
-
   .contacto-link {
     margin-left: 14px;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-start;
   }
 
   .contacto-link .texto-contacto {
@@ -202,14 +205,8 @@ iframe {
     height: 250px;
   }
 
-
   .boton {
     font-size: 14px;
     padding: 5px 50px;
-  }
-
-  .carousel-control-prev,
-  .carousel-control-next {
-    width: 8%;
   }
 }

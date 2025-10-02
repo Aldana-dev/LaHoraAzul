@@ -48,18 +48,18 @@
 
       <div class="carrusel-contenedor">
         <div class="carrusel-imagenes" id="carruselMarcos">
-          {% set nombres_marcos = [ "Marco directo", "Marco con passepartout",
-          "Marco Box simple", "Marco box flotante", "Marco doble vidrio",
-          "Marcos de colores" ] %} {% set rutas_imagenes = [
-          'img/marcos/marco_directo.jpg', 'img/marcos/marco_passepartout.jpg',
-          'img/marcos/marco_box_simple.jpg',
-          'img/marcos/marco_box_flotante.jpg',
-          'img/marcos/marco_doble_vidrio.jpg', 'img/marcos/marco_colores.jpg' ]
-          %} {% for i in range(nombres_marcos|length) %}
+          {% set rutas_imagenes = [ 'img/marcos/doble_vidrio.jpg',
+          'img/marcos/marco_directo_1.jpg', 'img/marcos/marco_directo_2.jpg',
+          'img/marcos/marco_directo_3.jpg', 'img/marcos/marco_directo_4.jpg',
+          'img/marcos/passepartout_1.jpg', 'img/marcos/passepartout_2.jpg',
+          'img/marcos/varillas_pintadas.jpg' ] %} {% for ruta in rutas_imagenes
+          %} {% set nombre_archivo =
+          ruta.split('/')[-1].replace('.jpg','').replace('_',' ') %} {% set
+          nombre_titulo = nombre_archivo.title() %}
           <img
-            src="{{ url_for('static', filename=rutas_imagenes[i]) }}"
-            alt="{{ nombres_marcos[i] }}"
-            data-titulo="{{ nombres_marcos[i] }}"
+            src="{{ url_for('static', filename=ruta) }}"
+            alt="{{ nombre_titulo }}"
+            data-titulo="{{ nombre_titulo }}"
           />
           {% endfor %}
         </div>

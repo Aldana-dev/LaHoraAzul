@@ -37,19 +37,36 @@ body {
 }
 
 /* ───────────── Tipografía ───────────── */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   line-height: 1.3;
   margin-bottom: 1rem;
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.75rem; }
-h4 { font-size: 1.5rem; }
-h5 { font-size: 1.25rem; }
-h6 { font-size: 1.1rem; }
+h1 {
+  font-size: 2.5rem;
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.75rem;
+}
+h4 {
+  font-size: 1.5rem;
+}
+h5 {
+  font-size: 1.25rem;
+}
+h6 {
+  font-size: 1.1rem;
+}
 
 p {
   font-size: 1rem;
@@ -62,7 +79,10 @@ p {
 }
 
 /* ───────────── Botones y navegación ───────────── */
-button, .btn, .boton, nav a {
+button,
+.btn,
+.boton,
+nav a {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
 }
@@ -95,7 +115,8 @@ button, .btn, .boton, nav a {
 }
 
 /* ───────────── Layout principal ───────────── */
-.pagina, main {
+.pagina,
+main {
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem;
@@ -187,8 +208,12 @@ nav a:hover {
   flex: 1;
 }
 
-.footer-left { text-align: left; }
-.footer-right { text-align: right; }
+.footer-left {
+  text-align: left;
+}
+.footer-right {
+  text-align: right;
+}
 
 /* ───────────── Admin trigger ───────────── */
 #admin-trigger {
@@ -207,7 +232,7 @@ nav a:hover {
   right: 20px;
   width: 60px;
   height: 60px;
-  background-color: #25D366;
+  background-color: #25d366;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -229,8 +254,11 @@ nav a:hover {
 }
 
 /* ───────────── Responsive ───────────── */
-@media (max-width: 768px) {
-  .pagina, main { padding: 0; }
+@media (max-width: 1024px) {
+  .pagina,
+  main {
+    padding: 0;
+  }
 
   nav {
     width: 100%;
@@ -244,26 +272,37 @@ nav a:hover {
   nav a {
     flex: 1 1 25%;
     text-align: center;
-    font-size: 13px;
+    font-size: 23px;
   }
 
   header {
-    padding-bottom: 5px;
-}
+    padding: 30px;
+  }
 
-  .boton { font-size: 1rem; }
+  .boton {
+    font-size: 1rem;
+  }
 
-  header img { height: 50px; }
-  .logo-titulo { font-size: 2rem; }
-  .carrito-icono { width: 40px; height: 40px; }
-  h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+  header img {
+    height: 90px;
+  }
+  .logo-titulo {
+    font-size: 4rem;
+  }
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
 
   .dos-columnas {
     flex-direction: column;
     padding: 2em 1em;
   }
 
-  .columna { flex: 100%; max-width: 100%; }
+  .columna {
+    flex: 100%;
+    max-width: 100%;
+  }
 
   .footer-content {
     flex-direction: column;
@@ -278,12 +317,23 @@ nav a:hover {
   }
 
   .footer-left,
-  .footer-right { text-align: center; }
+  .footer-right {
+    text-align: center;
+  }
   .footer p {
     font-size: 12px;
     text-align: center;
     margin: 0;
   }
   .carrito-icono-i {
-    font-size: 30px;
+    font-size: 3rem;
+  }
+
+  .btn-whatsapp {
+    bottom: 20px;
+    right: 40px;
+    width: 110px;
+    height: 110px;
+    font-size: 35px;
+  }
 }

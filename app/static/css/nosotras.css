@@ -1,9 +1,10 @@
 /* ───────────── Contenedor columnas flexibles ───────────── */
+
+
 .dos-columnas {
   display: flex;
   flex-wrap: wrap;
   gap: 2em;
-  padding: 4em 2em;
   border-top: 0; /* lo dejé 0px ya que así lo tenías */
 }
 
@@ -18,7 +19,6 @@
 /* Imágenes dentro de columnas */
 .galeria-img {
   width: 100%;
-  max-width: 500px;
   height: auto;
   border-radius: 0.5em;
   object-fit: cover;
@@ -26,7 +26,12 @@
 }
 
 /* ───────────── Responsive (max-width: 768px) ───────────── */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+
+  main {
+    margin-top: 5rem;
+  }
+
   .dos-columnas {
     flex-direction: column;
     align-items: center;
@@ -37,20 +42,20 @@
 
   .columna {
     width: 100%;
-    max-width: 600px;
+    max-width: 650px;
   }
 
   .galeria-img {
-    width: 90%;
+    max-width: 800px;
   }
 
   h2 {
-    font-size: 1.25rem; /* ~20px */
+    font-size: 2.5rem; /* ~20px */
     margin-bottom: 0.5em;
   }
 
   p {
-    font-size: 0.85rem; /* ~13-14px */
+    font-size: 1.5rem; /* ~13-14px */
     line-height: 1.5;
   }
 }
