@@ -1,5 +1,11 @@
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/modal.css') }}"
+/>
+<script src="https://developers.decidir.com/static/v2.6.4/decidir.js"></script>
+<script src="{{ url_for('static', filename='js/carrito.js') }}"></script>
+
 {% endblock %}
 
 <div
@@ -31,6 +37,9 @@
         <div class="modal-body">
           <!-- Paso 1: Datos de envío -->
           <fieldset class="paso" id="paso-1">
+                      
+            <p>Ingresar datos para el envio</p>
+
             <!-- Nombre y Apellido -->
             <div class="row">
               <div class="col mb-3">
@@ -262,6 +271,7 @@
             </div>
 
             <!-- Campos de tarjeta -->
+            <!-- Campos de tarjeta -->
             <div id="pago-tarjeta" class="d-none">
               <div class="mb-3">
                 <label for="numero_tarjeta" class="form-label"
@@ -275,8 +285,10 @@
                   inputmode="numeric"
                   pattern="[0-9]{13,19}"
                   placeholder="#### #### #### ####"
+                  required
                 />
               </div>
+
               <div class="row">
                 <div class="col">
                   <label for="vencimiento" class="form-label"
@@ -291,6 +303,7 @@
                       maxlength="2"
                       inputmode="numeric"
                       data-decidir="card_expiration_month"
+                      required
                     />
                     <input
                       type="text"
@@ -300,9 +313,11 @@
                       maxlength="2"
                       inputmode="numeric"
                       data-decidir="card_expiration_year"
+                      required
                     />
                   </div>
                 </div>
+
                 <div class="col">
                   <label for="cvv" class="form-label">CVV</label>
                   <input
@@ -313,9 +328,11 @@
                     pattern="[0-9]{3,4}"
                     inputmode="numeric"
                     data-decidir="security_code"
+                    required
                   />
                 </div>
               </div>
+
               <div class="mb-3">
                 <label for="titular" class="form-label"
                   >Titular de la tarjeta</label
@@ -326,19 +343,45 @@
                   id="titular"
                   data-decidir="card_holder_name"
                   autocomplete="cc-name"
+                  required
                 />
               </div>
+
               <div class="mb-3">
                 <label for="dni" class="form-label">Documento</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="dni"
-                  pattern="[0-9]{7,10}"
-                  inputmode="numeric"
-                  data-decidir="card_holder_doc_number"
-                />
+                <div class="d-flex gap-2">
+                  <select
+                    id="tipo_doc"
+                    data-decidir="card_holder_doc_type"
+                    class="form-control"
+                    required
+                  >
+                    <option value="dni">DNI</option>
+                    <option value="cuil">CUIL</option>
+                  </select>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="dni"
+                    pattern="[0-9]{7,10}"
+                    inputmode="numeric"
+                    data-decidir="card_holder_doc_number"
+                    required
+                  />
+                </div>
               </div>
+
+              <!-- Opcional -->
+              <!--
+  <div class="mb-3">
+    <label for="birthday" class="form-label">Fecha de nacimiento</label>
+    <input type="text" class="form-control" id="birthday" data-decidir="card_holder_birthday" placeholder="ddMMYYYY"/>
+  </div>
+  <div class="mb-3">
+    <label for="door_number" class="form-label">Número de puerta</label>
+    <input type="text" class="form-control" id="door_number" data-decidir="card_holder_door_number"/>
+  </div>
+  -->
             </div>
           </fieldset>
 
@@ -364,14 +407,17 @@
         </div>
 
         <!-- Footer con navegación -->
-        <div class="modal-footer">
-          <button type="button" class="btn boton" id="btn-anterior" disabled>
+        <div
+          class="modal-footer d-flex justify-content-end gap-2"
+          id="footer-botones"
+        >
+          <button type="button" class="btn boton d-none" id="btn-anterior">
             Anterior
           </button>
-          <button type="button" class="btn boton" id="btn-siguiente">
+          <button type="button" class="btn boton d-none" id="btn-siguiente">
             Siguiente
           </button>
-          <button type="submit" class="btn boton" id="btn-confirmar">
+          <button type="submit" class="btn boton d-none" id="btn-confirmar">
             Confirmar compra
           </button>
         </div>

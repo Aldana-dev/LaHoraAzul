@@ -117,82 +117,108 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==================================
 // 💳 2. Configuración de Payway
 // ==================================
-const publicApiKey = "TU_API_KEY_PUBLICA"; // sandbox
+const publicApiKey = 'ldks7gwim7CAZA4vMpSgIWRBGjk5m39'; // sandbox
 const urlSandbox = "https://developers.decidir.com/api/v2";
+
+// Instancia de la SDK
 const decidir = new Decidir(urlSandbox);
 decidir.setPublishableKey(publicApiKey);
-decidir.setTimeout(5000);
-
-// Formulario del modal
+decidir.setTimeout(5000); // 5 segundos
+// Formulario completo del modal
 const form = document.querySelector("#form-datos-usuario");
+// Solo el bloque de tarjeta
+const formTarjeta = document.querySelector("#pago-tarjeta");
 
+// Interceptar el submit
 form.addEventListener("submit", function (event) {
   const metodo = document.getElementById("metodo_pago").value;
 
   if (metodo === "tarjeta") {
     event.preventDefault();
-    decidir.createToken(form, sdkResponseHandler);
+
+    // Crear token usando solo los campos de tarjeta
+    decidir.createToken(formTarjeta, sdkResponseHandler);
   }
 });
 
+// Callback de la SDK
 function sdkResponseHandler(status, response) {
   if (status !== 200 && status !== 201) {
     console.error("Error al generar token:", response);
     alert("Hubo un problema con la tarjeta. Revisá los datos.");
-  } else {
-    console.log("Token generado:", response.token);
-
-    fetch("/confirmar_pedido", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        token: response.token,
-        nombre: document.getElementById("nombre").value,
-        apellido: document.getElementById("apellido").value,
-        email: document.getElementById("email").value,
-        telefono: document.getElementById("telefono").value,
-      }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        alert("Compra realizada con éxito 🎉");
-        console.log("Respuesta backend:", data);
-      })
-      .catch(err => {
-        console.error("Error en el backend:", err);
-        alert("No se pudo procesar el pago.");
-      });
+    return;
   }
+
+  console.log("Token generado:", response.token);
+
+  // Crear input oculto con el token para enviar al backend
+  let inputToken = document.querySelector("#token_pago");
+  if (!inputToken) {
+    inputToken = document.createElement("input");
+    inputToken.type = "hidden";
+    inputToken.id = "token_pago";
+    inputToken.name = "token_pago";
+    form.appendChild(inputToken);
+  }
+  inputToken.value = response.token;
+
+  // Ahora sí, enviamos el formulario completo al backend
+  form.submit();
 }
 
 // ==================================
 // 🧭 3. Navegación de pasos en modal
 // ==================================
-let pasoActual = 1;
-const pasos = document.querySelectorAll(".paso");
-const btnAnterior = document.getElementById("btn-anterior");
-const btnSiguiente = document.getElementById("btn-siguiente");
-const btnConfirmar = document.getElementById("btn-confirmar");
-const metodoPago = document.getElementById("metodo_pago");
-const pagoTarjeta = document.getElementById("pago-tarjeta");
+document.addEventListener("DOMContentLoaded", () => {
+  let pasoActual = 1;
+  const pasos = document.querySelectorAll(".paso");
+  const btnAnterior = document.getElementById("btn-anterior");
+  const btnSiguiente = document.getElementById("btn-siguiente");
+  const btnConfirmar = document.getElementById("btn-confirmar");
+  const metodoPago = document.getElementById("metodo_pago");
+  const pagoTarjeta = document.getElementById("pago-tarjeta");
+  const modalCompra = document.getElementById("modalCompra");
 
-function mostrarPaso(paso) {
-  pasos.forEach((p, i) => p.classList.toggle("d-none", i !== paso - 1));
-  btnAnterior.disabled = paso === 1;
-  btnSiguiente.classList.toggle("d-none", paso === pasos.length);
-  btnConfirmar.classList.toggle("d-none", paso !== pasos.length);
-}
+  // --- Función para mostrar el paso actual y actualizar botones ---
+  function mostrarPaso(paso) {
+    pasos.forEach((p, i) => p.classList.toggle("d-none", i !== paso - 1));
 
-btnAnterior.addEventListener("click", () => {
-  if (pasoActual > 1) mostrarPaso(--pasoActual);
+    // Ocultar todos los botones
+    btnAnterior.classList.add("d-none");
+    btnSiguiente.classList.add("d-none");
+    btnConfirmar.classList.add("d-none");
+
+    // Mostrar según el paso actual
+    if (paso === 1) {
+      btnSiguiente.classList.remove("d-none"); // Solo “Siguiente”
+    } else if (paso === 2) {
+      btnAnterior.classList.remove("d-none");  // “Anterior” y “Confirmar”
+      btnConfirmar.classList.remove("d-none");
+    }
+    // Paso 3 → sin botones visibles
+
+    pasoActual = paso;
+  }
+
+  // --- Listeners de los botones ---
+  btnAnterior.addEventListener("click", () => {
+    if (pasoActual > 1) mostrarPaso(--pasoActual);
+  });
+
+  btnSiguiente.addEventListener("click", () => {
+    if (pasoActual < pasos.length) mostrarPaso(++pasoActual);
+  });
+
+  metodoPago.addEventListener("change", e => {
+    pagoTarjeta.classList.toggle("d-none", e.target.value !== "tarjeta");
+  });
+
+  // --- Reiniciar el modal al abrirlo ---
+  modalCompra.addEventListener("shown.bs.modal", () => {
+    pasoActual = 1;         // Reiniciamos al paso 1 cada vez que se abre
+    mostrarPaso(pasoActual);
+  });
+
+  // --- Inicialización ---
+  mostrarPaso(pasoActual);
 });
-
-btnSiguiente.addEventListener("click", () => {
-  if (pasoActual < pasos.length) mostrarPaso(++pasoActual);
-});
-
-metodoPago.addEventListener("change", e => {
-  pagoTarjeta.classList.toggle("d-none", e.target.value !== "tarjeta");
-});
-
-mostrarPaso(pasoActual);

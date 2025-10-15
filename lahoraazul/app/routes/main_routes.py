@@ -243,54 +243,71 @@ def quitar_del_carrito(producto_id):
     return redirect(url_for('main.carrito'))
 
 
-# Ruta para confirmar el pedido
+# ----------------- Confirmar pedido con integración de pagos ----------------- #
 @main_bp.route('/carrito/confirmar', methods=['POST'])
 def confirmar_pedido():
+    import requests
     logging.info("Inicio del proceso de confirmación de pedido")
-    try:
-        # --- Datos del formulario ---
-        nombre = request.form.get("nombre")
-        apellido = request.form.get("apellido")
-        email_contacto = request.form.get("email")
-        telefono = request.form.get("telefono")
-        provincia = request.form.get("provincia")
-        localidad = request.form.get("localidad")
-        ciudad = request.form.get("ciudad")
-        cp_usuario = request.form.get("cp_usuario")
-        direccion = request.form.get("direccion")
-        referencias = request.form.get("referencias")
-        tipo_envio = request.form.get("tipo_envio")
-        comentarios = request.form.get("comentarios")
 
-        logging.info(f"Datos recibidos del formulario: {request.form.to_dict()}")
+    try:
+        # --- Recibir datos JSON desde JS ---
+        data = request.get_json()
+        if not data:
+            logging.warning("No se recibieron datos JSON")
+            return jsonify({"error": "Datos incompletos"}), 400
+
+        nombre = data.get("nombre")
+        apellido = data.get("apellido")
+        email_contacto = data.get("email")
+        telefono = data.get("telefono")
+        provincia = data.get("provincia")
+        localidad = data.get("localidad")
+        ciudad = data.get("ciudad")
+        cp_usuario = data.get("cp_usuario")
+        direccion = data.get("direccion")
+        referencias = data.get("referencias")
+        tipo_envio = data.get("tipo_envio")
+        comentarios = data.get("comentarios")
+        metodo_pago = data.get("metodo_pago")
+        token_tarjeta = data.get("token")
+        total = data.get("total")  # total calculado en frontend
+
+        logging.info(f"Datos recibidos: {data}")
 
         # Validaciones básicas
-        if not email_contacto:
-            logging.warning("No se ingresó email")
-            flash("Debés ingresar un email")
-            return redirect(url_for("main.carrito"))
+        if not email_contacto or not total:
+            logging.warning("Email o total faltante")
+            return jsonify({"error": "Email y total son obligatorios"}), 400
 
         carrito_ids = session.get("carrito", [])
-        logging.info(f"IDs en carrito para confirmación: {carrito_ids}")
         if not carrito_ids:
             logging.warning("Carrito vacío al intentar confirmar pedido")
-            flash("Tu carrito está vacío")
-            return redirect(url_for("main.carrito"))
+            return jsonify({"error": "El carrito está vacío"}), 400
 
-        # --- Obtener productos del carrito ---
         productos = Producto.query.filter(Producto.id.in_(carrito_ids)).all()
-        logging.info(f"Productos obtenidos para el pedido: {[p.id for p in productos]}")
         subtotal = sum([p.precio for p in productos])
         logging.info(f"Subtotal calculado: {subtotal}")
 
-        # Costo de envío
-        try:
-            costo_envio = float(request.form.get("costo_envio", 0))
-        except ValueError:
-            logging.error("Costo de envío inválido recibido del formulario")
-            costo_envio = 0
-        total = subtotal + costo_envio
-        logging.info(f"Costo de envío: {costo_envio}, Total final: {total}")
+        # --- Procesar pago si es tarjeta ---
+        if metodo_pago == "tarjeta":
+            if not token_tarjeta:
+                logging.warning("No se recibió token de tarjeta")
+                return jsonify({"error": "Falta token de tarjeta"}), 400
+
+            try:
+                resp = requests.post(
+                    "http://localhost:3001/create-payment-intent",
+                    json={"amount": total, "token": token_tarjeta},
+                    timeout=5
+                )
+                resp.raise_for_status()
+                resultado_pago = resp.json()
+                if resultado_pago.get("status") != "approved":
+                    logging.warning(f"Pago rechazado: {resultado_pago}")
+                    return jsonify({"error": "Pago rechazado", "details": resultado_pago}), 402
+            except requests.exceptions.RequestException as e:
+                logging.error(f"Error al procesar pago: {e}")
+                return jsonify({"error": "Error en el servicio de pagos", "details": str(e)}), 500
 
         # --- Crear pedido ---
         nuevo_pedido = Pedido(
@@ -307,7 +324,8 @@ def confirmar_pedido():
             tipo_envio=tipo_envio,
             comentarios=comentarios,
             total=total,
-            fecha=datetime.utcnow()
+            fecha=datetime.utcnow(),
+            estado_pago="aprobado" if metodo_pago == "tarjeta" else "pendiente"
         )
         db.session.add(nuevo_pedido)
         db.session.flush()
@@ -323,19 +341,21 @@ def confirmar_pedido():
             db.session.add(item)
             p.vendido = True
             db.session.add(p)
-            logging.info(f"Item agregado al pedido: Producto {p.id}, Precio {p.precio}")
 
         db.session.commit()
         logging.info(f"Pedido confirmado y guardado con ID: {nuevo_pedido.id}")
 
         # Vaciar carrito
         session.pop("carrito", None)
-        logging.info("Carrito de sesión vaciado después de guardar el pedido")
+        logging.info("Carrito de sesión vaciado")
 
-        flash("Pedido guardado con éxito ✅")
-        return redirect(url_for("main.index"))
+        return jsonify({"success": True, "pedido_id": nuevo_pedido.id})
 
     except Exception as e:
+        db.session.rollback()
+        logging.exception("Error al confirmar pedido")
+        return jsonify({"error": "Ocurrió un error al procesar el pedido", "details": str(e)}), 500
+
         db.session.rollback()
         logging.exception(f"Error al guardar pedido: {e}")
         flash("Ocurrió un error al confirmar el pedido ❌")
