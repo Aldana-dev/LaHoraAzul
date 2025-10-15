@@ -39,7 +39,6 @@ function actualizarLabel(label, precio, minDias, maxDias) {
   }
 }
 
-
 // Cotizar envío (D = domicilio, S = sucursal)
 async function cotizarEnvio(cpDestino, tipo) {
   const datosCotizacion = {

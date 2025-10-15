@@ -70,7 +70,7 @@
     <th>Fecha</th>
     <th>Precio Total</th>
     <th>Productos</th>
-    <th>Datos de Envío</th> <!-- Nueva columna -->
+    <th>Datos de Envío</th> <!-- Se mantiene, pero con contenido reducido -->
   </tr>
 </thead>
 <tbody>
@@ -112,12 +112,6 @@
       <td>
         <p><strong>Email:</strong> {{ pedido.email_contacto }}</p>
         <p><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
-        <p><strong>Provincia:</strong> {{ pedido.provincia }}</p>
-        <p><strong>Localidad:</strong> {{ pedido.localidad }}</p>
-        <p><strong>Ciudad:</strong> {{ pedido.ciudad }}</p>
-        <p><strong>Código Postal:</strong> {{ pedido.cp_usuario }}</p>
-        <p><strong>Dirección:</strong> {{ pedido.direccion }}</p>
-        <p><strong>Referencias:</strong> {{ pedido.referencias }}</p>
         <p><strong>Tipo de envío:</strong> {{ pedido.tipo_envio }}</p>
         <p><strong>Comentarios:</strong> {{ pedido.comentarios }}</p>
       </td>
@@ -159,7 +153,6 @@
         document.getElementById("modal-pedido").style.display = "none";
       }
 
-      // Eliminamos todo JS relacionado a modal eliminar pedidos
     </script>
   </body>
 </html>

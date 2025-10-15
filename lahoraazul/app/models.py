@@ -46,27 +46,17 @@ class ProductoImagen(db.Model):
 # ----------------- PEDIDOS ----------------- #
 class Pedido(db.Model):
     __tablename__ = 'pedidos'
-
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     apellido = db.Column(db.String(100), nullable=False)
-    email_contacto = db.Column(db.String(120), nullable=False)
+    email_contacto = db.Column(db.String(120), nullable=False)  # Correo electrónico
     telefono = db.Column(db.String(50), nullable=False)
-    provincia = db.Column(db.String(100), nullable=False)
-    localidad = db.Column(db.String(100), nullable=False)
-    ciudad = db.Column(db.String(100), nullable=False)
-    cp_usuario = db.Column(db.String(10), nullable=False)
-    direccion = db.Column(db.String(200), nullable=True)
-    referencias = db.Column(db.String(300), nullable=True)
     tipo_envio = db.Column(db.String(50), nullable=False)
-    comentarios = db.Column(db.Text, nullable=True)
-
+    comentarios = db.Column(db.Text, nullable=True)  # Mensaje extra
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
     estado = db.Column(db.String(50), default='pendiente')
-    total = db.Column(db.Numeric(10, 2), nullable=False)
-
+    total = db.Column(db.Numeric(10, 2), nullable=False)  # Coste
     es_viejo = db.Column(db.Boolean, default=False)
-
     items = db.relationship('PedidoItem', backref='pedido', lazy=True)
 
 
