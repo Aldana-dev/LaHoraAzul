@@ -2,38 +2,46 @@
 // 🚚 Cotización de envíos
 // ===============================
 function mostrarCotizacionGlobal(tipo, precio, minDias, maxDias) {
+  console.log(`Actualizando cotización para tipo: ${tipo}, precio: ${precio}`);
+
   // Actualizar sección principal
   const labelPrincipal = document.querySelector(`.tarjeta-envio[data-tipo="${tipo}"]`);
-  if (labelPrincipal) actualizarLabel(labelPrincipal, precio, minDias, maxDias);
+  if (labelPrincipal) {
+    actualizarLabel(labelPrincipal, precio, minDias, maxDias);
+  } else {
+    console.error(`Label principal para tipo ${tipo} no encontrado`);
+  }
 
   // Actualizar sección modal
   const labelModal = document.querySelector(`#modal-tarjetas-envio label[data-tipo="${tipo}"]`);
-  if (labelModal) actualizarLabel(labelModal, precio, minDias, maxDias);
+  if (labelModal) {
+    actualizarLabel(labelModal, precio, minDias, maxDias);
+  } else {
+    console.error(`Label modal para tipo ${tipo} no encontrado`);
+  }
 }
 
 // Función helper para actualizar cualquier label de envío
 function actualizarLabel(label, precio, minDias, maxDias) {
+  if (!label) {
+    console.error("Label no proporcionado");
+    return;
+  }
   const spanPrecio = label.querySelector(".precio-opcion, .precio-opcion-modal");
   const spanTiempo = label.querySelector(".texto-envio");
 
   if (precio != null) {
-    // Precio SOLO en el span de precio
-    spanPrecio.textContent = `$${precio.toFixed(2)}`;
+    console.log(`Actualizando label con precio: ${precio}`);
+    if (spanPrecio) spanPrecio.textContent = `$${precio.toFixed(2)}`;
     label.dataset.precio = precio;
-
-    // Tiempo SOLO en el span de tiempo
     if (spanTiempo) spanTiempo.textContent = `${minDias} a ${maxDias} días hábiles`;
-
-    // Habilitar input
     const input = label.querySelector("input");
     if (input) input.disabled = false;
   } else {
-    spanPrecio.textContent = "No disponible";
+    console.log("Precio no disponible");
+    if (spanPrecio) spanPrecio.textContent = "No disponible";
     if (spanTiempo) spanTiempo.textContent = "";
-
     label.dataset.precio = 0;
-
-    // Deshabilitar input
     const input = label.querySelector("input");
     if (input) input.disabled = true;
   }
@@ -41,6 +49,13 @@ function actualizarLabel(label, precio, minDias, maxDias) {
 
 // Cotizar envío (D = domicilio, S = sucursal)
 async function cotizarEnvio(cpDestino, tipo) {
+  console.log(`Cotizando envío para CP: ${cpDestino}, tipo: ${tipo}`);
+  if (!cpDestino || cpDestino.trim() === '') {
+    console.error("CP no proporcionado o inválido en cotizarEnvio");
+    alert("Por favor ingrese un Código Postal válido.");
+    return;
+  }
+
   const datosCotizacion = {
     customerId: "0001079998",
     postalCodeOrigin: "8407",
@@ -56,19 +71,46 @@ async function cotizarEnvio(cpDestino, tipo) {
       body: JSON.stringify(datosCotizacion),
     });
 
-    if (!resp.ok) throw new Error(`Error en la cotización: ${resp.status}`);
+    if (!resp.ok) {
+      throw new Error(`Error en la cotización: ${resp.status} - ${await resp.text()}`);
+    }
     const data = await resp.json();
-
-    const tarifa = data.rates?.find(r => r.deliveredType === datosCotizacion.deliveredType);
-    mostrarCotizacionGlobal(tipo, tarifa?.price ?? null, tarifa?.deliveryTimeMin, tarifa?.deliveryTimeMax);
+    console.log("Respuesta completa de la API:", data);
+    if (data.rates && data.rates.length > 0) {
+      const tarifa = data.rates.find(r => r.deliveredType === datosCotizacion.deliveredType);
+      mostrarCotizacionGlobal(tipo, tarifa?.price ?? null, tarifa?.deliveryTimeMin, tarifa?.deliveryTimeMax);
+    } else {
+      console.error("No se encontraron tarifas en la respuesta");
+      mostrarCotizacionGlobal(tipo, null);
+    }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error en cotizarEnvio:", error);
+    alert("Error al cotizar el envío. Verifica los datos e intenta de nuevo.");
     mostrarCotizacionGlobal(tipo, null);
   }
 }
 
-function calcularCotizaciones(cpDestino) {
+async function cotizarEnvioModal(cpDestino) {
+  console.log("Llamando a cotizarEnvioModal con CP:", cpDestino);
   if (!cpDestino) {
+    console.error("CP no proporcionado en cotizarEnvioModal");
+    alert("Por favor ingrese un Código Postal de destino.");
+    return;
+  }
+  try {
+    await cotizarEnvio(cpDestino, "domicilio");
+    await cotizarEnvio(cpDestino, "sucursal");
+    // actualizarResumenModal();  // Comentado porque no está definida; descomenta si la defines
+  } catch (error) {
+    console.error("Error en cotizarEnvioModal:", error);
+    alert("Error al cotizar en el modal.");
+  }
+}
+
+function calcularCotizaciones(cpDestino) {
+  console.log("Llamando a calcularCotizaciones con CP:", cpDestino);
+  if (!cpDestino) {
+    console.error("CP no proporcionado en calcularCotizaciones");
     alert("Por favor ingrese un Código Postal de destino.");
     return;
   }
@@ -80,89 +122,132 @@ function calcularCotizaciones(cpDestino) {
 // 💰 Resumen de costos
 // ===============================
 function parseCurrency(str) {
+  console.log("Parseando currency:", str);
   return parseFloat(str.replace(/[^0-9.-]+/g, "")) || 0;
 }
 
 function actualizarResumen() {
+  console.log("Actualizando resumen");
   const seleccionado = document.querySelector('input[name="tipo_envio"]:checked, input[name="opcion-envio"]:checked');
-  if (!seleccionado) return;
-
+  if (!seleccionado) {
+    console.warn("Ningún tipo de envío seleccionado");
+    return;
+  }
   const label = seleccionado.closest("label");
+  if (!label) {
+    console.error("Label no encontrado para el seleccionado");
+    return;
+  }
   const precioEnvio = parseFloat(label.dataset.precio || 0);
-
-  const subtotal = parseCurrency(document.getElementById("subtotal").textContent);
-  document.getElementById("costo-envio").textContent = `$${precioEnvio.toFixed(2)}`;
-  document.getElementById("total-compra").textContent = `$${(subtotal + precioEnvio).toFixed(2)}`;
+  const subtotalElement = document.getElementById("subtotal");
+  if (!subtotalElement) {
+    console.error("Elemento subtotal no encontrado");
+    return;
+  }
+  const subtotal = parseCurrency(subtotalElement.textContent);
+  const costoEnvioElement = document.getElementById("costo-envio");
+  if (costoEnvioElement) costoEnvioElement.textContent = `$${precioEnvio.toFixed(2)}`;
+  const totalCompraElement = document.getElementById("total-compra");
+  if (totalCompraElement) totalCompraElement.textContent = `$${(subtotal + precioEnvio).toFixed(2)}`;
 }
 
 // ===============================
 // 🚀 Inicialización
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
-  // Cotización inicial
-  calcularCotizaciones("8300");
-  document.getElementById("btn-cotizar-envio").addEventListener("click", () => {
-    calcularCotizaciones(document.getElementById("cp_destino").value.trim());
-  });
+  console.log("DOMContentLoaded ejecutado");
+  const cpDestinoInicial = document.getElementById("cp_destino")?.value.trim();
+  if (cpDestinoInicial) {
+    console.log("Iniciando cotización con CP inicial:", cpDestinoInicial);
+    calcularCotizaciones(cpDestinoInicial);
+  } else {
+    console.warn("No se encontró CP inicial");
+  }
 
-  // Escuchar todos los radios de envío (modal + principal)
+  const btnCotizar = document.getElementById("btn-cotizar-envio");
+  if (btnCotizar) {
+    btnCotizar.addEventListener("click", () => {
+      const cpDestino = document.getElementById("cp_destino")?.value.trim();
+      console.log("Botón cotizar presionado con CP:", cpDestino);
+      if (cpDestino) {
+        calcularCotizaciones(cpDestino);
+      } else {
+        console.error("CP no proporcionado en el botón");
+        alert("Por favor ingrese un Código Postal de destino.");
+      }
+    });
+  } else {
+    console.error("Botón btn-cotizar-envio no encontrado");
+  }
+
   document.querySelectorAll('input[name="tipo_envio"], input[name="opcion-envio"]').forEach(radio => {
-    radio.addEventListener("change", actualizarResumen);
+    radio.addEventListener("change", () => {
+      console.log("Tipo de envío cambiado");
+      actualizarResumen();
+    });
   });
 
-  actualizarResumen(); // inicializar
+  actualizarResumen();  // Inicializar resumen
 });
 
-// ==================================
-// 💳 2. Configuración de Payway
-// ==================================
-const publicApiKey = 'ldks7gwim7CAZA4vMpSgIWRBGjk5m39'; // sandbox
-const urlSandbox = "https://developers.decidir.com/api/v2";
+// Renombrado para evitar conflictos
+const formularioEnvioCompra = document.getElementById("form-datos-usuario");
+if (formularioEnvioCompra) {
+  formularioEnvioCompra.addEventListener("submit", function (e) {
+    e.preventDefault();
+    console.log("Verificando datos del formulario...");
+    const datos = {};
+    const formData = new FormData(formularioEnvioCompra);  // Actualizado aquí
+    for (let [key, value] of formData.entries()) {
+      datos[key] = value;
+    }
 
-// Instancia de la SDK
-const decidir = new Decidir(urlSandbox);
-decidir.setPublishableKey(publicApiKey);
-decidir.setTimeout(5000); // 5 segundos
-// Formulario completo del modal
-const form = document.querySelector("#form-datos-usuario");
-// Solo el bloque de tarjeta
-const formTarjeta = document.querySelector("#pago-tarjeta");
+    const requiredFields = ["nombre", "apellido", "provincia", "localidad", "ciudad", "cp_usuario", "email", "telefono"];
+    let isValid = true;
 
-// Interceptar el submit
-form.addEventListener("submit", function (event) {
-  const metodo = document.getElementById("metodo_pago").value;
+    requiredFields.forEach(field => {
+      const input = document.getElementById(field);
+      const errorSpan = document.getElementById(`error-${field}`);
+      const value = datos[field];
 
-  if (metodo === "tarjeta") {
-    event.preventDefault();
+      if (!value || value.trim() === "") {
+        isValid = false;
+        if (errorSpan) {
+          errorSpan.textContent = "Este campo es requerido.";
+          errorSpan.style.display = "block";
+        }
+      } else if (errorSpan) {
+        errorSpan.textContent = "";
+        errorSpan.style.display = "none";
+      }
 
-    // Crear token usando solo los campos de tarjeta
-    decidir.createToken(formTarjeta, sdkResponseHandler);
-  }
-});
+      // Validaciones adicionales en una sola verificación
+      const validations = {
+        email: value => !/\S+@\S+\.\S+/.test(value) && "Correo electrónico no válido.",
+        cp_usuario: value => !/^[0-9]{4,8}$/.test(value) && "Código postal no válido.",
+        telefono: value => !/[0-9+ ]{7,15}/.test(value) && "Teléfono no válido."
+      };
 
-// Callback de la SDK
-function sdkResponseHandler(status, response) {
-  if (status !== 200 && status !== 201) {
-    console.error("Error al generar token:", response);
-    alert("Hubo un problema con la tarjeta. Revisá los datos.");
-    return;
-  }
+      if (validations[field] && validations[field](value)) {
+        isValid = false;
+        if (errorSpan) {
+          errorSpan.textContent = validations[field](value);
+          errorSpan.style.display = "block";
+        }
+      }
+    });
 
-  console.log("Token generado:", response.token);
-
-  // Crear input oculto con el token para enviar al backend
-  let inputToken = document.querySelector("#token_pago");
-  if (!inputToken) {
-    inputToken = document.createElement("input");
-    inputToken.type = "hidden";
-    inputToken.id = "token_pago";
-    inputToken.name = "token_pago";
-    form.appendChild(inputToken);
-  }
-  inputToken.value = response.token;
-
-  // Ahora sí, enviamos el formulario completo al backend
-  form.submit();
+    if (isValid) {
+      console.log("Datos válidos:", datos);
+      if (typeof enviarDatosAAPI === "function") {
+        enviarDatosAAPI(datos);
+      } else {
+        console.error("Función enviarDatosAAPI no definida.");
+      }
+    } else {
+      console.error("Hay errores en el formulario.");
+    }
+  });
 }
 
 // ==================================
@@ -178,46 +263,76 @@ document.addEventListener("DOMContentLoaded", () => {
   const pagoTarjeta = document.getElementById("pago-tarjeta");
   const modalCompra = document.getElementById("modalCompra");
 
-  // --- Función para mostrar el paso actual y actualizar botones ---
+  console.log("Inicializando navegación de modal");
+
   function mostrarPaso(paso) {
+    console.log(`Mostrando paso: ${paso}`);
+    if (!pasos || pasos.length === 0) {
+      console.error("No se encontraron pasos");
+      return;
+    }
     pasos.forEach((p, i) => p.classList.toggle("d-none", i !== paso - 1));
 
-    // Ocultar todos los botones
     btnAnterior.classList.add("d-none");
     btnSiguiente.classList.add("d-none");
     btnConfirmar.classList.add("d-none");
 
-    // Mostrar según el paso actual
     if (paso === 1) {
-      btnSiguiente.classList.remove("d-none"); // Solo “Siguiente”
+      btnSiguiente.classList.remove("d-none");
     } else if (paso === 2) {
-      btnAnterior.classList.remove("d-none");  // “Anterior” y “Confirmar”
+      btnAnterior.classList.remove("d-none");
       btnConfirmar.classList.remove("d-none");
     }
-    // Paso 3 → sin botones visibles
 
     pasoActual = paso;
   }
 
-  // --- Listeners de los botones ---
-  btnAnterior.addEventListener("click", () => {
-    if (pasoActual > 1) mostrarPaso(--pasoActual);
-  });
+  if (btnAnterior) {
+    btnAnterior.addEventListener("click", () => {
+      console.log("Botón anterior presionado");
+      if (pasoActual > 1) mostrarPaso(pasoActual - 1);
+    });
+  } else {
+    console.error("Botón btn-anterior no encontrado");
+  }
 
-  btnSiguiente.addEventListener("click", () => {
-    if (pasoActual < pasos.length) mostrarPaso(++pasoActual);
-  });
+  if (btnSiguiente) {
+    btnSiguiente.addEventListener("click", () => {
+      console.log("Botón siguiente presionado");
+      if (pasoActual < pasos.length) mostrarPaso(pasoActual + 1);
+    });
+  } else {
+    console.error("Botón btn-siguiente no encontrado");
+  }
 
-  metodoPago.addEventListener("change", e => {
-    pagoTarjeta.classList.toggle("d-none", e.target.value !== "tarjeta");
-  });
+  if (metodoPago) {
+    metodoPago.addEventListener("change", e => {
+      console.log("Método de pago cambiado a:", e.target.value);
+      if (pagoTarjeta) pagoTarjeta.classList.toggle("d-none", e.target.value !== "tarjeta");
+    });
+  } else {
+    console.error("Elemento metodo_pago no encontrado");
+  }
 
-  // --- Reiniciar el modal al abrirlo ---
-  modalCompra.addEventListener("shown.bs.modal", () => {
-    pasoActual = 1;         // Reiniciamos al paso 1 cada vez que se abre
-    mostrarPaso(pasoActual);
-  });
+  if (modalCompra) {
+    modalCompra.addEventListener("shown.bs.modal", () => {
+      console.log("Modal mostrado, reiniciando a paso 1");
+      pasoActual = 1;
+      mostrarPaso(pasoActual);
+    });
+  } else {
+    console.error("Modal modalCompra no encontrado");
+  }
 
-  // --- Inicialización ---
-  mostrarPaso(pasoActual);
+  mostrarPaso(pasoActual);  // Inicializar
+});
+
+document.querySelectorAll('input, textarea, select').forEach((element, index) => {
+  element.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const nextElement = document.querySelector(`[tabindex="${index + 1}"]`);
+      if (nextElement) nextElement.focus();
+    }
+  });
 });

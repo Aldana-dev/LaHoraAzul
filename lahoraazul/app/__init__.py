@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_debugtoolbar import DebugToolbarExtension
 
 # Primero instanciamos los objetos sin app
 db = SQLAlchemy()
@@ -8,6 +9,7 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
+    toolbar = DebugToolbarExtension(app)
 
     # ---------------- Configuración ----------------
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://aldana_dev:devadmin@localhost/lahoraazul_db'
@@ -17,7 +19,7 @@ def create_app():
 
     # ---------------- Inicializar DB y Migraciones ----------------
     db.init_app(app)
-    migrate.init_app(app, db)  # <- Ahora sí conectamos migrate con app y db
+    migrate.init_app(app, db)
 
     # ---------------- Registrar Blueprints ----------------
     from app.routes.admin_routes import admin_bp
