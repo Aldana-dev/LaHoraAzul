@@ -1,8 +1,8 @@
-/* ───────────── Filtros y categorías ───────────── */
+/* Category Filters */
 .filtros-categorias {
   display: flex;
-  justify-content: space-between; /* separa las categorías equitativamente */
-  gap: 0; /* se maneja con flex: 1 */
+  justify-content: space-between;
+  gap: 0;
   margin: 4rem 0;
 }
 
@@ -12,8 +12,8 @@
   align-items: center;
   text-decoration: none;
   position: relative;
-  flex: 1; /* cada categoría ocupa un espacio proporcional */
-  min-width: 0; /* evita overflow de texto */
+  flex: 1;
+  min-width: 0;
 }
 
 .icono {
@@ -30,7 +30,7 @@
 .categoria span {
   font-size: 1rem;
   font-weight: 500;
-  color: #153f6c;
+  color: var(--color-primary);
   padding-bottom: 8px;
   text-align: center;
 }
@@ -44,12 +44,12 @@
   transform: translateX(-50%);
   width: 126px;
   height: 126px;
-  background-color: #153f6c;
+  background-color: var(--color-primary);
   border-radius: 50%;
   z-index: 1;
 }
 
-/* ───────────── Lista de productos ───────────── */
+/* Product List */
 .lista-productos {
   display: grid;
   grid-template-columns: repeat(4, minmax(160px, 1fr));
@@ -84,41 +84,40 @@
 .producto p {
   margin: 0.5rem 0;
 }
-/* Mensaje vacío centrado */
-.lista-productos .mensaje-vacio {
+
+.mensaje-vacio {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   font-size: 1.2rem;
-  color: #153f6c;
+  color: var(--color-primary);
   grid-column: 1 / -1;
   margin: 5rem;
 }
 
-
-/* ───────────── Responsive: max-width 1200px ───────────── */
+/* Media Queries */
 @media (max-width: 1200px) {
   .lista-productos {
     grid-template-columns: repeat(3, minmax(160px, 1fr));
   }
 }
 
-/* ───────────── Responsive: max-width 768px ───────────── */
 @media (max-width: 768px) {
   .filtros-categorias {
     margin: 2rem 0;
   }
 
-  .lista-productos .mensaje-vacio {
-  margin: 3rem;
-  font-size: 13px;
-}
+  .mensaje-vacio {
+    margin: 3rem;
+    font-size: 13px;
+  }
 
   .producto p {
     margin: 0.2rem 0;
     font-size: 13px;
   }
+
   .icono {
     width: 70px;
     height: 70px;
@@ -143,13 +142,16 @@
     width: 50px;
     height: 50px;
   }
-
-  
 }
 
-/* ───────────── Responsive: max-width 480px ───────────── */
 @media (max-width: 480px) {
+  main {
+    padding: 0px;
+  }
+
   .lista-productos {
+    padding: 0px;
+
     grid-template-columns: repeat(2, 1fr);
     gap: 0.8rem;
   }
@@ -165,5 +167,9 @@
 
   .producto img {
     height: 160px;
+  }
+
+  .footer {
+    margin-top: 1rem;
   }
 }

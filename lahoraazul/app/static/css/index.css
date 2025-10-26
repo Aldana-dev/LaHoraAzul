@@ -1,4 +1,3 @@
-/* ───────────── Banner / Carrusel ───────────── */
 .carousel {
   position: relative;
   z-index: 0;
@@ -9,7 +8,6 @@
   width: 10%;
 }
 
-/* ───────────── Contenido principal ───────────── */
 .contenido {
   max-width: 800px;
   margin: 6em auto;
@@ -17,12 +15,11 @@
 }
 
 .contenido p {
-  margin-bottom: 1em;
+  margin-bottom: var(--spacing-medium);
 }
 
-/* ───────────── Galería ───────────── */
 .galeria-preview {
-  background-color: white;
+  background-color: var(--color-white);
   margin-bottom: 6em;
   text-align: center;
 }
@@ -31,7 +28,7 @@
   flex: 0 0 25%;
   max-width: 25%;
   padding: 0.5em;
-  margin-bottom: 1em;
+  margin-bottom: var(--spacing-medium);
 }
 
 .galeria-img {
@@ -42,20 +39,19 @@
   border-radius: 0.5em;
 }
 
-/* ───────────── Contacto ───────────── */
 .contacto-link {
   display: flex;
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  color: #153f6c;
+  color: var(--color-primary);
   margin-bottom: 0.8em;
   white-space: normal;
 }
 
 .contacto-link .icono {
-  background-color: #153f6c;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-white);
   border-radius: 50%;
   font-size: 35px;
   width: 56px;
@@ -72,25 +68,30 @@
   word-break: break-word;
 }
 
-/* ───────────── Mapa iframe ───────────── */
-iframe {
-  width: 600px;
-  height: 400px;
+.mapa-iframe {
+  width: 100%;
   border: 0;
   border-radius: 0.5em;
 }
 
-/* ───────────── Footer ───────────── */
+.mapa-mobile,
+.mapa-desktop {
+  display: none;
+}
+
 .footer {
   margin-top: 0;
 }
 
-/* ───────────── Responsive ───────────── */
+@media (min-width: 1024px) {
+  .mapa-desktop {
+    display: block;
+    height: 400px;
+  }
+}
 
-/* Hasta 1024px → Forzar 3 columnas en galería y ocultar desde la 7ª */
 @media (max-width: 1024px) {
   .contenido {
-    margin: 5em 2em 4em;
     font-size: 1.5rem;
   }
 
@@ -105,36 +106,30 @@ iframe {
     padding-left: 0.5rem;
   }
 
-  .galeria-preview .row > [class*="col-"]:nth-child(n + 7) {
-    display: none;
-  }
+  .galeria-preview .row > [class*="col-"]:nth-child(n + 7),
   .galeria-preview .row > div:nth-child(n + 7) {
     display: none;
   }
+
   .dos-columnas {
     margin: 2rem;
     gap: 1.5em;
   }
+
   .contacto-link {
     padding-left: 2rem;
     font-size: 20px;
   }
-  iframe {
-    width: 100%;
-    height: 350px;
-  }
 }
 
-/* Hasta 768px → Ajustes de tablet y mobile mediano */
 @media (max-width: 768px) {
   .contenido {
-    margin: 4em 1em 2em;
-    padding: 0 1em;
+    margin: 4em var(--spacing-medium) 2em;
+    padding: 0 var(--spacing-medium);
   }
 
   .galeria-preview {
     padding: 2em 1.5em 0;
-    margin: 0;
   }
 
   .galeria-img {
@@ -143,7 +138,7 @@ iframe {
 
   .dos-columnas {
     flex-direction: column;
-    padding: 2em 1em;
+    padding: 2em var(--spacing-medium);
   }
 
   .contacto-link {
@@ -160,20 +155,33 @@ iframe {
     padding: 6px;
   }
 
-  iframe {
-    height: 300px;
-  }
-
   .carousel-control-prev,
   .carousel-control-next {
     width: 8%;
   }
 }
 
-/* Hasta 480px → Ajustes móviles pequeños */
 @media (max-width: 480px) {
+  main {
+    padding: var(--spacing-small);
+  }
+
+  .contenido {
+    margin-top: 2rem;
+    padding: 0;
+  }
+
   .contenido p {
     font-size: 12px;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  .galeria-preview {
+    padding: 0 1.5em 0;
+    margin: 0;
   }
 
   .galeria-preview .row > [class*="col-"] {
@@ -187,26 +195,37 @@ iframe {
     margin-bottom: 0 !important;
   }
 
+  .columna {
+    min-width: 237px !important;
+  }
+
+  .dos-columnas {
+    margin: 2rem 0;
+  }
+
   .contacto-link {
-    margin-left: 14px;
+    padding-left: 0;
+    margin-left: 10px;
+    font-size: 1rem;
   }
 
   .contacto-link .texto-contacto {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   .contacto-link .icono {
-    font-size: 20px;
-    width: 32px;
-    height: 32px;
+    font-size: 22px;
+    width: 36px;
+    height: 36px;
   }
 
-  iframe {
-    height: 250px;
+  .mapa-mobile {
+    display: block;
+    max-width: 256px;
   }
 
   .boton {
-    font-size: 14px;
-    padding: 5px 50px;
+    font-size: 16px;
+    padding: 8px 60px;
   }
 }

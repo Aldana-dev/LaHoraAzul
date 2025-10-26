@@ -1,4 +1,4 @@
-/* ───────────── Contenedor detalle producto ───────────── */
+/* Product Detail Container */
 .producto-detalle {
   max-width: 1200px;
   margin: 3rem auto;
@@ -8,21 +8,21 @@
   gap: 2rem;
 }
 
-/* ───────────── Header ───────────── */
+/* Header */
 .producto-header {
-  border-bottom: 2px solid #153f6c;
+  border-bottom: 2px solid var(--color-primary);
   padding-bottom: 1rem;
 }
 
 .producto-nombre {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 h2 {
   text-align: start;
 }
 
-/* ───────────── Precio y botón ───────────── */
+/* Price and Button */
 .precio-boton {
   display: flex;
   justify-content: space-between;
@@ -32,15 +32,15 @@ h2 {
 
 .producto-precio {
   font-size: 25px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
-/* ───────────── Descripción ───────────── */
+/* Description */
 .producto-descripcion {
   line-height: 1.6;
 }
 
-/* ───────────── Galería ───────────── */
+/* Gallery */
 .producto-galeria {
   display: flex;
   gap: 2rem;
@@ -49,7 +49,7 @@ h2 {
   align-items: flex-start;
 }
 
-/* Imagen principal */
+/* Main Image */
 .imagen-principal {
   flex: 1 1 50%;
   max-width: 600px;
@@ -59,7 +59,7 @@ h2 {
   align-items: center;
   border-radius: 6px;
   overflow: hidden;
-  background-color: #fff;
+  background-color: var(--color-white);
 }
 
 .imagen-principal img {
@@ -71,7 +71,7 @@ h2 {
   display: block;
 }
 
-/* Miniaturas */
+/* Thumbnails */
 .galeria-miniaturas {
   flex: 1 1 200px;
   display: grid;
@@ -93,22 +93,24 @@ h2 {
 
 .galeria-miniaturas img:hover,
 .galeria-miniaturas img.seleccionada {
-  border-color: #153f6c;
+  border-color: var(--color-primary);
 }
 
-/* Scroll personalizado */
+/* Custom Scrollbar */
 .galeria-miniaturas::-webkit-scrollbar {
   width: 6px;
 }
+
 .galeria-miniaturas::-webkit-scrollbar-thumb {
   background-color: #999;
   border-radius: 3px;
 }
+
 .galeria-miniaturas::-webkit-scrollbar-track {
   background: transparent;
 }
 
-/* ───────────── Responsive ───────────── */
+/* Media Queries */
 @media (max-width: 1042px) {
   h2 {
     font-size: 2rem;
@@ -128,6 +130,7 @@ h2 {
   .producto-detalle {
     padding: 1px 3rem;
   }
+
   .galeria-miniaturas {
     grid-template-columns: repeat(3, 1fr);
     max-width: 90%;
@@ -137,6 +140,47 @@ h2 {
     flex-direction: row;
     align-items: stretch;
   }
+
+  .producto-precio {
+    font-size: 2rem;
+  }
+
+  p {
+    font-size: 1.5rem;
+  }
+}
+
+/* Media Queries */
+@media (max-width: 1042px) {
+  h2 {
+    font-size: 2rem;
+  }
+
+  .producto-galeria {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .imagen-principal {
+    width: 100%;
+    max-width: 70%;
+    max-height: 80vh;
+  }
+
+  .producto-detalle {
+    padding: 1px 3rem;
+  }
+
+  .galeria-miniaturas {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 90%;
+  }
+
+  .precio-boton {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
   .producto-precio {
     font-size: 2rem;
   }
@@ -147,18 +191,32 @@ h2 {
 }
 
 @media (max-width: 480px) {
+  main {
+    padding: 0px !important;
+  }
+
   .producto-detalle {
-    padding: 0 0.5rem;
-    margin-top: 2rem;
+    padding: 0 0.25rem;
+    margin-top: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .producto-header {
+    padding-bottom: 0.5rem;
+  }
+
+  .producto-nombre {
+    font-size: 1.5rem;
   }
 
   .producto-descripcion {
     line-height: 1.6;
-    padding: 10px 10px 10px 10px;
+    padding: 5px;
+    font-size: 0.9rem;
   }
 
   .producto-precio {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   p {
@@ -167,19 +225,46 @@ h2 {
 
   .producto-galeria {
     flex-direction: column;
+    gap: 1rem;
   }
 
-  .galeria-miniaturas {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 100%;
+  .imagen-principal {
+    max-height: 250px;
   }
 
   .imagen-principal img {
-    max-height: 50vh;
+    max-height: 40vh;
+  }
+
+  .galeria-miniaturas {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    gap: 0.5rem;
+    max-height: 100px;
+    padding: 0.5rem 0;
+  }
+
+  .galeria-miniaturas img {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+  }
+
+  .precio-boton {
+    gap: 0.5rem;
+    align-items: flex-start;
   }
 
   .precio-boton .boton {
-    padding: 5px 10px;
+    padding: 6px 20px;
     font-size: 0.9rem;
+    width: 100%;
+  }
+
+  .footer {
+    margin: 0px;
   }
 }

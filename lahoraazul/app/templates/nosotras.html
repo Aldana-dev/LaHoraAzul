@@ -2,23 +2,18 @@
 {% block title %}Nosotras - La Hora Azul{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/nosotras.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/nosotras.css') }}" />
 {% endblock %}
 
 {% block content %}
 <main id="nosotras">
-
-  <!-- Sección: Nosotras -->
-  <section class="dos-columnas">
+  <!-- Section: About Us -->
+  <section class="dos-columnas" id="nosotras-section" aria-labelledby="nosotras-heading">
     <div class="columna">
-      <img 
-        src="{{ url_for('static', filename='img/nosotras/image1.jpg') }}" 
-        alt="Michele, Gisela y Sofía, creadoras de La Hora Azul" 
-        class="galeria-img"
-        loading="lazy">
+      <img src="{{ url_for('static', filename='img/nosotras/image1.jpg') }}" alt="Michele, Gisela y Sofía, creadoras de La Hora Azul" class="galeria-img" loading="lazy" />
     </div>
     <div class="columna">
-      <h2>Nosotras</h2>
+      <h2 id="nosotras-heading">Nosotras</h2>
       <p><strong>Michele, Gisela y Sofía</strong>, creadoras de <strong>La Hora Azul</strong>.</p>
       <p>
         Somos tres amigas que elegimos Villa La Angostura como nuestro hogar. 
@@ -29,17 +24,13 @@
     </div>
   </section>
 
-  <!-- Sección: La tienda -->
-  <section class="dos-columnas">
+  <!-- Section: The Store -->
+  <section class="dos-columnas" id="tienda-section" aria-labelledby="tienda-heading">
     <div class="columna">
-      <img 
-        src="{{ url_for('static', filename='img/nosotras/image2.png') }}" 
-        alt="Interior de la tienda La Hora Azul" 
-        class="galeria-img"
-        loading="lazy">
+      <img src="{{ url_for('static', filename='img/nosotras/image2.png') }}" alt="Interior de la tienda La Hora Azul" class="galeria-img" loading="lazy" />
     </div>
     <div class="columna">
-      <h2>La tienda</h2>
+      <h2 id="tienda-heading">La tienda</h2>
       <p>
         Arte gráfico, cerámica, grabado, fotografía… 
         En nuestra casa conviven objetos e imágenes de todo tipo, 
@@ -49,17 +40,13 @@
     </div>
   </section>
 
-  <!-- Sección: El taller -->
-  <section class="dos-columnas">
+  <!-- Section: The Workshop -->
+  <section class="dos-columnas" id="taller-section" aria-labelledby="taller-heading">
     <div class="columna">
-      <img 
-        src="{{ url_for('static', filename='img/nosotras/image3.png') }}" 
-        alt="Taller de enmarcación artesanal en La Hora Azul" 
-        class="galeria-img"
-        loading="lazy">
+      <img src="{{ url_for('static', filename='img/nosotras/image3.png') }}" alt="Taller de enmarcación artesanal en La Hora Azul" class="galeria-img" loading="lazy" />
     </div>
     <div class="columna">
-      <h2>El taller</h2>
+      <h2 id="taller-heading">El taller</h2>
       <p>
         Nuestros marcos son <strong>artesanales y personalizados</strong>. 
         Enmarcamos obras de artistas de todo el país, disponibles en nuestra tienda, 
@@ -68,17 +55,13 @@
     </div>
   </section>
 
-  <!-- Sección: Encuentros -->
-  <section class="dos-columnas">
+  <!-- Section: Encounters -->
+  <section class="dos-columnas" id="encuentros-section" aria-labelledby="encuentros-heading">
     <div class="columna">
-      <img 
-        src="{{ url_for('static', filename='img/nosotras/image4.png') }}" 
-        alt="Talleres y charlas en La Hora Azul" 
-        class="galeria-img"
-        loading="lazy">
+      <img src="{{ url_for('static', filename='img/nosotras/image4.png') }}" alt="Talleres y charlas en La Hora Azul" class="galeria-img" loading="lazy" />
     </div>
     <div class="columna">
-      <h2>Encuentros</h2>
+      <h2 id="encuentros-heading">Encuentros</h2>
       <p>
         Queremos que nuestro espacio sea un lugar de <strong>encuentro y aprendizaje</strong>. 
         Por eso, organizamos talleres, charlas y actividades que invitan a crear, explorar 
@@ -89,6 +72,5 @@
       </p>
     </div>
   </section>
-
 </main>
 {% endblock %}

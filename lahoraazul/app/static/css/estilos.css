@@ -1,9 +1,22 @@
-/* ───────────── Fuentes personalizadas ───────────── */
-@font-face {
-  font-family: "Macaroni";
-  src: url("../fonts/macaroni.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
+/* ───────────── Variables CSS para reutilización y mantenimiento ───────────── */
+:root {
+  --color-primary: #153f6c;
+  --color-secondary: #727272;
+  --color-accent: #25d366;
+  --color-white: #ffffff;
+  --font-primary: "Libre Franklin", sans-serif;
+  --font-secondary: "Poppins", sans-serif;
+  --font-logo: "Macaroni", cursive;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --spacing-small: 0.5rem;
+  --spacing-medium: 1rem;
+  --spacing-large: 2rem;
+  --border-radius: 0;
+  --box-shadow-light: 0px 12px 12px -10px rgba(0, 0, 0, 0.1);
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
 }
 
 /* ───────────── Reset y estilos globales ───────────── */
@@ -15,9 +28,9 @@
 
 html,
 body {
-  background-color: white;
-  color: #153f6c;
-  font-family: "Libre Franklin", sans-serif;
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  font-family: var(--font-primary);
   font-size: 1rem;
   line-height: 1.6;
   scroll-padding-top: 80px;
@@ -26,9 +39,9 @@ body {
 .mensaje-vacio {
   text-align: center;
   font-size: 1.3rem;
-  color: #153f6c;
-  margin: 8rem;
-  font-weight: 500;
+  color: var(--color-primary);
+  margin: 8rem var(--spacing-medium);
+  font-weight: var(--font-weight-medium);
 }
 
 .ico-decorador {
@@ -43,10 +56,10 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-medium);
   line-height: 1.3;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-medium);
 }
 
 h1 {
@@ -70,11 +83,11 @@ h6 {
 
 p {
   font-size: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-medium);
 }
 
 .logo-titulo {
-  font-family: "Macaroni", cursive;
+  font-family: var(--font-logo);
   font-size: 3.5rem;
 }
 
@@ -83,25 +96,25 @@ button,
 .btn,
 .boton,
 nav a {
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-bold);
 }
 
 .boton {
   display: inline-block;
-  padding: 10px 100px;
-  background-color: #ffffff;
-  color: #153f6c;
-  border: 2px solid #153f6c;
-  border-radius: 0;
+  padding: var(--spacing-small) 100px;
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--transition-normal);
   text-decoration: none;
 }
 
 .boton:hover {
-  background-color: #153f6c;
-  color: #ffffff;
+  background-color: var(--color-primary);
+  color: var(--color-white);
 }
 
 .small-btn {
@@ -119,64 +132,64 @@ nav a {
 main {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: var(--spacing-medium);
 }
 
-/* ───────────── Header y navegación ───────────── */
+/* ───────────── Layout Components ───────────── */
 header {
-  padding: 1em;
+  padding: var(--spacing-medium);
   text-align: center;
 }
 
 nav {
   display: flex;
   justify-content: center;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-bold);
   gap: 100px;
-  padding: 15px 10px;
-  background-color: white;
+  padding: 15px var(--spacing-small);
+  background-color: var(--color-white);
   z-index: 3;
   position: sticky;
   top: 0;
-  box-shadow: 0px 12px 12px -10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow-light);
 }
 
 nav a {
-  color: #153f6c;
+  color: var(--color-primary);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color var(--transition-normal);
 }
 
 nav a:hover {
-  color: #727272;
+  color: var(--color-secondary);
 }
 
-/* ───────────── Carrito ───────────── */
+/* Carrito */
 .carrito-icono {
-  width: 65px;
-  height: 65px;
+  width: 50px;
+  height: 50px;
   padding: 0;
   text-decoration: none;
 }
 
 .carrito-icono-i {
   font-size: 40px;
-  color: #153f6c;
-  transition: color 0.2s;
+  color: var(--color-primary);
+  transition: color var(--transition-fast);
 }
 
 .carrito-icono-i:hover {
-  color: #727272;
+  color: var(--color-secondary);
 }
 
-/* ───────────── Columnas flexibles ───────────── */
+/* Columnas flexibles */
 .dos-columnas {
   display: flex;
   flex-wrap: wrap;
-  gap: 2em;
+  gap: var(--spacing-large);
   padding: 4em 4em 4em 0;
-  border-top: 2px solid #153f6c;
+  border-top: 2px solid var(--color-primary);
 }
 
 .columna {
@@ -187,12 +200,12 @@ nav a:hover {
   justify-content: center;
 }
 
-/* ───────────── Footer ───────────── */
+/* Footer */
 .footer {
   margin-top: 6rem;
-  padding: 4em 1em 1.5em;
+  padding: 4em var(--spacing-medium) 1.5em;
   font-size: 0.9rem;
-  border-top: 2px solid #153f6c;
+  border-top: 2px solid var(--color-primary);
 }
 
 .footer-content {
@@ -215,7 +228,7 @@ nav a:hover {
   text-align: right;
 }
 
-/* ───────────── Admin trigger ───────────── */
+/* Admin trigger */
 #admin-trigger {
   cursor: pointer;
   user-select: none;
@@ -225,27 +238,25 @@ nav a:hover {
   text-decoration: underline dashed;
 }
 
-/* ───────────── Botón flotante WhatsApp ───────────── */
+/* Botón flotante WhatsApp */
 .btn-whatsapp {
   position: fixed;
   bottom: 20px;
   right: 20px;
   width: 60px;
   height: 60px;
-  background-color: #25d366;
+  background-color: var(--color-accent);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   z-index: 999;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.btn-whatsapp img {
-  width: 30px;
-  height: 30px;
-  filter: invert(1);
+.btn-whatsapp i {
+  color: var(--color-white);
 }
 
 .btn-whatsapp:hover {
@@ -253,8 +264,33 @@ nav a:hover {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
-/* ───────────── Responsive ───────────── */
-@media (max-width: 1024px) {
+/* ───────────── Media Queries: Mobile-first responsivo ───────────── */
+/* Tablet (768px y arriba) */
+@media (min-width: 768px) {
+  nav {
+    gap: 50px;
+  }
+
+  .dos-columnas {
+    padding: 2em var(--spacing-large);
+  }
+
+  .footer-content {
+    flex-direction: row;
+  }
+
+  .btn-whatsapp {
+    width: 70px;
+    height: 70px;
+  }
+
+  .btn-whatsapp i {
+    font-size: 2.5rem;
+  }
+}
+
+/* Desktop (1024px y arriba) */
+@media (min-width: 1024px) {
   .pagina,
   main {
     padding: 0;
@@ -266,13 +302,13 @@ nav a:hover {
     justify-content: space-between;
     align-items: center;
     gap: 0;
-    padding: 10px 0px;
+    padding: 10px 0;
   }
 
   nav a {
     flex: 1 1 25%;
     text-align: center;
-    font-size: 23px;
+    font-size: 18px;
   }
 
   header {
@@ -286,54 +322,102 @@ nav a:hover {
   header img {
     height: 90px;
   }
+
   .logo-titulo {
     font-size: 4rem;
   }
+
   h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-medium);
   }
 
   .dos-columnas {
-    flex-direction: column;
-    padding: 2em 1em;
+    flex-direction: row;
+    padding: 4em 4em 4em 0;
   }
 
   .columna {
-    flex: 100%;
-    max-width: 100%;
+    flex: 1;
+    max-width: none;
+  }
+
+  .footer {
+    margin-top: 6rem;
+    padding: 4em var(--spacing-medium) 1.5em;
   }
 
   .footer-content {
-    flex-direction: column;
-    text-align: center;
-    gap: 1em;
-  }
-  .footer {
-    margin-top: 1rem;
-    padding: 1em;
-    font-size: 0.9rem;
-    border-top: 2px solid #153f6c;
+    flex-direction: row;
+    text-align: left;
   }
 
-  .footer-left,
-  .footer-right {
-    text-align: center;
+  .footer-left {
+    text-align: left;
   }
+
+  .footer-right {
+    text-align: right;
+  }
+
   .footer p {
-    font-size: 12px;
-    text-align: center;
+    font-size: 0.9rem;
     margin: 0;
   }
+
   .carrito-icono-i {
     font-size: 3rem;
   }
 
   .btn-whatsapp {
     bottom: 20px;
-    right: 40px;
-    width: 110px;
-    height: 110px;
-    font-size: 35px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+  }
+
+  .btn-whatsapp i {
+    font-size: 2.5rem;
+  }
+}
+
+/* Móviles pequeños (480px y abajo) */
+@media (max-width: 480px) {
+  header {
+    padding: var(--spacing-small);
+    img {
+      height: 50px; /* Reducido de 80px para móviles pequeños */
+    }
+  }
+  .logo-titulo {
+    font-size: 2.5rem; /* Reducido de 3.5rem para caber mejor */
+  }
+  nav {
+    gap: 20px; /* Reducido de 100px para nav más compacto */
+    padding: 10px var(--spacing-small); /* Padding reducido */
+    font-size: 0.9rem; /* Fuente más pequeña para enlaces */
+  }
+  nav a {
+    font-size: 0.9rem; /* Consistente con nav */
+  }
+  .carrito-icono{
+    width: ;
+  }
+  .carrito-icono-i {
+    font-size: 30px !important; /* Más pequeño para móviles */
+  }
+  .footer {
+    margin-top: 3rem; /* Reducido */
+    padding: 1.5em var(--spacing-medium) 1em; /* Padding más pequeño */
+  }
+  .footer-content {
+    flex-direction: column; /* Líneas una sobre la otra (vertical) */
+    text-align: center; /* Centrado */
+    gap: var(--spacing-small); /* Espacio entre líneas */
+  }
+  .footer-left,
+  .footer-right {
+    text-align: center; /* Centrado para ambas líneas */
+        font-size: 0.7rem; /* Más pequeño para líneas verticales */
+
   }
 }

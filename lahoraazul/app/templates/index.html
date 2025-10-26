@@ -5,8 +5,7 @@
   href="{{ url_for('static', filename='css/index.css') }}"
 />
 {% endblock %} {% block content %}
-
-<!-- Carrusel -->
+<!-- Carousel Section -->
 {% if banners %}
 <div
   id="carouselExampleIndicators"
@@ -25,7 +24,6 @@
     </div>
     {% endfor %}
   </div>
-
   <button
     class="carousel-control-prev"
     type="button"
@@ -49,7 +47,7 @@
 </div>
 {% endif %}
 
-<!-- Bienvenida -->
+<!-- Welcome Section -->
 <section class="contenido">
   <h2>Bienvenidxs a La Hora Azul</h2>
   <p>Un refugio para todo lo que se hace con amor.</p>
@@ -66,42 +64,37 @@
   </p>
 </section>
 
-<!-- Galería -->
+<!-- Gallery Preview Section -->
 <section class="galeria-preview container text-center">
   <div class="row justify-content-center my-4">
     {% for imagen in imagenes_galeria[:6] %}
-<div class="col-4 col-md-3 mb-3">
-  <img
-    src="{{ url_for('static', filename=imagen.imagen) }}"
-    class="img-fluid galeria-img"
-    alt="Galería La Hora Azul - Imagen {{ loop.index }}"
-    loading="lazy"
-  />
-</div>
-{% endfor %}
-
-{% for imagen in imagenes_galeria[6:8] %}
-<div class="col-4 col-md-3 mb-3 d-none d-md-block">
-  <img
-    src="{{ url_for('static', filename=imagen.imagen) }}"
-    class="img-fluid galeria-img"
-    alt="Galería La Hora Azul - Imagen {{ loop.index }}"
-    loading="lazy"
-  />
-</div>
-{% endfor %}
-
+    <div class="col-4 col-md-3 mb-3">
+      <img
+        src="{{ url_for('static', filename=imagen.imagen) }}"
+        class="img-fluid galeria-img"
+        alt="Galería La Hora Azul - Imagen {{ loop.index }}"
+        loading="lazy"
+      />
+    </div>
+    {% endfor %} {% for imagen in imagenes_galeria[6:8] %}
+    <div class="col-4 col-md-3 mb-3 d-none d-md-block">
+      <img
+        src="{{ url_for('static', filename=imagen.imagen) }}"
+        class="img-fluid galeria-img"
+        alt="Galería La Hora Azul - Imagen {{ loop.index }}"
+        loading="lazy"
+      />
+    </div>
+    {% endfor %}
   </div>
-
   {% if imagenes_galeria %}
   <a href="{{ url_for('main.galeria') }}" class="btn boton">Ver más</a>
   {% endif %}
 </section>
 
-<!-- Contacto + Mapa -->
+<!-- Contact and Map Section -->
 <section class="dos-columnas">
   <div class="columna">
-    <!-- Instagram -->
     <p>
       <a
         href="https://www.instagram.com/lahoraazul.arte"
@@ -114,8 +107,6 @@
         <span class="texto-contacto">@lahoraazul.arte</span>
       </a>
     </p>
-
-    <!-- Email -->
     <p>
       <a
         href="mailto:horaazul.obj@gmail.com?subject=Consulta%20desde%20sitio%20web"
@@ -126,8 +117,6 @@
         <span class="texto-contacto">horaazul.obj@gmail.com</span>
       </a>
     </p>
-
-    <!-- WhatsApp -->
     <p>
       <a
         href="https://wa.me/5492944712263"
@@ -140,8 +129,6 @@
         <span class="texto-contacto">+54 9 2944 712263</span>
       </a>
     </p>
-
-    <!-- Ubicación -->
     <p>
       <a
         href="https://maps.app.goo.gl/7QqgRrGrNxKmvXU57"
@@ -151,23 +138,34 @@
         aria-label="Ver ubicación en el mapa"
       >
         <i class="fa-solid fa-location-dot icono"></i>
-        <span class="texto-contacto">
-          Av. Arrayanes 282 - Local 8 - Villa La Angostura
-        </span>
+        <span class="texto-contacto"
+          >Av. Arrayanes 282 - Local 8 - Villa La Angostura</span
+        >
       </a>
     </p>
   </div>
-
   <div class="columna">
+    <!-- Mapa para pantallas > 480px (desktop y tablets) -->
     <iframe
-      class="mapa-iframe"
+      class="mapa-iframe mapa-desktop"
       src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3021.95875407797!2d-71.6418157!3d-40.762931900000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9610bf40fd7f503d%3A0x3e12e4209e19682a!2sLa%20hora%20azul!5e0!3m2!1ses-419!2sar!4v1752101680920!5m2!1ses-419!2sar"
       loading="lazy"
       allowfullscreen=""
       referrerpolicy="no-referrer-when-downgrade"
-      title="Ubicación en el mapa de La Hora Azul"
+      title="Ubicación en el mapa de La Hora Azul - Desktop"
+    ></iframe>
+
+    <!-- Mapa para pantallas <= 480px (móviles pequeños) -->
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5608.4037974338235!2d-71.64396990256465!3d-40.76263164425557!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9610bf40fd7f503d%3A0x3e12e4209e19682a!2sLa%20hora%20azul!5e0!3m2!1ses-419!2sar!4v1761320077733!5m2!1ses-419!2sar"
+      class="mapa-mobile"
+      width="300"
+      height="400"
+      style="border: 0"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
     ></iframe>
   </div>
 </section>
-
 {% endblock %}

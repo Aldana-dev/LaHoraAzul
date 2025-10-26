@@ -1,22 +1,22 @@
-/* ───────────── Contenedor columnas flexibles ───────────── */
-
-
+/* ───────────── Layout Components ───────────── */
 .dos-columnas {
   display: flex;
   flex-wrap: wrap;
-  gap: 2em;
-  border-top: 0; /* lo dejé 0px ya que así lo tenías */
+  gap: var(--spacing-large, 2em);
+  border-top: 0;
+  justify-content: center; /* Centra las columnas horizontalmente */
 }
 
 .columna {
   flex: 1;
   min-width: 300px;
+  max-width: 100%; /* Limita el ancho para no superar el contenedor */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  text-align: left;
 }
 
-/* Imágenes dentro de columnas */
 .galeria-img {
   width: 100%;
   height: auto;
@@ -25,19 +25,41 @@
   margin: 0 auto;
 }
 
-/* ───────────── Responsive (max-width: 768px) ───────────── */
-@media (max-width: 1024px) {
+/* ───────────── Media Queries: Mobile-first responsivo ───────────── */
+@media (min-width: 768px) {
+  .dos-columnas {
+    gap: var(--spacing-medium, 1em);
+    padding: var(--spacing-large, 2em) var(--spacing-medium, 1em);
+  }
 
+  .columna {
+    max-width: 650px;
+  }
+
+  .galeria-img {
+    max-width: 600px;
+  }
+
+  h2 {
+    margin-bottom: var(--spacing-medium, 1em);
+  }
+
+  p {
+    line-height: 1.6;
+  }
+}
+
+@media (min-width: 1024px) {
   main {
-    margin-top: 5rem;
+    margin-top: 4rem;
   }
 
   .dos-columnas {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    text-align: center;
-    padding: 2em 1em;
-    gap: 1em;
+    text-align: left;
+    padding: var(--spacing-large, 2em) var(--spacing-medium, 1em);
+    gap: var(--spacing-large, 2em);
   }
 
   .columna {
@@ -50,12 +72,46 @@
   }
 
   h2 {
-    font-size: 2.5rem; /* ~20px */
-    margin-bottom: 0.5em;
+    margin-bottom: var(--spacing-medium, 1em);
   }
 
   p {
-    font-size: 1.5rem; /* ~13-14px */
     line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: var(--spacing-small);
+  }
+
+  .dos-columnas {
+    padding: 0px;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .columna {
+    min-width: 250px;
+    text-align: center;
+  }
+
+  .galeria-img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    margin-bottom: var(--spacing-small, 0.5em);
+  }
+
+  p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .footer{
+    margin: 0px;
   }
 }

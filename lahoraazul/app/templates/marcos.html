@@ -1,11 +1,13 @@
-{% extends "base.html" %} {% block title %}Marcos - La Hora Azul{% endblock %}
+{% extends "base.html" %}
+{% block title %}Marcos - La Hora Azul{% endblock %}
+
 {% block extra_css %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/marcos.css') }}"
-/>
-{% endblock %} {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/marcos.css') }}" />
+{% endblock %}
+
+{% block content %}
 <section class="marcos">
+  <!-- Introduction Section -->
   <div class="introduccion-marcos">
     <p>
       Nuestros marcos son hechos a la medida de tu obra de manera artesanal y
@@ -16,6 +18,7 @@
     </p>
   </div>
 
+  <!-- Budget Section -->
   <div class="presupuesto-marcos">
     <h2>Cómo pedir un presupuesto</h2>
     <ol>
@@ -38,40 +41,31 @@
     </ol>
   </div>
 
+  <!-- Carousel Section -->
   <section class="carrusel-marcos text-center">
     <h2>Explorá nuestros marcos</h2>
 
-    <div
-      class="carrusel d-flex align-items-center justify-content-center gap-3"
-    >
-      <button id="btn-prev" class="carrusel-btn">&#10094;</button>
-
-      <div class="carrusel-contenedor">
-        <div class="carrusel-imagenes" id="carruselMarcos">
-          {% set rutas_imagenes = [ 'img/marcos/doble_vidrio.jpg',
-          'img/marcos/marco_directo_1.jpg', 'img/marcos/marco_directo_2.jpg',
-          'img/marcos/marco_directo_3.jpg', 'img/marcos/marco_directo_4.jpg',
-          'img/marcos/passepartout_1.jpg', 'img/marcos/passepartout_2.jpg',
-          'img/marcos/varillas_pintadas.jpg' ] %} {% for ruta in rutas_imagenes
-          %} {% set nombre_archivo =
-          ruta.split('/')[-1].replace('.jpg','').replace('_',' ') %} {% set
-          nombre_titulo = nombre_archivo.title() %}
-          <img
-            src="{{ url_for('static', filename=ruta) }}"
-            alt="{{ nombre_titulo }}"
-            data-titulo="{{ nombre_titulo }}"
-          />
-          {% endfor %}
+    <div class="carousel-container">
+      <button id="btn-prev" class="carousel-btn" aria-label="Imagen anterior">&#10094;</button>
+      <div class="frames">
+        <div class="frame left">
+          <img src="" alt="" loading="lazy" />
+        </div>
+        <div class="frame center">
+          <img src="" alt="" loading="lazy" />
+        </div>
+        <div class="frame right">
+          <img src="" alt="" loading="lazy" />
         </div>
       </div>
-
-      <button id="btn-next" class="carrusel-btn">&#10095;</button>
+      <button id="btn-next" class="carousel-btn" aria-label="Imagen siguiente">&#10095;</button>
     </div>
 
     <div class="titulo-marco" id="titulo-marco">Marco 1</div>
   </section>
 </section>
-{% endblock %} {% block extra_js %}
-<script src="{{ url_for('static', filename='js/marcos.js') }}"></script>
+{% endblock %}
 
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/marcos.js') }}"></script>
 {% endblock %}

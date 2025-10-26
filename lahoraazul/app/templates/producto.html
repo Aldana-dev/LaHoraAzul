@@ -7,54 +7,37 @@
 {% block content %}
 <main class="pagina">
   <section class="producto-detalle">
-    <!-- Nombre del producto -->
+    <!-- Product Header -->
     <header class="producto-header">
       <h2 class="producto-nombre">{{ producto.nombre }}</h2>
     </header>
 
-    <!-- Galería de imágenes -->
+    <!-- Product Gallery -->
     <div class="producto-galeria">
       <div class="imagen-principal" role="img" aria-label="{{ producto.nombre }}">
-        <img
-          id="img-principal"
-          src="{{ url_for('static', filename=producto.imagen) }}"
-          alt="{{ producto.nombre }}"
-        />
+        <img id="img-principal" src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" />
       </div>
 
       {% if imagenes %}
       <aside class="galeria-miniaturas" aria-label="Miniaturas del producto">
-        <!-- Imagen principal como primera miniatura -->
-        <img
-          class="miniatura seleccionada"
-          src="{{ url_for('static', filename=producto.imagen) }}"
-          alt="Imagen principal"
-        />
+        <!-- Main image as first thumbnail -->
+        <img class="miniatura seleccionada" src="{{ url_for('static', filename=producto.imagen) }}" alt="Imagen principal" />
         {% for img in imagenes %}
-        <img
-          class="miniatura"
-          src="{{ url_for('static', filename=img.imagen) }}"
-          alt="Miniatura {{ loop.index }}"
-        />
+        <img class="miniatura" src="{{ url_for('static', filename=img.imagen) }}" alt="Miniatura {{ loop.index }}" />
         {% endfor %}
       </aside>
       {% endif %}
     </div>
 
-    <!-- Precio y botón de compra -->
+    <!-- Price and Button -->
     <div class="precio-boton">
       <p class="producto-precio" aria-label="Precio del producto">$ {{ "{:.2f}".format(producto.precio) }}</p>
-      <form
-        method="POST"
-        action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}"
-      >
-        <button class="boton agregar-carrito" type="submit">
-          Agregar al carrito
-        </button>
+      <form method="POST" action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}">
+        <button class="boton agregar-carrito" type="submit">Agregar al carrito</button>
       </form>
     </div>
 
-    <!-- Descripción con formato enriquecido -->
+    <!-- Product Description -->
     <article class="producto-descripcion">
       {{ producto.descripcion | safe }}
     </article>
@@ -62,7 +45,7 @@
 </main>
 
 <script>
-  // Cambiar imagen principal al hacer click en miniatura
+  // Change main image on thumbnail click
   const miniaturas = document.querySelectorAll(".miniatura");
   const imgPrincipal = document.getElementById("img-principal");
 

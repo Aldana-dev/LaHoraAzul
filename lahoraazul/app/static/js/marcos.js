@@ -1,111 +1,110 @@
-const carrusel = document.getElementById("carruselMarcos");
-const btnPrev = document.getElementById("btn-prev");
-const btnNext = document.getElementById("btn-next");
-const gap = 30;
+const images = [
+  '/static/img/marcos/doble_vidrio.jpg',
+  '/static/img/marcos/marco_directo_1.jpg',
+  '/static/img/marcos/marco_directo_2.jpg',
+  '/static/img/marcos/marco_directo_3.jpg',
+  '/static/img/marcos/marco_directo_4.jpg',
+  '/static/img/marcos/passepartout_1.jpg',
+  '/static/img/marcos/passepartout_2.jpg',
+  '/static/img/marcos/varillas_pintadas.jpg'
+];
 
-let imgs = carrusel.querySelectorAll("img");
-const imgCount = imgs.length;
+let currentIndex = 1;
+const frames = document.querySelectorAll('.frame img');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const tituloMarco = document.getElementById('titulo-marco');
 
-// Clonar imágenes para efecto infinito
-function clonarImagenes() {
-    imgs = carrusel.querySelectorAll("img");
-    for (let i = 0; i < imgCount; i++) {
-        const clone = imgs[i].cloneNode(true);
-        carrusel.appendChild(clone);
-    }
-    for (let i = imgCount - 1; i >= 0; i--) {
-        const clone = imgs[i].cloneNode(true);
-        carrusel.insertBefore(clone, carrusel.firstChild);
-    }
-}
-clonarImagenes();
+function updateCarousel() {
+  const leftIndex = (currentIndex - 1 + images.length) % images.length;
+  const centerIndex = currentIndex;
+  const rightIndex = (currentIndex + 1) % images.length;
 
-const todasImgs = carrusel.querySelectorAll("img");
+  frames[0].src = images[leftIndex];
+  frames[1].src = images[centerIndex];
+  frames[2].src = images[rightIndex];
 
-// Posición inicial: primer elemento original
-let posicion = imgCount;
+  preloadImage(images[leftIndex]);
+  preloadImage(images[rightIndex]);
 
-const contenedor = document.querySelector(".carrusel-contenedor");
-
-// Configuración de tamaño
-function getSizes() {
-    const vw = window.innerWidth;
-    let visibleCount = 3;
-    let imgWidth = 345; // ancho fijo de tus imágenes
-    let containerWidth;
-
-    if (vw < 768) {
-        // Mobile: se recortan los costados
-        containerWidth = vw; // ocupamos todo el ancho visible
-        imgWidth = 345; // ancho fijo
-    } else {
-        // Desktop: 3 imágenes completas
-        containerWidth = visibleCount * (imgWidth + gap);
-    }
-
-    return { imgWidth, containerWidth, visibleCount };
+  const titulo = images[centerIndex].split('/').pop().replace('.jpg', '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  tituloMarco.textContent = titulo;
 }
 
-let { imgWidth, containerWidth, visibleCount } = getSizes();
-
-// Posicionar carrusel
-function setPosition() {
-    const offset = -posicion * (imgWidth + gap) + (contenedor.offsetWidth - imgWidth) / 2;
-    carrusel.style.transition = "none";
-    carrusel.style.transform = `translateX(${offset}px)`;
-    contenedor.style.width = containerWidth + "px";
-    actualizarCentro();
-    actualizarTitulo();
+function preloadImage(src) {
+  const img = new Image();
+  img.src = src;
 }
 
-// Actualizar imagen central
-function actualizarCentro() {
-    todasImgs.forEach(img => img.classList.remove("centro"));
-    if (todasImgs[posicion]) {
-        todasImgs[posicion].classList.add("centro");
-    }
-}
-
-// Actualizar título
-function actualizarTitulo() {
-    const titulo = todasImgs[posicion]?.dataset.titulo || "";
-    document.getElementById("titulo-marco").textContent = titulo;
-}
-
-// Mover carrusel
-function mover(n) {
-    posicion += n;
-    carrusel.style.transition = "transform 0.4s ease";
-    const offset = -posicion * (imgWidth + gap) + (contenedor.offsetWidth - imgWidth) / 2;
-    carrusel.style.transform = `translateX(${offset}px)`;
-    actualizarCentro();
-    actualizarTitulo();
-
-    carrusel.addEventListener("transitionend", () => {
-        if (posicion >= imgCount * 2) {
-            // saltar al primer original
-            posicion = imgCount;
-            setPosition();
-        } else if (posicion < imgCount) {
-            // saltar al último original
-            posicion = imgCount * 2 - 1;
-            setPosition();
-        }
-    }, { once: true });
-}
-
-// Botones
-btnNext.addEventListener("click", () => mover(1));
-btnPrev.addEventListener("click", () => mover(-1));
-
-// Ajustar al redimensionar
-window.addEventListener("resize", () => {
-    const sizes = getSizes();
-    imgWidth = sizes.imgWidth;
-    containerWidth = sizes.containerWidth;
-    visibleCount = sizes.visibleCount;
-    setPosition();
+btnNext.addEventListener('click', () => {
+  currentIndex = (currentIndex + 1) % images.length;
+  updateCarousel();
 });
 
-// Inicializar carrusel
-setPosition();
+btnPrev.addEventListener('click', () => {
+  currentIndex = (currentIndex - 1 + images.length) % images.length;
+  updateCarousel();
+});
+
+// Gestos Táctiles (Swipe)
+let startX = 0;
+let endX = 0;
+
+document.querySelector('.frames').addEventListener('touchstart', (e) => {
+  startX = e.touches[0].clientX;
+});
+
+document.querySelector('.frames').addEventListener('touchend', (e) => {
+  endX = e.changedTouches[0].clientX;
+  if (startX - endX > 50) btnNext.click();
+  if (endX - startX > 50) btnPrev.click();
+});
+
+// Gestos de Ratón (Drag/Scroll Horizontal)
+let isDragging = false;
+let startDragX = 0;
+
+document.querySelector('.frames').addEventListener('mousedown', (e) => {
+  isDragging = true;
+  startDragX = e.clientX;
+});
+
+document.querySelector('.frames').addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const deltaX = e.clientX - startDragX;
+  if (deltaX > 50) {
+    btnPrev.click();
+    isDragging = false;
+  } else if (deltaX < -50) {
+    btnNext.click();
+    isDragging = false;
+  }
+});
+
+document.querySelector('.frames').addEventListener('mouseup', () => {
+  isDragging = false;
+});
+
+// Función de throttling para limitar frecuencia
+function throttle(func, limit) {
+  let inThrottle;
+  return function() {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+// Scroll horizontal con throttling (500ms de delay)
+document.querySelector('.frames').addEventListener('wheel', throttle((e) => {
+  e.preventDefault();
+  if (e.deltaX > 0) btnNext.click();
+  else btnPrev.click();
+}, 500));
+
+// Inicializar
+updateCarousel();
