@@ -2,20 +2,20 @@
   max-width: 1100px;
   margin: 0 auto;
   padding: 3rem 2rem;
-  box-sizing: border-box; /* Incluye el padding y border en el ancho total */
+  box-sizing: border-box;
 }
 
 .titulo-admin {
   text-align: center;
   font-family: 'Poppins', sans-serif;
   font-size: 2rem;
-  color: #073763;
+  color: var(--color-primary);
   margin-bottom: 1rem;
 }
 
 .separador {
   height: 4px;
-  background-color: #073763;
+  background-color: var(--color-primary);
   border: none;
   margin: 0 auto 3rem auto;
 }
@@ -26,9 +26,9 @@
 }
 
 .filtro-btn.activo {
-  background-color: #073763;
+  background-color: var(--color-primary);
   color: #fff;
-  border: 2px solid #073763;
+  border: 2px solid var(--color-primary);
 }
 
 .estado-tabla {
@@ -53,7 +53,7 @@
 }
 
 .tabla-admin thead {
-  background-color: #073763;
+  background-color: var(--color-primary);
   color: #ffffff;
 }
 
@@ -122,7 +122,7 @@
   background-color: #f9f9fb;
   margin: 3rem auto;
   padding: 2rem;
-  border: 2px solid #073763;
+  border: 2px solid var(--color-primary);
   border-radius: 8px;
   width: 90%;
   max-width: 600px;
@@ -139,7 +139,7 @@
   right: 16px;
   font-size: 2rem;
   font-weight: bold;
-  color: #073763;
+  color: var(--color-primary);
   cursor: pointer;
   user-select: none;
   transition: color 0.3s ease;
@@ -177,4 +177,80 @@
 .producto-resumen p {
   font-size: 1rem;
   margin-bottom: 0rem;
+}
+
+/* ───────────── Media Queries para responsividad ───────────── */
+@media (max-width: 768px) {
+  .estado-tabla {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .tabla-admin {
+    font-size: 0.85rem;
+  }
+
+  .tabla-admin th,
+  .tabla-admin td {
+    padding: 0.5rem 0.5rem;
+  }
+
+  .producto-resumen {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .producto-resumen img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .modal-content {
+    margin: 2rem auto;
+    padding: 1.5rem;
+  }
+
+  .tabla-admin th:nth-child(7),
+  .tabla-admin td:nth-child(7),
+  .tabla-admin th:nth-child(8),
+  .tabla-admin td:nth-child(8) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-panel {
+    padding: 2rem 1rem;
+  }
+
+  .estado-tabla {
+    gap: 0.5rem;
+  }
+
+  .tabla-admin {
+    font-size: 0.8rem;
+  }
+
+  .tabla-admin th,
+  .tabla-admin td {
+    padding: 0.4rem 0.3rem;
+  }
+
+  .tabla-admin th:nth-child(4),
+  .tabla-admin td:nth-child(4),
+  .tabla-admin th:nth-child(5),
+  .tabla-admin td:nth-child(5),
+  .tabla-admin th:nth-child(6),
+  .tabla-admin td:nth-child(6),
+  .tabla-admin th:nth-child(7),
+  .tabla-admin td:nth-child(7),
+  .tabla-admin th:nth-child(8),
+  .tabla-admin td:nth-child(8) {
+    display: none;
+  }
+
+  .modal-content {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
 }

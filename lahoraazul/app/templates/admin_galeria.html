@@ -5,6 +5,11 @@
     <title>Administrar Galería - La Hora Azul</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
+      rel="icon"
+      href="{{ url_for('static', filename='icon/ico.png') }}"
+      type="image/png"
+    />
+    <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/estilos.css') }}"
     />
@@ -17,80 +22,80 @@
       href="{{ url_for('static', filename='css/admin_galeria.css') }}"
     />
   </head>
+
   <body class="pagina">
-    <section class="admin-panel container">
-      <!-- Título y separador -->
-      <h2 class="titulo-admin">Administrar Galería</h2>
-      <hr class="separador" />
+    <main>
+      <section class="admin-panel container">
+        <!-- Título y separador -->
+        <h2 class="titulo-admin">Administrar Galería</h2>
+        <hr class="separador" />
 
-      <!-- Descripción -->
-      <p class="descripcion">
-        Esta sección te permite gestionar las imágenes de la galería. Podés
-        subir nuevas imágenes para mostrar tus productos o trabajos, y también
-        eliminar aquellas que ya no quieras mantener visibles en el sitio.
-      </p>
+        <!-- Descripción -->
+        <p class="descripcion">
+          Esta sección te permite gestionar las imágenes de la galería. Podés
+          subir nuevas imágenes para mostrar tus productos o trabajos, y también
+          eliminar aquellas que ya no quieras mantener visibles en el sitio.
+        </p>
 
-      <!-- Tarjeta de subida -->
-      <div class="tarjeta form-galeria">
-        <!-- Formulario de subida -->
-
-        <form
-          action="{{ url_for('admin.subir_galeria') }}"
-          method="post"
-          enctype="multipart/form-data"
-          class="form-upload"
-        >
-          <label for="galeria-img" class="label-upload"
-            >Seleccioná una o más imágenes para subir:</label
+        <!-- Tarjeta de subida -->
+        <div class="tarjeta form-galeria">
+          <form
+            action="{{ url_for('admin.subir_galeria') }}"
+            method="post"
+            enctype="multipart/form-data"
+            class="form-upload"
           >
-          <input
-            type="file"
-            id="galeria-img"
-            name="imagenes"
-            multiple
-            required
-          />
-          <button class="btn_large boton" type="submit">Subir</button>
-        </form>
-      </div>
-
-      <!-- Vista previa -->
-      <div class="galeria-preview-grid">
-        <h4 class="subtitulo">Imágenes actuales:</h4>
-        <div class="galeria-grid">
-          {% if imagenes %} {% for img in imagenes %}
-          <div class="galeria-item">
-            <form
-              action="{{ url_for('admin.eliminar_galeria', imagen_id=img.id) }}"
-              method="post"
-              onsubmit="return confirm('¿Eliminar esta imagen?');"
-            >
-              <button
-                class="eliminar-imagen"
-                type="submit"
-                title="Eliminar imagen"
-              >
-                ×
-              </button>
-            </form>
-
-            <img
-              src="{{ url_for('static', filename=img.imagen) }}"
-              alt="Imagen galería {{ loop.index }}"
+            <label for="galeria-img">Seleccioná una o más imágenes para subir:</label>
+            <input
+              type="file"
+              id="galeria-img"
+              name="imagenes"
+              multiple
+              required
             />
-          </div>
-          {% endfor %} {% else %}
-          <p>No hay imágenes cargadas.</p>
-          {% endif %}
+            <button class="boton btn_large" type="submit">Subir</button>
+          </form>
         </div>
-      </div>
 
-      <!-- Botón volver -->
-      <div class="text-center mt-5">
-        <a href="{{ url_for('admin.admin') }}" class="btn boton"
-          >Volver al Panel</a
-        >
-      </div>
-    </section>
+        <!-- Vista previa -->
+        <div class="galeria-preview-grid">
+          <h4 class="subtitulo">Imágenes actuales:</h4>
+          <div class="galeria-grid">
+            {% if imagenes %}
+              {% for img in imagenes %}
+                <div class="galeria-item">
+                  <form
+                    action="{{ url_for('admin.eliminar_galeria', imagen_id=img.id) }}"
+                    method="post"
+                    onsubmit="return confirm('¿Eliminar esta imagen?');"
+                  >
+                    <button
+                      class="eliminar-imagen"
+                      type="submit"
+                      title="Eliminar imagen"
+                      aria-label="Eliminar imagen de galería {{ loop.index }}"
+                    >
+                      ×
+                    </button>
+                  </form>
+
+                  <img
+                    src="{{ url_for('static', filename=img.imagen) }}"
+                    alt="Imagen de galería número {{ loop.index }}"
+                  />
+                </div>
+              {% endfor %}
+            {% else %}
+              <p>No hay imágenes cargadas.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Botón volver -->
+        <div class="text-center mt-5">
+          <a href="{{ url_for('admin.admin') }}" class="boton">Volver al Panel</a>
+        </div>
+      </section>
+    </main>
   </body>
 </html>

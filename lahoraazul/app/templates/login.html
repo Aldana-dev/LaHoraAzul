@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="icon"
-      href="{{ url_for('static', filename='icon/logo.png') }}"
+      href="{{ url_for('static', filename='icon/ico.png') }}"
       type="image/png"
     />
     <link
@@ -20,37 +20,39 @@
   </head>
 
   <body class="pagina">
-    <div class="login-container">
-      <h2>Iniciar sesión</h2>
+    <main>
+      <section class="login-container">
+        <h2>Iniciar sesión</h2>
+        <form action="{{ url_for('admin.admin_login') }}" method="post">
+          <label for="username">Email</label>
+          <input
+            type="email"
+            id="username"
+            name="username"
+            placeholder="ejemplo@correo.com"
+            autocomplete="email"
+            required
+          />
 
-      <form action="{{ url_for('admin.admin_login') }}" method="post">
+          <label for="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Ingrese contraseña"
+            autocomplete="current-password"
+            required
+          />
 
-        <label for="username">Email</label>
-        <input
-          type="email"
-          id="username"
-          name="username"
-          placeholder="ejemplo@correo.com"
-          required
-        />
+          <button type="submit" class="boton boton-acceder">Acceder</button>
+        </form>
 
-        <label for="password">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Ingrese contraseña"
-          required
-        />
-
-        <button type="submit" class="btn boton-acceder">Acceder</button>
-      </form>
-
-      <div class="volver-container">
-        <a href="{{ url_for('main.index') }}" class="btn boton-volver"
-          >Volver al Inicio</a
-        >
-      </div>
-    </div>
+        <div class="volver-container">
+          <a href="{{ url_for('main.index') }}" class="boton boton-volver"
+            >Volver al Inicio</a
+          >
+        </div>
+      </section>
+    </main>
   </body>
 </html>

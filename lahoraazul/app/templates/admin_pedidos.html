@@ -5,6 +5,11 @@
     <title>Administrar Pedidos - La Hora Azul</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
+      rel="icon"
+      href="{{ url_for('static', filename='icon/ico.png') }}"
+      type="image/png"
+    />
+    <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/estilos.css') }}"
     />
@@ -29,114 +34,116 @@
       }
     </style>
   </head>
+
   <body class="pagina">
-    <section class="admin-panel">
-      <h2 class="titulo-admin">Administrar Pedidos</h2>
-      <hr class="separador" />
+    <main>
+      <section class="admin-panel container">
+        <h2 class="titulo-admin">Administrar Pedidos</h2>
+        <hr class="separador" />
 
-      <!-- FILTROS ACTUALIZADOS: nuevos e historial -->
-      <div class="estado-tabla">
-        <a
-          href="{{ url_for('admin.admin_pedidos', filtro='nuevos') }}"
-          class="btn_large boton filtro-btn {% if filtro == 'nuevos' %}activo{% endif %}"
-          >Nuevos</a
-        >
-        <a
-          href="{{ url_for('admin.admin_pedidos', filtro='historial') }}"
-          class="btn_large boton filtro-btn {% if filtro == 'historial' %}activo{% endif %}"
-          >Historial</a
-        >
-      </div>
-
-      <!-- Formulario para marcar pedidos como historial SOLO en filtro 'nuevos' -->
-      {% if filtro == 'nuevos' %}
-      <form method="POST" action="{{ url_for('admin.marcar_como_historial') }}">
-      {% else %}
-      <form id="form-historial"> <!-- Sin action ni método para filtro historial -->
-      {% endif %}
-
-        <table class="tabla-admin">
-          <thead>
-  <tr>
-    <th>
-      <label for="select-todos" class="sr-only">Seleccionar todos</label>
-      <input type="checkbox" id="select-todos" />
-    </th>
-    <th>ID</th>
-    <th>Cliente</th>
-    {% if filtro == 'nuevos' %}
-    <th>Estado</th>
-    {% endif %}
-    <th>Fecha</th>
-    <th>Precio Total</th>
-    <th>Productos</th>
-    <th>Datos de Envío</th> <!-- Se mantiene, pero con contenido reducido -->
-  </tr>
-</thead>
-<tbody>
-  {% if pedidos|length == 0 %}
-  <tr>
-    <td colspan="{% if filtro == 'nuevos' %}8{% else %}7{% endif %}"
-        style="text-align: center; font-style: italic; color: #666">
-      No hay pedidos {{ filtro }} para mostrar.
-    </td>
-  </tr>
-  {% else %}
-    {% for pedido in pedidos %}
-    <tr>
-      <td style="text-align: center">
-        <input type="checkbox" name="pedido_ids" value="{{ pedido.id }}" />
-      </td>
-      <td>{{ pedido.id }}</td>
-      <td>{{ pedido.nombre }} {{ pedido.apellido }}</td>
-      {% if filtro == 'nuevos' %}
-      <td>
-        {% set dias = (current_time.date() - pedido.fecha.date()).days %}
-        <span class="indicador-estado {% if dias == 0 %}verde {% elif dias >= 7 %}rojo {% else %}amarillo {% endif %}">
-        </span>
-      </td>
-      {% endif %}
-      <td>{{ pedido.fecha.strftime('%d/%m/%Y') }}</td>
-      <td>${{ pedido.total }}</td>
-      <td>
-        {% for item in pedido.items %}
-        <div class="producto-resumen">
-          <img src="{{ url_for('static', filename=item.producto.imagen) }}" alt="{{ item.producto.nombre }}" />
-          <div>
-            <p>{{ item.producto.nombre }}</p>
-            <p>${{ item.precio_unitario }}</p>
-          </div>
+        <!-- FILTROS ACTUALIZADOS: nuevos e historial -->
+        <div class="estado-tabla">
+          <a
+            href="{{ url_for('admin.admin_pedidos', filtro='nuevos') }}"
+            class="boton filtro-btn {% if filtro == 'nuevos' %}activo{% endif %}"
+            >Nuevos</a
+          >
+          <a
+            href="{{ url_for('admin.admin_pedidos', filtro='historial') }}"
+            class="boton filtro-btn {% if filtro == 'historial' %}activo{% endif %}"
+            >Historial</a
+          >
         </div>
-        {% endfor %}
-      </td>
-      <td>
-        <p><strong>Email:</strong> {{ pedido.email_contacto }}</p>
-        <p><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
-        <p><strong>Tipo de envío:</strong> {{ pedido.tipo_envio }}</p>
-        <p><strong>Comentarios:</strong> {{ pedido.comentarios }}</p>
-      </td>
-    </tr>
-    {% endfor %}
-  {% endif %}
-</tbody>
 
-        </table>
-
+        <!-- Formulario para marcar pedidos como historial SOLO en filtro 'nuevos' -->
         {% if filtro == 'nuevos' %}
-        <div class="text-center" style="margin-top: 1rem">
-          <button type="submit" class="btn_large boton">
-            Pasar a Historial
-          </button>
-        </div>
+        <form method="POST" action="{{ url_for('admin.marcar_como_historial') }}">
+        {% else %}
+        <form id="form-historial">
         {% endif %}
-      </form>
 
-      <div class="text-center mt-5">
-        <a href="{{ url_for('admin.admin') }}" class="btn boton">
-          Volver al Panel
-        </a>
-      </div>
-    </section>
+          <div class="tabla-container">
+            <table class="tabla-admin">
+              <thead>
+                <tr>
+                  <th>
+                    <label for="select-todos" class="sr-only">Seleccionar todos</label>
+                    <input type="checkbox" id="select-todos" aria-label="Seleccionar todos los pedidos" />
+                  </th>
+                  <th>ID</th>
+                  <th>Cliente</th>
+                  {% if filtro == 'nuevos' %}
+                  <th>Estado</th>
+                  {% endif %}
+                  <th>Fecha</th>
+                  <th>Precio Total</th>
+                  <th>Productos</th>
+                  <th>Datos de Envío</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if pedidos|length == 0 %}
+                <tr>
+                  <td colspan="{% if filtro == 'nuevos' %}8{% else %}7{% endif %}" class="no-pedidos">
+                    No hay pedidos {{ filtro }} para mostrar.
+                  </td>
+                </tr>
+                {% else %}
+                  {% for pedido in pedidos %}
+                  <tr>
+                    <td>
+                      <input type="checkbox" name="pedido_ids" value="{{ pedido.id }}" aria-label="Seleccionar pedido {{ pedido.id }}" />
+                    </td>
+                    <td>{{ pedido.id }}</td>
+                    <td>{{ pedido.nombre }} {{ pedido.apellido }}</td>
+                    {% if filtro == 'nuevos' %}
+                    <td>
+                      {% set dias = (current_time.date() - pedido.fecha.date()).days %}
+                      <span class="indicador-estado {% if dias == 0 %}verde{% elif dias >= 7 %}rojo{% else %}amarillo{% endif %}" aria-label="Estado del pedido: {% if dias == 0 %}Nuevo{% elif dias >= 7 %}Antiguo{% else %}Pendiente{% endif %}"></span>
+                    </td>
+                    {% endif %}
+                    <td>{{ pedido.fecha.strftime('%d/%m/%Y') }}</td>
+                    <td>${{ pedido.total }}</td>
+                    <td>
+                      {% for item in pedido.items %}
+                      <div class="producto-resumen">
+                        <img src="{{ url_for('static', filename=item.producto.imagen) }}" alt="Imagen de {{ item.producto.nombre }}" />
+                        <div>
+                          <p>{{ item.producto.nombre }}</p>
+                          <p>${{ item.precio_unitario }}</p>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </td>
+                    <td>
+                      <p><strong>Email:</strong> {{ pedido.email_contacto }}</p>
+                      <p><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
+                      <p><strong>Tipo de envío:</strong> {{ pedido.tipo_envio }}</p>
+                      <p><strong>Comentarios:</strong> {{ pedido.comentarios }}</p>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+
+          {% if filtro == 'nuevos' %}
+          <div class="text-center" style="margin-top: 1rem">
+            <button type="submit" class="boton btn_large">
+              Pasar a Historial
+            </button>
+          </div>
+          {% endif %}
+        </form>
+
+        <div class="text-center mt-5">
+          <a href="{{ url_for('admin.admin') }}" class="boton">
+            Volver al Panel
+          </a>
+        </div>
+      </section>
+    </main>
 
     <script>
       // Select/Deselect all checkboxes
@@ -148,11 +155,6 @@
             .querySelectorAll('input[name="pedido_ids"]')
             .forEach((cb) => (cb.checked = checked));
         });
-
-      function cerrarModal() {
-        document.getElementById("modal-pedido").style.display = "none";
-      }
-
     </script>
   </body>
 </html>

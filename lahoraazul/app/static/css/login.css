@@ -1,15 +1,22 @@
 /* ───────────── Contenedor principal del login ───────────── */
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
 .login-container {
   max-width: 400px;
-  margin: 3rem auto;
+  margin: 0;
   padding: 2rem;
-  border: 1px solid #073763;
+  border: 1px solid var(--color-primary);
   background: #f9f9fb;
 }
 
 .login-container h2 {
-  color: #073763;
-  font-family: 'Poppins', sans-serif;
+  color: var(--color-primary);
+  font-family: var(--font-secondary);
   text-align: center;
   margin-bottom: 1.5rem;
 }
@@ -18,62 +25,52 @@
 .login-container form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0px;
 }
 
 .login-container label {
-  font-weight: 600;
-  color: #073763;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
 }
 
 .login-container input {
   padding: 0.5rem;
   border: 1px solid #ccc;
-  outline: none; /* Quita el borde azul por defecto al enfocar */
-}
-
-/* ───────────── Botones base (compartidos) ───────────── */
-.btn {
-  display: inline-block;
-  width: 100%; /* Botón ocupa todo el ancho del contenedor */
-  padding: 0.6rem;
-  font-weight: bold;
-  text-align: center;
-  font-family: inherit;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
-  text-decoration: none;
-  box-sizing: border-box;
-}
-
-/* ───────────── Botón principal azul ───────────── */
-.boton-acceder {
-  background-color: #073763;
-  color: white;
-  border: 2px solid #073763;
+  outline: none;
+  margin-bottom: 1rem;
 }
 
 .boton-acceder:hover {
-  background-color: white;
-  color: #073763;
+  background-color: var(--color-white);
+  color: var(--color-primary);
 }
-
-/* ───────────── Botón secundario blanco con borde azul ───────────── */
 .boton-volver {
-  background-color: #3b3b3b;
-  color: white;
-  border: 2px solid #3b3b3b;
-;
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  border: 2px solid var(--color-secondary);
+  width: 100%;
+  padding-right: 13px;
+  padding-left: 13px;
 }
-
 .boton-volver:hover {
-  background-color: white;
-  color: #3b3b3b;
+  background-color: var(--color-white);
+  color: var(--color-secondary);
 }
-
 /* ───────────── Contenedor para centrar el botón volver ───────────── */
 .volver-container {
   text-align: center;
   margin-top: 1rem;
+}
+
+/* ───────────── Media Queries para responsividad ───────────── */
+@media (max-width: 480px) {
+  .login-container {
+    margin: 0;
+    padding: 1rem;
+  }
+
+  .login-container h2 {
+    font-size: 1.5rem;
+    margin: 1rem;
+  }
 }

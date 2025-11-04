@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <title>Administrar Banner - La Hora Azul</title>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='icon/ico.png') }}"
+      type="image/png"
+    />
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="stylesheet"
@@ -17,78 +23,80 @@
       href="{{ url_for('static', filename='css/admin_banner.css') }}"
     />
   </head>
+
   <body class="pagina">
-    <section class="admin-panel container">
-      <!-- Título y línea azul -->
-      <h2 class="titulo-admin">Administrar Imágenes del Banner</h2>
-      <hr class="separador" />
+    <main>
+      <section class="admin-panel container">
+        <!-- Título y línea azul -->
+        <h2 class="titulo-admin">Administrar Imágenes del Banner</h2>
+        <hr class="separador" />
 
-      <!-- Descripción centrada y con margen -->
-      <p class="descripcion">
-        En esta sección podés gestionar las imágenes que se muestran en el
-        banner principal del sitio. Subí nuevas imágenes para destacarlas en la
-        página de inicio, ordená su aparición o eliminá aquellas que ya no
-        quieras mostrar.
-      </p>
+        <!-- Descripción centrada y con margen -->
+        <p class="descripcion">
+          En esta sección podés gestionar las imágenes que se muestran en el
+          banner principal del sitio. Subí nuevas imágenes para destacarlas en
+          la página de inicio, ordená su aparición o eliminá aquellas que ya no
+          quieras mostrar.
+        </p>
 
-      <!-- Tarjeta con el formulario para subir imagen -->
-      <div class="tarjeta form-banner">
-        <form
-          action="{{ url_for('admin.subir_banner') }}"
-          method="post"
-          enctype="multipart/form-data"
-          class="form-upload"
-        >
-          <label for="banner-img" class="label-upload"
-            >Seleccioná uno o más banners:</label
-          >
-          <input
-            type="file"
-            id="banner-img"
-            name="imagenes"
-            multiple
-            required
-          />
-          <button class="boton btn_large" type="submit">Subir</button>
-        </form>
-      </div>
-
-      <!-- Previsualización imágenes actuales -->
-      <div class="banner-preview">
-        <h4 class="subtitulo">Imágenes actuales:</h4>
-
-        {% if banners %} {% for banner in banners %}
-        <div class="imagen-item">
+        <!-- Tarjeta con el formulario para subir imagen -->
+        <div class="tarjeta form-banner">
           <form
-            action="{{ url_for('admin.eliminar_banner', banner_id=banner.id) }}"
+            action="{{ url_for('admin.subir_banner') }}"
             method="post"
-            onsubmit="return confirm('¿Seguro querés eliminar este banner?');"
+            enctype="multipart/form-data"
+            class="form-upload"
           >
-            <button
-              class="eliminar-imagen"
-              type="submit"
-              title="Eliminar banner"
-            >
-              ×
-            </button>
+            <label for="banner-img">Seleccioná uno o más banners:</label>
+            <input
+              type="file"
+              id="banner-img"
+              name="imagenes"
+              multiple
+              required
+            />
+            <button class="boton btn_large" type="submit">Subir</button>
           </form>
-
-          <img
-            src="{{ url_for('static', filename=banner.imagen) }}"
-            alt="Banner {{ loop.index }}"
-          />
         </div>
-        {% endfor %} {% else %}
-        <p>No hay banners cargados.</p>
-        {% endif %}
-      </div>
 
-      <!-- Botón volver -->
-      <div class="text-center mt-5">
-        <a href="{{ url_for('admin.admin') }}" class="btn boton"
-          >Volver al Panel</a
-        >
-      </div>
-    </section>
+        <!-- Previsualización imágenes actuales -->
+        <div class="banner-preview">
+          <h4 class="subtitulo">Imágenes actuales:</h4>
+
+          {% if banners %} {% for banner in banners %}
+          <div class="imagen-item">
+            <form
+              action="{{ url_for('admin.eliminar_banner', banner_id=banner.id) }}"
+              method="post"
+              onsubmit="return confirm('¿Seguro querés eliminar este banner?');"
+            >
+              <button
+                class="eliminar-imagen"
+                type="submit"
+                title="Eliminar banner"
+                aria-label="Eliminar banner {{ loop.index }}"
+              >
+                ×
+              </button>
+            </form>
+
+            <img
+              src="{{ url_for('static', filename=banner.imagen) }}"
+              alt="Imagen del banner número {{ loop.index }}"
+            />
+          </div>
+          {% endfor %} {% else %}
+          <p>No hay banners cargados.</p>
+          {% endif %}
+        </div>
+
+        <!-- Botón volver -->
+        <div class="text-center mt-5">
+          <a href="{{ url_for('admin.admin') }}" class="boton"
+            >Volver al Panel</a
+          >
+        </div>
+      </section>
+    </main>
   </body>
 </html>

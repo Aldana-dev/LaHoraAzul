@@ -10,34 +10,35 @@
 {% endblock %}
 
 {% block content %}
-<section class="galeria-pinterest" aria-labelledby="titulo-galeria">
-  <div class="container">
-    <header class="galeria-header">
-      <h1 id="titulo-galeria">Galería</h1>
-      <p class="galeria-descripcion">
-        Cada obra tiene algo para contarte, recorre nuestra galería.
-      </p>
-    </header>
+<main>
+  <section class="galeria-pinterest" aria-labelledby="titulo-galeria">
+    <div class="container">
+      <header class="galeria-header">
+        <h5 class="galeria-descripcion">
+          Cada obra tiene algo para contarte, recorre nuestra galería.
+        </>
+      </header>
 
-    <div class="grid-galeria">
-      {% if imagenes %}
-        {% for img in imagenes %}
-          <figure class="galeria-item">
-            <img
-              src="{{ url_for('static', filename=img.imagen) }}"
-              alt="Obra {{ loop.index }} de la galería La Hora Azul"
-              loading="lazy"
-            />
-          </figure>
-        {% endfor %}
-      {% else %}
-        <p class="mensaje-vacio">
-          No hay imágenes cargadas en la galería por el momento.
-        </p>
-      {% endif %}
+      <div class="grid-galeria">
+        {% if imagenes %}
+          {% for img in imagenes %}
+            <figure class="galeria-item">
+              <img
+                src="{{ url_for('static', filename=img.imagen) }}"
+                alt="Obra {{ loop.index }} de la galería La Hora Azul"
+                loading="lazy"
+              />
+            </figure>
+          {% endfor %}
+        {% else %}
+          <p class="mensaje-vacio">
+            No hay imágenes cargadas en la galería por el momento.
+          </p>
+        {% endif %}
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+</main>
 {% endblock %}
 
 {% block extra_js %}{% endblock %}

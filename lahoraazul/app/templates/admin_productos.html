@@ -5,6 +5,11 @@
     <title>Administrar Productos - La Hora Azul</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
+      rel="icon"
+      href="{{ url_for('static', filename='icon/ico.png') }}"
+      type="image/png"
+    />
+    <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/estilos.css') }}"
     />
@@ -21,243 +26,235 @@
       rel="stylesheet"
     />
   </head>
-  <body class="pagina">
-    <section class="admin-panel">
-      <h2 class="titulo-admin">Administrar Productos</h2>
-      <hr class="separador" />
-      <p class="descripcion">
-        Desde acá podés agregar productos nuevos a tu tienda, subir sus
-        imágenes, establecer precios y también eliminar o editar los ya
-        existentes.
-      </p>
 
-      <!-- Formulario para agregar producto -->
-      <div class="tarjeta form-producto">
-        <h3>Agregar nuevo producto</h3>
-        <form
-          action="{{ url_for('admin.agregar_producto') }}"
-          method="post"
-          enctype="multipart/form-data"
-          class="form-upload"
-        >
-          <div class="campo">
-            <span class="simbolo">#</span>
+  <body class="pagina">
+    <main>
+      <section class="admin-panel container">
+        <h2 class="titulo-admin">Administrar Productos</h2>
+        <hr class="separador" />
+        <p class="descripcion">
+          Desde acá podés agregar productos nuevos a tu tienda, subir sus
+          imágenes, establecer precios y también eliminar o editar los ya
+          existentes.
+        </p>
+
+        <!-- Formulario para agregar producto -->
+        <div class="tarjeta form-producto">
+          <h3>Agregar nuevo producto</h3>
+          <form
+            action="{{ url_for('admin.agregar_producto') }}"
+            method="post"
+            enctype="multipart/form-data"
+            class="form-upload"
+          >
+            <div class="campo">
+              <span class="simbolo">#</span>
+              <input
+                type="text"
+                name="nombre"
+                placeholder="Nombre del producto"
+                required
+              />
+            </div>
+            <div class="campo">
+              <span class="simbolo">$</span>
+              <input
+                type="number"
+                name="precio"
+                placeholder="Precio en ARS"
+                step="0.01"
+                required
+                style="appearance: none; -moz-appearance: textfield"
+                onwheel="this.blur()"
+              />
+            </div>
+
+            <!-- Editor enriquecido para descripción -->
+            <div id="editor-container" style="height: 150px"></div>
+            <input type="hidden" name="descripcion" id="descripcion-hidden" />
+
+            <select name="categoria_id" id="categoria" required>
+              <option value="" disabled selected>Seleccioná una categoría</option>
+              {% for cat in categorias %}
+              <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+              {% endfor %}
+            </select>
+
+            <!-- Imagen principal -->
+            <div>
+              <label for="imagen_principal">Imagen principal del producto:</label>
+              <input
+                type="file"
+                name="imagen_principal"
+                id="imagen_principal"
+                accept="image/*"
+                required
+              />
+            </div>
+            <!-- Imágenes secundarias -->
+            <div>
+              <label for="imagenes_secundarias">Imágenes secundarias:</label>
+              <input
+                type="file"
+                name="imagenes_secundarias"
+                id="imagenes_secundarias"
+                accept="image/*"
+                multiple
+              />
+            </div>
+            <button type="submit" class="boton btn_large">
+              Agregar Producto
+            </button>
+          </form>
+        </div>
+
+        <!-- Lista de productos -->
+        <h3 class="subtitulo">Productos actuales:</h3>
+        <div class="galeria-preview-grid">
+          <div class="galeria-grid">
+            {% if productos|length == 0 %}
+            <p>No hay productos cargados aún.</p>
+            {% else %}
+              {% for producto in productos %}
+                <div class="galeria-item">
+                  {% if producto.imagen %}
+                    <img
+                      src="{{ url_for('static', filename=producto.imagen) }}"
+                      alt="Imagen de {{ producto.nombre }}"
+                    />
+                  {% else %}
+                    <img
+                      src="{{ url_for('static', filename='img/placeholder.png') }}"
+                      alt="Sin imagen para {{ producto.nombre }}"
+                    />
+                  {% endif %}
+
+                  <p>{{ producto.nombre }} - ${{ producto.precio }}</p>
+
+                  <div class="botones-producto">
+                    <button
+                      class="boton small-btn edit-btn"
+                      data-id="{{ producto.id }}"
+                      data-nombre="{{ producto.nombre }}"
+                      data-precio="{{ producto.precio }}"
+                      data-descripcion="{{ producto.descripcion }}"
+                      data-categoria="{{ producto.categoria_id }}"
+                      data-imagen="{{ producto.imagen }}"
+                      data-imagenes='{{ producto.imagenes|map(attribute="imagen")|list|tojson }}'
+                    >
+                      Editar
+                    </button>
+
+                    <form
+                      action="{{ url_for('admin.eliminar_producto', producto_id=producto.id) }}"
+                      method="post"
+                      style="display: inline"
+                    >
+                      <button
+                        class="boton small-btn delete-btn"
+                        type="submit"
+                        onclick="return confirm('¿Eliminar este producto?');"
+                      >
+                        Eliminar
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="text-center mt-5">
+          <a href="{{ url_for('admin.admin') }}" class="boton">Volver al Panel</a>
+        </div>
+      </section>
+
+      <div id="modal-editar" class="modal">
+        <div class="modal-content">
+          <span class="cerrar" aria-label="Cerrar modal">&times;</span>
+          <h3>Editar Producto</h3>
+          <form
+            id="form-editar-producto"
+            method="post"
+            enctype="multipart/form-data"
+            class="form-upload"
+            action="{{ url_for('admin.editar_producto', producto_id=0) }}"
+          >
+            <input type="hidden" name="producto_id" id="edit-id" />
+
             <input
               type="text"
               name="nombre"
+              id="edit-nombre"
               placeholder="Nombre del producto"
               required
             />
-          </div>
-          <!-- Precio sin flechas -->
-          <div class="campo">
-            <span class="simbolo">$</span>
             <input
               type="number"
-              name="precio"
-              placeholder="Precio en ARS"
               step="0.01"
-              required
-              style="appearance: none; -moz-appearance: textfield"
-              onwheel="this.blur()"
-            />
-          </div>
-
-          <!-- Editor enriquecido para descripción -->
-          <div id="editor-container" style="height: 150px"></div>
-          <input type="hidden" name="descripcion" id="descripcion-hidden" />
-
-          <select name="categoria_id" id="categoria" required>
-            <option value="" disabled selected>Seleccioná una categoría</option>
-            {% for cat in categorias %}
-            <option value="{{ cat.id }}">{{ cat.nombre }}</option>
-            {% endfor %}
-          </select>
-
-          <!-- Imagen principal -->
-          <div>
-            <label for="imagen_principal">Imagen principal del producto:</label>
-            <input
-              type="file"
-              name="imagen_principal"
-              id="imagen_principal"
-              accept="image/*"
+              name="precio"
+              id="edit-precio"
+              placeholder="Precio"
               required
             />
-          </div>
-          <!-- Imágenes secundarias -->
-          <div>
-            <label for="imagenes_secundarias">Imágenes secundarias:</label>
+
+            <!-- Editor enriquecido -->
+            <div id="editor-container-edit" style="height: 150px"></div>
+            <input type="hidden" name="descripcion" id="edit-descripcion" />
+
+            <select name="categoria_id" id="edit-categoria" required>
+              <option value="" disabled>Seleccioná una categoría</option>
+              {% for cat in categorias %}
+              <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+              {% endfor %}
+            </select>
+
+            <label>Imagen principal actual:</label>
+            <img
+              id="img-principal-edit"
+              src=""
+              alt="Imagen principal del producto"
+              style="max-width: 200px; margin-bottom: 10px"
+            />
+            <label for="imagen-principal-nueva">Cambiar imagen principal:</label>
             <input
               type="file"
-              name="imagenes_secundarias"
-              id="imagenes_secundarias"
+              name="imagen"
+              id="imagen-principal-nueva"
               accept="image/*"
-              multiple
             />
-          </div>
-          <button type="submit" class="btn_large boton">
-            Agregar Producto
-          </button>
-        </form>
-      </div>
 
-      <!-- Lista de productos -->
-      <h3 class="subtitulo">Productos actuales:</h3>
-      <div class="galeria-preview-grid">
-        <div class="galeria-grid">
-          {% if productos|length == 0 %}
-          <p>No hay productos cargados aún.</p>
-          {% else %} {% for producto in productos %}
-          <div class="galeria-item">
-            {% if producto.imagen %}
-            <img
-              src="{{ url_for('static', filename=producto.imagen) }}"
-              alt="Producto"
-            />
-            {% else %}
-            <img
-              src="{{ url_for('static', filename='img/placeholder.png') }}"
-              alt="Sin imagen"
-            />
-            {% endif %}
-
-            <p>{{ producto.nombre }} - ${{ producto.precio }}</p>
-
-            <div class="botones-producto">
-              <button
-                class="boton small-btn edit-btn"
-                data-id="{{ producto.id }}"
-                data-nombre="{{ producto.nombre }}"
-                data-precio="{{ producto.precio }}"
-                data-descripcion="{{ producto.descripcion }}"
-                data-categoria="{{ producto.categoria_id }}"
-                data-imagen="{{ producto.imagen }}"
-                data-imagenes='{{ producto.imagenes|map(attribute="imagen")|list|tojson }}'
-              >
-                Editar
-              </button>
-
-              <form
-                action="{{ url_for('admin.eliminar_producto', producto_id=producto.id) }}"
-                method="post"
-                style="display: inline"
-              >
-                <button
-                  class="boton small-btn delete-btn"
-                  type="submit"
-                  onclick="return confirm('¿Eliminar este producto?');"
-                >
-                  Eliminar
-                </button>
-              </form>
+            <label>Imágenes adicionales actuales:</label>
+            <div
+              id="imagenes-adicionales-edit"
+              style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;"
+            >
+              <!-- JS inyectará aquí las imágenes con botón X -->
             </div>
-          </div>
-          {% endfor %} {% endif %}
+
+            <input
+              type="hidden"
+              name="imagenes_a_eliminar"
+              id="imagenes-a-eliminar"
+            />
+
+            <label for="imagenes-adicionales-nuevas">Subir nuevas imágenes adicionales:</label>
+            <input
+              type="file"
+              name="imagenes_adicionales"
+              id="imagenes-adicionales-nuevas"
+              multiple
+              accept="image/*"
+            />
+
+            <button type="submit" class="boton">Guardar Cambios</button>
+          </form>
         </div>
       </div>
-
-      <div class="text-center mt-5">
-        <a href="{{ url_for('admin.admin') }}" class="btn boton"
-          >Volver al Panel</a
-        >
-      </div>
-    </section>
-
-    <div id="modal-editar" class="modal">
-      <div class="modal-content">
-        <span class="cerrar">&times;</span>
-        <h3>Editar Producto</h3>
-        <form
-          id="form-editar-producto"
-          method="post"
-          enctype="multipart/form-data"
-          class="form-upload"
-          action="{{ url_for('admin.editar_producto', producto_id=0) }}"
-        >
-          <input type="hidden" name="producto_id" id="edit-id" />
-
-          <input
-            type="text"
-            name="nombre"
-            id="edit-nombre"
-            placeholder="Nombre del producto"
-            required
-          />
-          <input
-            type="number"
-            step="0.01"
-            name="precio"
-            id="edit-precio"
-            placeholder="Precio"
-            required
-          />
-
-          <!-- Editor enriquecido -->
-          <div id="editor-container-edit" style="height: 150px"></div>
-          <input type="hidden" name="descripcion" id="edit-descripcion" />
-
-          <!-- Select de categoría sin título -->
-          <select name="categoria_id" id="edit-categoria" required>
-            <option value="" disabled>Seleccioná una categoría</option>
-            {% for cat in categorias %}
-            <option value="{{ cat.id }}">{{ cat.nombre }}</option>
-            {% endfor %}
-          </select>
-
-          <label>Imagen principal actual:</label>
-          <img
-            id="img-principal-edit"
-            src=""
-            alt="Imagen principal"
-            style="max-width: 200px; margin-bottom: 10px"
-          />
-          <label for="imagen-principal-nueva">Cambiar imagen principal:</label>
-          <input
-            type="file"
-            name="imagen"
-            id="imagen-principal-nueva"
-            accept="image/*"
-          />
-
-          <label>Imágenes adicionales actuales:</label>
-          <div
-            id="imagenes-adicionales-edit"
-            style="
-              display: flex;
-              flex-wrap: wrap;
-              gap: 10px;
-              margin-bottom: 10px;
-            "
-          >
-            <!-- JS inyectará aquí las imágenes con botón X -->
-          </div>
-
-          <!-- Campo oculto para registrar imágenes eliminadas -->
-          <input
-            type="hidden"
-            name="imagenes_a_eliminar"
-            id="imagenes-a-eliminar"
-          />
-
-          <label for="imagenes-adicionales-nuevas"
-            >Subir nuevas imágenes adicionales:</label
-          >
-          <input
-            type="file"
-            name="imagenes_adicionales"
-            id="imagenes-adicionales-nuevas"
-            multiple
-            accept="image/*"
-          />
-
-          <button type="submit" class="btn boton">Guardar Cambios</button>
-        </form>
-      </div>
-    </div>
+    </main>
 
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <script src="{{ url_for('static', filename='js/admin_productos.js') }}"></script>
-
   </body>
 </html>

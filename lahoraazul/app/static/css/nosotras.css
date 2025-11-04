@@ -4,13 +4,13 @@
   flex-wrap: wrap;
   gap: var(--spacing-large, 2em);
   border-top: 0;
-  justify-content: center; /* Centra las columnas horizontalmente */
+  justify-content: center;
 }
 
 .columna {
   flex: 1;
   min-width: 300px;
-  max-width: 100%; /* Limita el ancho para no superar el contenedor */
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -2,18 +2,6 @@
 .galeria-pinterest {
   padding: 20px;
 }
-.mensaje-vacio {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200vh;
-  text-align: center;
-}
-
-.mensaje-vacio p {
-  font-size: 1.2rem;
-  color: #555;
-}
 
 /* ───────────── Grid de columnas para galería ───────────── */
 .grid-galeria {
@@ -28,7 +16,7 @@
   object-fit: cover;
   border-radius: 6px;
   break-inside: avoid;
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-normal);
   cursor: pointer;
 }
 
@@ -37,24 +25,54 @@
   transform: scale(1.05);
 }
 
-/* ───────────── Responsive: menos columnas en pantallas pequeñas ───────────── */
+/* ───────────── Mensaje vacío ───────────── */
+.mensaje-vacio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+/* ───────────── Media Queries para responsividad ───────────── */
 @media (max-width: 1024px) {
   .grid-galeria {
     column-count: 2;
-    gap: 1rem;
+    column-gap: 1rem;
   }
-  .container{
+
+  .galeria-pinterest {
     padding: 0px;
+  }
+
+  .container {
+    padding: 0;
   }
 
   .grid-galeria img {
     margin: 0.5rem;
   }
- 
-  .galeria-pinterest {
-    padding: 10px;
-  }
+
   figure {
     margin: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-galeria {
+    column-count: 2;
+    column-gap: 0.75rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+  h5{
+    font-size: 0.7rem;
+  }
+  .grid-galeria img {
+    margin: 0.25rem;
   }
 }

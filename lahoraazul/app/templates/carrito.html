@@ -22,7 +22,7 @@
         loading="lazy"
       />
       <div class="detalle-producto">
-        <header class="header-detalle">
+        <div class="header-detalle">
           <h3 class="nombre-producto">{{ item.nombre }}</h3>
           <form
             method="POST"
@@ -34,7 +34,7 @@
               type="submit"
             ></button>
           </form>
-        </header>
+        </div>
         <div class="precio-quitar">
           <p class="precio">${{ item.precio }}</p>
         </div>
@@ -127,7 +127,7 @@
 
     <div class="finalizar-compra-container">
       <button
-        class="btn boton"
+        class="boton"
         id="btn-finalizar"
         data-bs-toggle="modal"
         data-bs-target="#modalCompra"

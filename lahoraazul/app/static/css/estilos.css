@@ -252,7 +252,8 @@ nav a:hover {
   justify-content: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   z-index: 999;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .btn-whatsapp i {
@@ -382,42 +383,45 @@ nav a:hover {
 
 /* Móviles pequeños (480px y abajo) */
 @media (max-width: 480px) {
+  .pagina,
+  main {
+    padding: var(--spacing-small);
+  }
   header {
     padding: var(--spacing-small);
     img {
-      height: 50px; /* Reducido de 80px para móviles pequeños */
+      height: 50px;
     }
   }
   .logo-titulo {
-    font-size: 2.5rem; /* Reducido de 3.5rem para caber mejor */
+    font-size: 2.5rem;
   }
   nav {
-    gap: 20px; /* Reducido de 100px para nav más compacto */
-    padding: 10px var(--spacing-small); /* Padding reducido */
-    font-size: 0.9rem; /* Fuente más pequeña para enlaces */
+    gap: 20px;
+    padding: 10px var(--spacing-small);
+    font-size: 0.9rem;
   }
   nav a {
-    font-size: 0.9rem; /* Consistente con nav */
+    font-size: 0.9rem;
   }
-  .carrito-icono{
+  .carrito-icono {
     width: ;
   }
   .carrito-icono-i {
-    font-size: 30px !important; /* Más pequeño para móviles */
+    font-size: 30px !important;
   }
   .footer {
-    margin-top: 3rem; /* Reducido */
-    padding: 1.5em var(--spacing-medium) 1em; /* Padding más pequeño */
+    margin-top: 3rem;
+    padding: 1.5em var(--spacing-medium) 1em;
   }
   .footer-content {
-    flex-direction: column; /* Líneas una sobre la otra (vertical) */
-    text-align: center; /* Centrado */
-    gap: var(--spacing-small); /* Espacio entre líneas */
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-small);
   }
   .footer-left,
   .footer-right {
-    text-align: center; /* Centrado para ambas líneas */
-        font-size: 0.7rem; /* Más pequeño para líneas verticales */
-
+    text-align: center;
+    font-size: 0.7rem;
   }
 }

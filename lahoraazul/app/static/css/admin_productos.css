@@ -7,21 +7,20 @@
 }
 
 .subtitulo {
-  font-family: 'Libre Franklin', sans-serif;
-  color: #073763;
+  font-family: var(--font-primary);
+  color: var(--color-primary);
   font-size: 1.4rem;
-  border-bottom: 2px solid #073763;
+  border-bottom: 2px solid var(--color-primary);
   padding-bottom: 0.3rem;
   margin: 3rem auto 1.5rem auto;
 }
-
 
 /* ───────────── Formularios ───────────── */
 .form-producto {
   margin: 0 auto;
   padding: 2rem;
   background-color: #f9f9fb;
-  border: 2px solid #073763;
+  border: 2px solid var(--color-primary);
   border-radius: 6px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
@@ -37,37 +36,36 @@
 .form-upload input[type="file"],
 .form-upload textarea,
 .form-upload select {
-  font-family: 'Libre Franklin', sans-serif;
+  font-family: var(--font-primary);
   font-size: 1rem;
   padding: 0.7rem 0.8rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100%;
   box-sizing: border-box;
-  color: #153f6c;
-  background-color: #fff;
-  transition: border 0.3s ease;
+  color: var(--color-primary);
+  background-color: var(--color-white);
+  transition: border var(--transition-normal);
 }
 
 .form-upload input:focus,
 .form-upload textarea:focus,
 .form-upload select:focus {
-  border-color: #073763;
+  border-color: var(--color-primary);
   outline: none;
 }
-
 
 /* ────── Editor Quill adaptado al estilo del formulario ────── */
 .ql-container,
 .ql-container .ql-editor {
-  font-family: 'Libre Franklin', sans-serif !important;
+  font-family: var(--font-primary) !important;
   font-size: 1rem;
-  background-color: white;
+  background-color: var(--color-white);
   border: 0;
   border-radius: 4px;
   box-sizing: border-box;
-  color: #153f6c;
-  transition: border 0.3s ease;
+  color: var(--color-primary);
+  transition: border var(--transition-normal);
 }
 
 .ql-container.ql-snow {
@@ -78,7 +76,7 @@
 .ql-toolbar.ql-snow {
   border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: white;
+  background-color: var(--color-white);
 }
 
 .ql-toolbar.ql-snow + .ql-container.ql-snow {
@@ -87,12 +85,11 @@
 
 .ql-container:focus-within,
 .ql-toolbar:focus-within {
-  border-color: #073763;
+  border-color: var(--color-primary);
   outline: none;
 }
 
-
-/* ───────────── Inputs con símbolo $ ───────────── */
+/* ───────────── Inputs con símbolo ───────────── */
 .campo {
   display: flex;
   align-items: center;
@@ -102,7 +99,6 @@
   margin-right: 8px;
   font-size: 1.2rem;
 }
-
 
 /* ───────────── Galería ───────────── */
 .galeria-preview-grid {
@@ -137,16 +133,6 @@
   margin-bottom: 1rem;
 }
 
-.galeria-preview-grid .galeria-item .btn {
-  width: auto;
-  padding: 0.5rem 4rem;
-  font-size: 0.9rem;
-  white-space: nowrap;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-
 /* ───────────── Botones productos ───────────── */
 .botones-producto {
   display: flex;
@@ -161,28 +147,28 @@
 }
 
 .edit-btn {
-  background-color: #153f6c;
-  color: white;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: 2px solid var(--color-primary);
+  transition: var(--transition-normal);
 }
 
 .edit-btn:hover {
-  background-color: white;
-  color: #153f6c;
+  background-color: var(--color-white);
+  color: var(--color-primary);
 }
 
 .delete-btn {
-  background-color: #3b3b3b;
-  border-color: #3b3b3b;
-  color: white;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--color-secondary);
+  border: 2px solid var(--color-secondary);
+  color: var(--color-white);
+  transition: var(--transition-normal);
 }
 
 .delete-btn:hover {
-  background-color: white;
-  color: #3b3b3b;
+  background-color: var(--color-white);
+  color: var(--color-secondary);
 }
-
 
 /* ───────────── Modal ───────────── */
 .modal {
@@ -193,7 +179,7 @@
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   overflow-y: auto;
 }
 
@@ -201,11 +187,11 @@
   background-color: #f9f9fb;
   margin: 3rem auto;
   padding: 2rem;
-  border: 2px solid #073763;
+  border: 2px solid var(--color-primary);
   border-radius: 8px;
   width: 90%;
   max-width: 600px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   position: relative;
   box-sizing: border-box;
   height: auto;
@@ -218,16 +204,15 @@
   right: 16px;
   font-size: 2rem;
   font-weight: bold;
-  color: #073763;
+  color: var(--color-primary);
   cursor: pointer;
   user-select: none;
-  transition: color 0.3s ease;
+  transition: color var(--transition-normal);
 }
 
 .cerrar:hover {
   color: #be2a88;
 }
-
 
 /* ───────────── Imágenes adicionales en edición ───────────── */
 .contenedor-imagen-adicional {
@@ -244,13 +229,12 @@
   display: block;
 }
 
-
 .btn-eliminar-imagen {
   position: absolute;
   top: -5px;
   right: -5px;
   background: #c0392b;
-  color: #fff;
+  color: var(--color-white);
   border: none;
   border-radius: 50%;
   width: 22px;
@@ -262,8 +246,13 @@
   padding: 0;
 }
 
+/* ───────────── Media Queries para responsividad ───────────── */
+@media (max-width: 1024px) {
+  .galeria-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 
-/* ───────────── Responsive ───────────── */
 @media (max-width: 768px) {
   .galeria-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -278,8 +267,28 @@
     margin-bottom: 0.5rem;
   }
 
-  .galeria-preview-grid .galeria-item .btn {
-    padding: 0.4rem 1rem;
-    font-size: 0.85rem;
+  .form-producto {
+    padding: 1.5rem;
+  }
+
+  .modal-content {
+    margin: 2rem auto;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .galeria-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .form-producto {
+    padding: 1rem;
+  }
+
+  .modal-content {
+    margin: 1rem auto;
+    padding: 1rem;
   }
 }

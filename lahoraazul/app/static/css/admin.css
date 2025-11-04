@@ -1,25 +1,27 @@
+/* ───────────── Panel de administración ───────────── */
 .admin-panel {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 3rem 2rem;
-  box-sizing: border-box;
+  padding: 6rem 4rem !important;
 }
 
+/* ───────────── Título y separador ───────────── */
 .titulo-admin {
   text-align: center;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-secondary);
   font-size: 2rem;
-  color: #073763;
+  color: var(--color-primary);
   margin-bottom: 1rem;
 }
 
 .separador {
   height: 4px;
-  background-color: #073763;
+  background-color: var(--color-primary);
   border: none;
   margin: 0 auto 3rem auto;
 }
 
+/* ───────────── Contenedor de tarjetas ───────────── */
 .tarjetas-admin {
   display: flex;
   flex-wrap: wrap;
@@ -27,10 +29,11 @@
   justify-content: space-between;
 }
 
+/* ───────────── Tarjetas individuales ───────────── */
 .tarjeta {
   flex: 1 1 calc(33.333% - 2rem);
   min-width: 250px;
-  border: 2px solid #073763;
+  border: 2px solid var(--color-primary);
   padding: 2rem;
   background-color: #f9f9fb;
   display: flex;
@@ -40,11 +43,11 @@
 }
 
 .tarjeta h3 {
-  font-family: "Libre Franklin", sans-serif;
+  font-family: var(--font-primary);
   font-size: 1.3rem;
-  color: #073763;
+  color: var(--color-primary);
   margin-bottom: 2rem;
-  border-bottom: 2px solid #073763;
+  border-bottom: 2px solid var(--color-primary);
   padding-bottom: 0.5rem;
 }
 
@@ -52,23 +55,87 @@
   margin-bottom: 2rem;
 }
 
-.tarjeta .btn {
+/* ───────────── Botón en tarjetas ───────────── */
+.tarjeta .boton {
   align-self: center;
   text-align: center;
   padding: 0.7rem 2rem;
   font-size: 1rem;
-  display: inline-block;
+}
+
+/* ───────────── Clases compartidas para todas las páginas admin ───────────── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-medium);
+}
+
+.mt-5 {
+  margin-top: 3rem;
 }
 
 .btn_large {
-  align-self: center;
-  text-align: center;
-  padding: 0.7rem 8rem;
-  font-size: 1rem;
   display: inline-block;
+  padding: var(--spacing-small) 8rem;
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  text-decoration: none;
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-bold);
+}
+
+.btn_large:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
 }
 
 .text-center {
   text-align: center;
   margin-top: 4rem;
+}
+
+/* ───────────── Media Queries para responsividad ───────────── */
+@media (max-width: 768px) {
+  .tarjetas-admin {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tarjeta {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .admin-panel {
+    padding: 2rem 1rem;
+  }
+
+  .titulo-admin {
+    font-size: 1.75rem;
+  }
+
+  .btn_large {
+    padding: var(--spacing-small) 4rem;
+  }
+
+  .text-center {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .admin-panel {
+    padding: 3rem 0rem !important;
+  }
+  .tarjeta .boton {
+    padding: 0.4rem 1rem;
+    font-size: 14px;
+  }
+  .boton {
+    padding: 0.4rem 4rem;
+  }
 }
