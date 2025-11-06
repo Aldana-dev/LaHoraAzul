@@ -52,7 +52,7 @@ async function cotizarEnvio(cpDestino, tipo) {
   console.log(`Cotizando envío para CP: ${cpDestino}, tipo: ${tipo}`);
   if (!cpDestino || cpDestino.trim() === '') {
     console.error("CP no proporcionado o inválido en cotizarEnvio");
-    alert("Por favor ingrese un Código Postal válido.");
+    mostrarErrorAPI("Por favor ingrese un Código Postal válido.");
     return;
   }
 
@@ -79,14 +79,16 @@ async function cotizarEnvio(cpDestino, tipo) {
     if (data.rates && data.rates.length > 0) {
       const tarifa = data.rates.find(r => r.deliveredType === datosCotizacion.deliveredType);
       mostrarCotizacionGlobal(tipo, tarifa?.price ?? null, tarifa?.deliveryTimeMin, tarifa?.deliveryTimeMax);
+      ocultarErrorAPI();  // Ocultar error si cotización exitosa
     } else {
       console.error("No se encontraron tarifas en la respuesta");
       mostrarCotizacionGlobal(tipo, null);
+      mostrarErrorAPI("No se encontraron tarifas para este destino.");
     }
   } catch (error) {
     console.error("Error en cotizarEnvio:", error);
-    alert("Error al cotizar el envío. Verifica los datos e intenta de nuevo.");
     mostrarCotizacionGlobal(tipo, null);
+    mostrarErrorAPI("Error al cotizar el envío. Verifica los datos e intenta de nuevo.");
   }
 }
 
@@ -94,7 +96,7 @@ async function cotizarEnvioModal(cpDestino) {
   console.log("Llamando a cotizarEnvioModal con CP:", cpDestino);
   if (!cpDestino) {
     console.error("CP no proporcionado en cotizarEnvioModal");
-    alert("Por favor ingrese un Código Postal de destino.");
+    mostrarErrorAPI("Por favor ingrese un Código Postal de destino.");
     return;
   }
   try {
@@ -103,7 +105,7 @@ async function cotizarEnvioModal(cpDestino) {
     // actualizarResumenModal();  // Comentado porque no está definida; descomenta si la defines
   } catch (error) {
     console.error("Error en cotizarEnvioModal:", error);
-    alert("Error al cotizar en el modal.");
+    mostrarErrorAPI("Error al cotizar en el modal.");
   }
 }
 
@@ -111,7 +113,7 @@ function calcularCotizaciones(cpDestino) {
   console.log("Llamando a calcularCotizaciones con CP:", cpDestino);
   if (!cpDestino) {
     console.error("CP no proporcionado en calcularCotizaciones");
-    alert("Por favor ingrese un Código Postal de destino.");
+    mostrarErrorAPI("Por favor ingrese un Código Postal de destino.");
     return;
   }
   cotizarEnvio(cpDestino, "domicilio");
@@ -173,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
         calcularCotizaciones(cpDestino);
       } else {
         console.error("CP no proporcionado en el botón");
-        alert("Por favor ingrese un Código Postal de destino.");
+        mostrarErrorAPI("Por favor ingrese un Código Postal de destino.");
       }
     });
   } else {
@@ -336,3 +338,127 @@ document.querySelectorAll('input, textarea, select').forEach((element, index) =>
     }
   });
 });
+
+// ==================================
+// 🆕 AGREGADOS: Funciones nuevas y manejo de errores visuales
+// ==================================
+
+// Función para mostrar errores de API en el div rojo
+function mostrarErrorAPI(mensaje) {
+  const errorDiv = document.getElementById('api-error');
+  if (errorDiv) {
+    errorDiv.textContent = mensaje;
+    errorDiv.classList.remove('d-none');
+  }
+}
+
+// Función para ocultar errores de API
+function ocultarErrorAPI() {
+  const errorDiv = document.getElementById('api-error');
+  if (errorDiv) {
+    errorDiv.classList.add('d-none');
+  }
+}
+
+// Función para enviar datos a la API (importar envío)
+async function enviarDatosAAPI(datos) {
+  console.log("Enviando datos a la API:", datos);
+
+  const payload = {
+    customerId: "0001079998",  // Reemplaza con uno válido (regístralo si no)
+    extOrderId: `order-${Date.now()}`,  // ID único
+    orderNumber: "102",
+    sender: {
+      name: "Tu Tienda",
+      phone: "123456789",
+      email: "tienda@example.com",
+      originAddress: {
+        streetName: "Calle Origen",
+        streetNumber: "123",
+        city: "Ciudad Origen",
+        provinceCode: "B",  // Tu provincia origen
+        postalCode: "8407"  // Tu CP origen
+      }
+    },
+    recipient: {
+      name: `${datos.nombre} ${datos.apellido}`,
+      phone: datos.telefono,
+      email: datos.email
+    },
+    shipping: {
+      deliveryType: datos.tipo_envio === "domicilio" ? "D" : "S",
+      agency: datos.tipo_envio === "sucursal" ? datos.selector_sucursal : null,
+      productType: "CP",
+      address: {
+        streetName: datos.direccion.split(' ')[0] || "Calle",  // Extrae calle
+        streetNumber: datos.direccion.split(' ')[1] || "123",  // Extrae número
+        city: datos.ciudad,
+        provinceCode: datos.provincia,  // Ahora es el código directo del select
+        postalCode: datos.cp_usuario
+      },
+      weight: 1000,  // Calcula del carrito real
+      declaredValue: 500.00,  // Total real
+      height: 10,
+      length: 30,
+      width: 20
+    }
+  };
+
+  try {
+    const response = await fetch("/importar_envio", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const result = await response.json();
+    if (response.ok && result.createdAt) {  // Éxito si hay createdAt
+      alert("Envío importado exitosamente. ¡Compra confirmada!");
+      ocultarErrorAPI();
+      const modal = bootstrap.Modal.getInstance(document.getElementById('modalCompra'));
+      modal.hide();
+    } else {
+      mostrarErrorAPI("Error: " + (result.message || "Desconocido"));
+    }
+  } catch (error) {
+    console.error("Error en enviarDatosAAPI:", error);
+    mostrarErrorAPI("Error de conexión al importar envío.");
+  }
+}
+
+// Función para cargar sucursales
+async function cargarSucursales(provinceCode) {
+  try {
+    const response = await fetch(`/sucursales?customerId=0001079998&provinceCode=${provinceCode}`);
+    const data = await response.json();
+    const select = document.getElementById('selector-sucursal');
+    select.innerHTML = '<option value="">Seleccione una sucursal</option>';
+    if (Array.isArray(data)) {
+      data.forEach(suc => {
+        select.innerHTML += `<option value="${suc.code}">${suc.name}</option>`;
+      });
+    }
+    document.getElementById('campo-sucursal').classList.remove('d-none');
+  } catch (error) {
+    console.error("Error cargando sucursales:", error);
+    mostrarErrorAPI("Error al cargar sucursales.");
+  }
+}
+
+// Evento para cargar sucursales al seleccionar tipo_envio o cambiar provincia
+document.addEventListener("DOMContentLoaded", () => {
+  // Evento para radios de tipo_envio
+  document.querySelectorAll('input[name="tipo_envio"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      if (e.target.value === 'sucursal') {
+        const provinceCode = document.getElementById('provincia').value;
+        if (provinceCode) {
+          cargarSucursales(provinceCode);
+        } else {
+          mostrarErrorAPI("Selecciona una provincia primero.");
+        }
+      } else {
+        document.getElementById('campo-sucursal').classList.add('d-none');
+      }
+    });
+  })
+})

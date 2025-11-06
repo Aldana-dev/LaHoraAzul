@@ -35,6 +35,11 @@
         </div>
 
         <div class="modal-body">
+          <!-- NUEVO: Div para errores de API (se muestra/oculta desde JS) -->
+          <div id="api-error" class="alert alert-danger d-none" role="alert">
+            <!-- Mensajes de error se insertarán aquí desde JS -->
+          </div>
+
           <!-- Paso 1: Datos de envío -->
           <fieldset class="paso" id="paso-1">
             <!-- Nombre y Apellido -->
@@ -55,7 +60,6 @@
                   class="error-message"
                   style="color: red; display: none"
                 ></span>
-                <!-- Mensaje de error -->
               </div>
               <div class="col mb-3">
                 <label for="apellido" class="form-label">Apellido</label>
@@ -114,16 +118,42 @@
             <!-- Localidad -->
             <fieldset class="row">
               <div class="col mb-3">
+                <!-- Provincia ahora es un select con códigos de la guía -->
                 <label for="provincia" class="form-label">Provincia</label>
-                <input
-                  type="text"
+                <select
                   class="form-control"
                   id="provincia"
                   name="provincia"
                   autocomplete="shipping address-level1"
                   tabindex="5"
                   required
-                />
+                >
+                  <option value="">Seleccione una provincia</option>
+                  <option value="A">Salta</option>
+                  <option value="B">Provincia de Buenos Aires</option>
+                  <option value="C">Ciudad Autónoma de Buenos Aires</option>
+                  <option value="D">San Luis</option>
+                  <option value="E">Entre Ríos</option>
+                  <option value="F">La Rioja</option>
+                  <option value="G">Santiago del Estero</option>
+                  <option value="H">Chaco</option>
+                  <option value="J">San Juan</option>
+                  <option value="K">Catamarca</option>
+                  <option value="L">La Pampa</option>
+                  <option value="M">Mendoza</option>
+                  <option value="N">Misiones</option>
+                  <option value="P">Formosa</option>
+                  <option value="Q">Neuquén</option>
+                  <option value="R">Río Negro</option>
+                  <option value="S">Santa Fe</option>
+                  <option value="T">Tucumán</option>
+                  <option value="U">Chubut</option>
+                  <option value="V">Tierra del Fuego</option>
+                  <option value="W">Corrientes</option>
+                  <option value="X">Córdoba</option>
+                  <option value="Y">Jujuy</option>
+                  <option value="Z">Santa Cruz</option>
+                </select>
                 <span
                   id="error-provincia"
                   class="error-message"
@@ -242,13 +272,14 @@
               </div>
             </fieldset>
 
-            <!-- Selector de sucursal -->
+            <!-- Selector de sucursal (ya existe, se poblará dinámicamente desde JS) -->
             <div class="mb-3 d-none" id="campo-sucursal">
               <label for="selector-sucursal" class="form-label"
                 >Seleccionar sucursal</label
               >
               <select id="selector-sucursal" class="form-control" tabindex="9">
                 <option value="">Seleccione una sucursal</option>
+                <!-- Opciones se agregarán desde JS con cargarSucursales() -->
               </select>
               <small
                 id="horarios-sucursal"
