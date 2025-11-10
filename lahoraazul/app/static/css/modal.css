@@ -80,6 +80,7 @@
   background-color: #f8f8f8;
 }
 
+
 /* Efecto hover */
 .tarjeta-envio-modal:hover {
   border-color: #153f6c;
@@ -136,6 +137,8 @@
 .tarjeta-envio-modal .texto-envio {
   font-size: 0.85rem;
   color: #666;
+  display: block;
+
 }
 
 /* Seleccionada usando :has */

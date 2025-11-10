@@ -87,6 +87,7 @@
                 type="text"
                 class="form-control"
                 id="direccion"
+                name="direccion"
                 autocomplete="shipping address-line1"
                 tabindex="3"
                 placeholder="Calle y número"
@@ -237,7 +238,8 @@
                   />
                   <strong>Retiro en el local</strong>
                   <span class="precio-opcion-modal">$0.00</span>
-                  <small class="texto-envio">Disponible inmediatamente</small>
+                  <small class="texto-envio">Disponible inmediatamente;</small>
+                  <small class="texto-envio">retirar máximo 30 días tras la compra</small>
                 </label>
 
                 <!-- Envío a domicilio -->
@@ -277,7 +279,7 @@
               <label for="selector-sucursal" class="form-label"
                 >Seleccionar sucursal</label
               >
-              <select id="selector-sucursal" class="form-control" tabindex="9">
+              <select id="selector-sucursal" name="selector_sucursal" class="form-control" tabindex="9">
                 <option value="">Seleccione una sucursal</option>
                 <!-- Opciones se agregarán desde JS con cargarSucursales() -->
               </select>
