@@ -46,7 +46,6 @@ btnPrev.addEventListener('click', () => {
   updateCarousel();
 });
 
-// Gestos Táctiles (Swipe)
 let startX = 0;
 let endX = 0;
 
@@ -60,7 +59,6 @@ document.querySelector('.frames').addEventListener('touchend', (e) => {
   if (endX - startX > 50) btnPrev.click();
 });
 
-// Gestos de Ratón (Drag/Scroll Horizontal)
 let isDragging = false;
 let startDragX = 0;
 
@@ -85,7 +83,6 @@ document.querySelector('.frames').addEventListener('mouseup', () => {
   isDragging = false;
 });
 
-// Función de throttling para limitar frecuencia
 function throttle(func, limit) {
   let inThrottle;
   return function() {
@@ -99,12 +96,10 @@ function throttle(func, limit) {
   };
 }
 
-// Scroll horizontal con throttling (500ms de delay)
 document.querySelector('.frames').addEventListener('wheel', throttle((e) => {
   e.preventDefault();
   if (e.deltaX > 0) btnNext.click();
   else btnPrev.click();
 }, 500));
 
-// Inicializar
 updateCarousel();

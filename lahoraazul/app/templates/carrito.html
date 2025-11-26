@@ -1,21 +1,17 @@
 {% extends "base.html" %}
-
 {% block title %}Carrito - La Hora Azul{% endblock %}
-
 {% block extra_css %}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/carrito.css') }}"
 />
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 
 <main class="lista-carrito">
   {% if carrito %}
   <section class="items-carrito" aria-label="Productos en el carrito">
     {% for item in carrito %}
-    <article class="item-carrito">
+    <article class="item-carrito" data-producto-id="{{ item.id }}">
       <img
         src="{{ url_for('static', filename=item.imagen) }}"
         alt="Imagen de {{ item.nombre }}"
@@ -82,7 +78,7 @@
           <legend>Opciones de envío</legend>
 
           <!-- Retiro en local -->
-          <label class="tarjeta-envio" data-precio="0">
+          <label class="tarjeta-envio" data-tipo="local" data-precio="0">
             <input type="radio" name="opcion-envio" value="local" checked />
             <strong>Retiro en el local - Sin costo</strong><br />
             <span class="precio-opcion">
@@ -95,14 +91,20 @@
           <label class="tarjeta-envio" data-tipo="domicilio" data-precio="0">
             <input type="radio" name="opcion-envio" value="domicilio" />
             <strong>Envío a domicilio</strong><br />
-            <span class="precio-opcion" id="precio-domicilio">--</span>
+            <span class="precio-opcion" id="precio-domicilio"
+              >Cotizando...</span
+            >
+            <span class="texto-envio" id="dias-domicilio"></span>
           </label>
 
           <!-- Retiro en sucursal -->
           <label class="tarjeta-envio" data-tipo="sucursal" data-precio="0">
             <input type="radio" name="opcion-envio" value="sucursal" />
             <strong>Retiro en sucursal</strong><br />
-            <span class="precio-opcion" id="precio-sucursal">--</span>
+            <span class="precio-opcion" id="precio-sucursal"
+              >Cotizando...</span
+            >
+            <span class="texto-envio" id="dias-sucursal"></span>
           </label>
         </fieldset>
       </div>
@@ -138,12 +140,13 @@
   </aside>
 
   <!-- Modal de compra separado -->
-  {% include "modal_compra.html" %}
-
-  {% else %}
+  {% include "modal_compra.html" %} {% else %}
   <p class="mensaje-vacio">Tu carrito está vacío</p>
   {% endif %}
 
-  <script src="{{ url_for('static', filename='js/carrito.js') }}" defer></script>
+  <script
+    src="{{ url_for('static', filename='js/carrito.js') }}"
+    defer
+  ></script>
 </main>
 {% endblock %}

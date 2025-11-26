@@ -72,19 +72,18 @@
                   </th>
                   <th>ID</th>
                   <th>Cliente</th>
-                  {% if filtro == 'nuevos' %}
-                  <th>Estado</th>
-                  {% endif %}
                   <th>Fecha</th>
                   <th>Precio Total</th>
                   <th>Productos</th>
-                  <th>Datos de Envío</th>
+                  <th>Tipo de Envío</th>
+                  <th>Email</th>
+                  <th>Teléfono</th>
                 </tr>
               </thead>
               <tbody>
                 {% if pedidos|length == 0 %}
                 <tr>
-                  <td colspan="{% if filtro == 'nuevos' %}8{% else %}7{% endif %}" class="no-pedidos">
+                  <td colspan="9" class="no-pedidos">
                     No hay pedidos {{ filtro }} para mostrar.
                   </td>
                 </tr>
@@ -96,12 +95,6 @@
                     </td>
                     <td>{{ pedido.id }}</td>
                     <td>{{ pedido.nombre }} {{ pedido.apellido }}</td>
-                    {% if filtro == 'nuevos' %}
-                    <td>
-                      {% set dias = (current_time.date() - pedido.fecha.date()).days %}
-                      <span class="indicador-estado {% if dias == 0 %}verde{% elif dias >= 7 %}rojo{% else %}amarillo{% endif %}" aria-label="Estado del pedido: {% if dias == 0 %}Nuevo{% elif dias >= 7 %}Antiguo{% else %}Pendiente{% endif %}"></span>
-                    </td>
-                    {% endif %}
                     <td>{{ pedido.fecha.strftime('%d/%m/%Y') }}</td>
                     <td>${{ pedido.total }}</td>
                     <td>
@@ -116,11 +109,18 @@
                       {% endfor %}
                     </td>
                     <td>
-                      <p><strong>Email:</strong> {{ pedido.email_contacto }}</p>
-                      <p><strong>Teléfono:</strong> {{ pedido.telefono }}</p>
-                      <p><strong>Tipo de envío:</strong> {{ pedido.tipo_envio }}</p>
-                      <p><strong>Comentarios:</strong> {{ pedido.comentarios }}</p>
+                      {% if pedido.tipo_envio == 'local' %}
+                        Retiro en el local
+                      {% elif pedido.tipo_envio == 'domicilio' %}
+                        Envío a domicilio
+                      {% elif pedido.tipo_envio == 'sucursal' %}
+                        Envío a sucursal
+                      {% else %}
+                        {{ pedido.tipo_envio }}
+                      {% endif %}
                     </td>
+                    <td>{{ pedido.email_contacto }}</td>
+                    <td>{{ pedido.telefono }}</td>
                   </tr>
                   {% endfor %}
                 {% endif %}

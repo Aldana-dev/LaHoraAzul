@@ -4,7 +4,7 @@
   href="{{ url_for('static', filename='css/modal.css') }}"
 />
 <script src="https://developers.decidir.com/static/v2.6.4/decidir.js"></script>
-<!-- <script src="{{ url_for('static', filename='js/carrito.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/token.js') }}"></script>
 
 {% endblock %}
 
@@ -35,7 +35,7 @@
         </div>
 
         <div class="modal-body">
-          <!-- NUEVO: Div para errores de API (se muestra/oculta desde JS) -->
+          <!-- Div para errores de API -->
           <div id="api-error" class="alert alert-danger d-none" role="alert">
             <!-- Mensajes de error se insertarán aquí desde JS -->
           </div>
@@ -239,11 +239,17 @@
                   <strong>Retiro en el local</strong>
                   <span class="precio-opcion-modal">$0.00</span>
                   <small class="texto-envio">Disponible inmediatamente;</small>
-                  <small class="texto-envio">retirar máximo 30 días tras la compra</small>
+                  <small class="texto-envio"
+                    >retirar máximo 30 días tras la compra</small
+                  >
                 </label>
 
                 <!-- Envío a domicilio -->
-                <label class="tarjeta-envio-modal" data-tipo="domicilio">
+                <label
+                  class="tarjeta-envio-modal"
+                  data-tipo="domicilio"
+                  data-precio="0"
+                >
                   <input
                     type="radio"
                     name="tipo_envio"
@@ -252,13 +258,17 @@
                   />
                   <strong>Envío a domicilio</strong>
                   <span class="precio-opcion-modal" id="precio-domicilio-modal"
-                    >--</span
+                    >Cotizando...</span
                   >
-                  <small class="texto-envio" id="dias-domicilio"></small>
+                  <small class="texto-envio" id="dias-domicilio-modal"></small>
                 </label>
 
                 <!-- Retiro en sucursal -->
-                <label class="tarjeta-envio-modal" data-tipo="sucursal">
+                <label
+                  class="tarjeta-envio-modal"
+                  data-tipo="sucursal"
+                  data-precio="0"
+                >
                   <input
                     type="radio"
                     name="tipo_envio"
@@ -267,26 +277,46 @@
                   />
                   <strong>Retiro en sucursal</strong>
                   <span class="precio-opcion-modal" id="precio-sucursal-modal"
-                    >--</span
+                    >Cotizando...</span
                   >
-                  <small class="texto-envio" id="dias-sucursal"></small>
+                  <small class="texto-envio" id="dias-sucursal-modal"></small>
                 </label>
               </div>
             </fieldset>
 
-            <!-- Selector de sucursal (ya existe, se poblará dinámicamente desde JS) -->
             <div class="mb-3 d-none" id="campo-sucursal">
               <label for="selector-sucursal" class="form-label"
                 >Seleccionar sucursal</label
               >
-              <select id="selector-sucursal" name="selector_sucursal" class="form-control" tabindex="9">
+              <select
+                id="selector-sucursal"
+                name="selector_sucursal"
+                class="form-control"
+                tabindex="9"
+              >
                 <option value="">Seleccione una sucursal</option>
-                <!-- Opciones se agregarán desde JS con cargarSucursales() -->
               </select>
               <small
                 id="horarios-sucursal"
                 class="form-text text-muted"
               ></small>
+            </div>
+            <div class="mb-4 p-3 bg-light rounded">
+              <h6 class="mb-3">Resumen de tu compra</h6>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Productos:</span>
+                <strong id="subtotal-modal">$0.00</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Envío:</span>
+                <strong id="costo-envio-modal">$0.00</strong>
+              </div>
+              <div class="d-flex justify-content-between pt-2 border-top">
+                <span><strong>Total a pagar:</strong></span>
+                <strong id="total-compra-modal" class="text-primary fs-5"
+                  >$0.00</strong
+                >
+              </div>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Correo electrónico</label>
@@ -338,27 +368,13 @@
                 tabindex="12"
               ></textarea>
             </div>
+            <input type="hidden" id="total-carrito" value="2500" />
           </fieldset>
 
           <!-- Paso 2: Datos de pago -->
           <fieldset class="paso d-none" id="paso-2">
-            <div class="mb-3">
-              <label for="metodo_pago" class="form-label">Método de pago</label>
-              <select
-                id="metodo_pago"
-                name="metodo_pago"
-                class="form-control"
-                required
-              >
-                <option value="">Seleccione...</option>
-                <option value="tarjeta">Tarjeta de crédito/débito</option>
-                <option value="transferencia">Transferencia bancaria</option>
-                <option value="mercadopago">MercadoPago</option>
-              </select>
-            </div>
-
             <!-- Campos de tarjeta -->
-            <div id="pago-tarjeta" class="d-none">
+            <div id="pago-tarjeta">
               <div class="mb-3">
                 <label for="numero_tarjeta" class="form-label"
                   >Número de tarjeta</label
@@ -369,10 +385,13 @@
                   id="numero_tarjeta"
                   data-decidir="card_number"
                   inputmode="numeric"
-                  pattern="[0-9]{13,19}"
                   placeholder="#### #### #### ####"
+                  autocomplete="cc-number"
                   required
                 />
+                <small class="form-text text-muted"
+                  >Ingrese los 16 dígitos de su tarjeta</small
+                >
               </div>
 
               <div class="row">
@@ -389,6 +408,7 @@
                       maxlength="2"
                       inputmode="numeric"
                       data-decidir="card_expiration_month"
+                      autocomplete="cc-exp-month"
                       required
                     />
                     <input
@@ -399,6 +419,7 @@
                       maxlength="2"
                       inputmode="numeric"
                       data-decidir="card_expiration_year"
+                      autocomplete="cc-exp-year"
                       required
                     />
                   </div>
@@ -411,9 +432,9 @@
                     class="form-control"
                     id="cvv"
                     maxlength="4"
-                    pattern="[0-9]{3,4}"
                     inputmode="numeric"
                     data-decidir="security_code"
+                    autocomplete="cc-csc"
                     required
                   />
                 </div>
@@ -429,6 +450,7 @@
                   id="titular"
                   data-decidir="card_holder_name"
                   autocomplete="cc-name"
+                  placeholder="Nombre como aparece en la tarjeta"
                   required
                 />
               </div>
@@ -440,6 +462,7 @@
                     id="tipo_doc"
                     data-decidir="card_holder_doc_type"
                     class="form-control"
+                    style="max-width: 100px"
                     required
                   >
                     <option value="dni">DNI</option>
@@ -449,34 +472,23 @@
                     type="text"
                     class="form-control"
                     id="dni"
-                    pattern="[0-9]{7,10}"
                     inputmode="numeric"
                     data-decidir="card_holder_doc_number"
+                    placeholder="Número de documento"
                     required
                   />
                 </div>
               </div>
             </div>
           </fieldset>
-
           <!-- Paso 3: Confirmación -->
           <fieldset class="paso d-none" id="paso-3">
-            <legend>Confirmación de compra</legend>
-            <p>Revisa que tus datos sean correctos antes de confirmar:</p>
+            <legend>Pedido completado</legend>
+            <p>
+              ¡Gracias por su compra! Su pedido ha sido procesado exitosamente.
+            </p>
+            <p>Le recomendamos guardar la información de su compra hasta recibir su pedido</p>
             <ul id="resumen-compra"></ul>
-
-            <!-- Términos -->
-            <div class="mb-3 form-check">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="acepto"
-                required
-              />
-              <label class="form-check-label" for="acepto"
-                >Acepto los términos y condiciones</label
-              >
-            </div>
           </fieldset>
         </div>
 
@@ -491,7 +503,11 @@
           <button type="button" class="btn boton d-none" id="btn-siguiente">
             Siguiente
           </button>
-          <button type="submit" class="btn boton d-none" id="btn-confirmar">
+          <button
+            type="button"
+            class="btn boton confirmar d-none"
+            id="btn-confirmar"
+          >
             Confirmar compra
           </button>
         </div>
@@ -499,3 +515,23 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const publicKey = "{{ config.PUBLIC_KEY }}";
+    initPaywayIntegration(publicKey);
+
+    const metodoPago = document.querySelector("#metodo_pago");
+    const pagoTarjeta = document.querySelector("#pago-tarjeta");
+
+    if (metodoPago && pagoTarjeta) {
+      metodoPago.addEventListener("change", function () {
+        if (this.value === "tarjeta") {
+          pagoTarjeta.classList.remove("d-none");
+        } else {
+          pagoTarjeta.classList.add("d-none");
+        }
+      });
+    }
+  });
+</script>

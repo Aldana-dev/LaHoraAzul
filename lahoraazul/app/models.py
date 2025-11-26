@@ -13,6 +13,8 @@ class Categoria(db.Model):
     productos = db.relationship('Producto', backref='categoria', lazy=True)
 
 # ----------------- PRODUCTOS ----------------- #
+
+
 class Producto(db.Model):
     __tablename__ = 'productos'
 
@@ -20,10 +22,12 @@ class Producto(db.Model):
     nombre = db.Column(db.String(120), nullable=False)
     descripcion = db.Column(db.Text, nullable=True)
     precio = db.Column(db.Numeric(10, 2), nullable=False)
-    imagen = db.Column(db.String(255), nullable=False)  # Imagen principal / thumbnail
+    # Imagen principal / thumbnail
+    imagen = db.Column(db.String(255), nullable=False)
     vendido = db.Column(db.Boolean, default=False)
-    
-    categoria_id = db.Column(db.Integer, db.ForeignKey('categorias.id'), nullable=False)
+
+    categoria_id = db.Column(db.Integer, db.ForeignKey(
+        'categorias.id'), nullable=False)
 
     # Relación uno a muchos con las imágenes adicionales
     imagenes = db.relationship(
@@ -35,29 +39,41 @@ class Producto(db.Model):
     )
 
 # ----------------- IMÁGENES DE PRODUCTOS ----------------- #
+
+
 class ProductoImagen(db.Model):
     __tablename__ = 'producto_imagenes'
 
     id = db.Column(db.Integer, primary_key=True)
-    producto_id = db.Column(db.Integer, db.ForeignKey('productos.id'), nullable=False)
-    imagen = db.Column(db.String(255), nullable=False)  # Ruta relativa a /static/uploads/
-    orden = db.Column(db.Integer, default=0)  # Para ordenar imágenes; 0 = principal
+    producto_id = db.Column(db.Integer, db.ForeignKey(
+        'productos.id'), nullable=False)
+    # Ruta relativa a /static/uploads/
+    imagen = db.Column(db.String(255), nullable=False)
+    # Para ordenar imágenes; 0 = principal
+    orden = db.Column(db.Integer, default=0)
 
 # ----------------- PEDIDOS ----------------- #
+
+
 class Pedido(db.Model):
     __tablename__ = 'pedidos'
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     apellido = db.Column(db.String(100), nullable=False)
-    email_contacto = db.Column(db.String(120), nullable=False)  # Correo electrónico
+    email_contacto = db.Column(
+        db.String(120), nullable=False)  # Correo electrónico
     telefono = db.Column(db.String(50), nullable=False)
     tipo_envio = db.Column(db.String(50), nullable=False)
     comentarios = db.Column(db.Text, nullable=True)  # Mensaje extra
     fecha = db.Column(db.DateTime, default=datetime.utcnow)
-    estado = db.Column(db.String(50), default='pendiente')
+    # Cambiar de 'pendiente' a 'nuevo'
+    estado = db.Column(db.String(50), default='nuevo')
     total = db.Column(db.Numeric(10, 2), nullable=False)  # Coste
     es_viejo = db.Column(db.Boolean, default=False)
     items = db.relationship('PedidoItem', backref='pedido', lazy=True)
+    payment_id = db.Column(db.String(50), nullable=True)
+    payment_ticket = db.Column(db.String(50), nullable=True)
+    payment_authorization = db.Column(db.String(50), nullable=True)
 
 
 # ----------------- ITEMS DE CADA PEDIDO ----------------- #
@@ -65,13 +81,17 @@ class PedidoItem(db.Model):
     __tablename__ = 'pedido_items'
 
     id = db.Column(db.Integer, primary_key=True)
-    pedido_id = db.Column(db.Integer, db.ForeignKey('pedidos.id'), nullable=False)
-    producto_id = db.Column(db.Integer, db.ForeignKey('productos.id'), nullable=False)
+    pedido_id = db.Column(db.Integer, db.ForeignKey(
+        'pedidos.id'), nullable=False)
+    producto_id = db.Column(db.Integer, db.ForeignKey(
+        'productos.id'), nullable=False)
     precio_unitario = db.Column(db.Numeric(10, 2), nullable=False)
 
     producto = db.relationship('Producto')
 
 # ----------------- USUARIOS (SOLO ADMIN) ----------------- #
+
+
 class Usuario(db.Model):
     __tablename__ = 'usuarios'
 
@@ -88,6 +108,8 @@ class Usuario(db.Model):
         return check_password_hash(self.contraseña_hash, password)
 
 # ----------------- GALERÍA ----------------- #
+
+
 class Galeria(db.Model):
     __tablename__ = 'galeria'
 
@@ -96,6 +118,8 @@ class Galeria(db.Model):
     fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
 
 # ----------------- BANNERS ----------------- #
+
+
 class Banner(db.Model):
     __tablename__ = 'banners'
 
