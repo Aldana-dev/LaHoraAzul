@@ -7,7 +7,6 @@ import os
 
 load_dotenv()
 
-# Primero instanciamos los objetos sin app
 db = SQLAlchemy()
 migrate = Migrate()
 
@@ -16,28 +15,20 @@ def create_app():
     toolbar = DebugToolbarExtension(app)
 
     # ---------------- Configuración ----------------
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://aldana_dev:devadmin@localhost/lahoraazul_db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://aldana_dev:devadmin@localhost/lahoraazul_db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = 'app/static/uploads'
     app.secret_key = os.getenv('SECRET_KEY')
         
     # ---------------- Configuración Payway ----------------
-    # Public Key (usada en el frontend - token.js)
     app.config['PUBLIC_KEY'] = os.getenv('PUBLIC_KEY')
-    
-    # Private Key (solo para backend - NO enviar al frontend)
     app.config['PRIVATE_KEY'] = os.getenv('PRIVATE_KEY')
-    
-    # API Key para comunicación Flask <-> Node.js
     app.config['API_KEY'] = os.getenv('API_KEY')
-    
-    # URL del servidor Node.js de pagos
     app.config['NODE_API_URL'] = os.getenv('NODE_API_URL', 'http://localhost:3001')
 
     # ---------------- Inicializar DB y Migraciones ----------------
     db.init_app(app)
     migrate.init_app(app, db)
-
 
     # ---------------- Registrar Blueprints ----------------
     from app.routes.admin_routes import admin_bp
