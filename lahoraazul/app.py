@@ -11,23 +11,26 @@ with app.app_context():
     try:
         alembic_cfg = Config("alembic.ini")
         command.upgrade(alembic_cfg, "head")
-        print("✔ Migraciones aplicadas correctamente.")
+        print("Migraciones aplicadas correctamente.")
     except Exception as e:
-        print("⚠ Error aplicando migraciones:", e)
+        print("Error aplicando migraciones:", e)
 
     # ---------------- Crear admin temporalmente ----------------
-    email_admin = "admin@horaazul.com"
-    password_admin = "MiContraseñaSegura123"
+    email_admin = os.getenv("ADMIN_EMAIL")
+    password_admin = os.getenv("ADMIN_PASSWORD")
 
-    admin = Usuario.query.filter_by(email=email_admin).first()
-    if not admin:
-        admin = Usuario(nombre="Admin", email=email_admin, es_admin=True)
-        admin.set_password(password_admin)
-        db.session.add(admin)
-        db.session.commit()
-        print("✔ Usuario administrador creado.")
+    if email_admin and password_admin:
+        admin = Usuario.query.filter_by(email=email_admin).first()
+        if not admin:
+            admin = Usuario(nombre="Admin", email=email_admin, es_admin=True)
+            admin.set_password(password_admin)
+            db.session.add(admin)
+            db.session.commit()
+            print("Usuario administrador creado.")
+        else:
+            print("El usuario administrador ya existe.")
     else:
-        print("El usuario administrador ya existe.")
+        print("ADMIN_EMAIL o ADMIN_PASSWORD no están definidos en el entorno")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
