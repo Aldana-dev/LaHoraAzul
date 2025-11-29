@@ -12,10 +12,9 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    toolbar = DebugToolbarExtension(app)
 
     # ---------------- Configuración ----------------
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://aldana_dev:devadmin@localhost/lahoraazul_db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = 'app/static/uploads'
     app.secret_key = os.getenv('SECRET_KEY')
@@ -24,7 +23,7 @@ def create_app():
     app.config['PUBLIC_KEY'] = os.getenv('PUBLIC_KEY')
     app.config['PRIVATE_KEY'] = os.getenv('PRIVATE_KEY')
     app.config['API_KEY'] = os.getenv('API_KEY')
-    app.config['NODE_API_URL'] = os.getenv('NODE_API_URL', 'http://localhost:3001')
+    app.config['NODE_API_URL'] = os.getenv('NODE_API_URL')
 
     # ---------------- Inicializar DB y Migraciones ----------------
     db.init_app(app)
