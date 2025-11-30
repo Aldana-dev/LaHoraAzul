@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Microservicio de pagos para LaHoraAzul",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "Aldana Ravalle",
