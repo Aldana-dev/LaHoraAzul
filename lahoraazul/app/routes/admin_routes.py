@@ -5,7 +5,8 @@ import os
 from functools import wraps
 from datetime import datetime
 
-admin_bp = Blueprint('admin', __name__, template_folder='../templates')
+
+admin_bp = Blueprint('admin', __name__, url_prefix='/admin', template_folder='../templates')
 
 UPLOAD_FOLDER = 'app/static/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -35,18 +36,6 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorada
 
-@admin_bp.route('/init_admin')
-def init_admin():
-    existing_admin = Usuario.query.filter_by(email='admin@site.com').first()
-    if existing_admin:
-        return 'El admin ya existe'
-
-    admin = Usuario(nombre='Admin', email='admin@site.com', es_admin=True)
-    admin.set_password('123')
-    db.session.add(admin)
-    db.session.commit()
-    return 'Admin creado correctamente'
-
 @admin_bp.route('/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
@@ -57,7 +46,7 @@ def admin_login():
         if usuario and usuario.es_admin and usuario.check_password(clave):
             session['admin'] = True
             flash('Sesión iniciada correctamente')
-            return redirect(url_for('admin.admin'))
+            return redirect(url_for('admin.dashboard'))
 
         flash('Credenciales incorrectas')
 
@@ -69,18 +58,18 @@ def admin_logout():
     flash('Sesión cerrada')
     return redirect(url_for('main.index'))
 
-@admin_bp.route('/admin')
+@admin_bp.route('/')
 @admin_required
-def admin():
+def dashboard():
     return render_template('admin.html')
 
-@admin_bp.route("/admin/banner")
+@admin_bp.route("/banner")
 @admin_required
 def admin_banner():
     banners = Banner.query.all()
     return render_template("admin_banner.html", banners=banners)
 
-@admin_bp.route('/admin/banner/subir', methods=['POST'])
+@admin_bp.route('/banner/subir', methods=['POST'])
 @admin_required
 def subir_banner():
     archivos = request.files.getlist('imagenes')
@@ -106,7 +95,7 @@ def subir_banner():
 
     return redirect(url_for('admin.admin_banner'))
 
-@admin_bp.route('/admin/banner/eliminar/<int:banner_id>', methods=['POST'])
+@admin_bp.route('/banner/eliminar/<int:banner_id>', methods=['POST'])
 @admin_required
 def eliminar_banner(banner_id):
     banner = Banner.query.get_or_404(banner_id)
@@ -124,13 +113,13 @@ def eliminar_banner(banner_id):
 
     return redirect(url_for('admin.admin_banner'))
 
-@admin_bp.route("/admin/galeria")
+@admin_bp.route("/galeria")
 @admin_required
 def admin_galeria():
     imagenes = Galeria.query.order_by(Galeria.fecha_creacion).all()
     return render_template("admin_galeria.html", imagenes=imagenes)
 
-@admin_bp.route('/admin/galeria/subir', methods=['POST'])
+@admin_bp.route('/galeria/subir', methods=['POST'])
 @admin_required
 def subir_galeria():
     archivos = request.files.getlist('imagenes')
@@ -159,7 +148,7 @@ def subir_galeria():
 
     return redirect(url_for('admin.admin_galeria'))
 
-@admin_bp.route('/admin/galeria/eliminar/<int:imagen_id>', methods=['POST'])
+@admin_bp.route('/galeria/eliminar/<int:imagen_id>', methods=['POST'])
 @admin_required
 def eliminar_galeria(imagen_id):
     imagen = Galeria.query.get_or_404(imagen_id)
@@ -177,14 +166,14 @@ def eliminar_galeria(imagen_id):
 
     return redirect(url_for('admin.admin_galeria'))
 
-@admin_bp.route("/admin/productos")
+@admin_bp.route("/productos")
 @admin_required
 def admin_productos():
     categorias = Categoria.query.all()
     productos = Producto.query.order_by(Producto.id.desc()).all()
     return render_template("admin_productos.html", categorias=categorias, productos=productos)
 
-@admin_bp.route('/admin/productos/agregar', methods=['POST'])
+@admin_bp.route('/productos/agregar', methods=['POST'])
 @admin_required
 def agregar_producto():
     nombre = request.form.get('nombre')
@@ -240,7 +229,7 @@ def agregar_producto():
 
     return redirect(url_for('admin.admin_productos'))
 
-@admin_bp.route('/admin/productos/editar/<int:producto_id>', methods=['POST'])
+@admin_bp.route('/productos/editar/<int:producto_id>', methods=['POST'])
 @admin_required
 def editar_producto(producto_id):
     producto = Producto.query.get_or_404(producto_id)
@@ -313,7 +302,7 @@ def editar_producto(producto_id):
 
     return redirect(url_for('admin.admin_productos'))
 
-@admin_bp.route('/admin/productos/<int:producto_id>/imagenes/subir', methods=['POST'])
+@admin_bp.route('/productos/<int:producto_id>/imagenes/subir', methods=['POST'])
 @admin_required
 def subir_imagen_producto(producto_id):
     producto = Producto.query.get_or_404(producto_id)
@@ -343,7 +332,7 @@ def subir_imagen_producto(producto_id):
 
     return redirect(url_for('admin.admin_productos'))
 
-@admin_bp.route('/admin/productos/imagenes/editar/<int:imagen_id>', methods=['POST'])
+@admin_bp.route('/productos/imagenes/editar/<int:imagen_id>', methods=['POST'])
 @admin_required
 def editar_imagen_producto(imagen_id):
     imagen = ProductoImagen.query.get_or_404(imagen_id)
@@ -378,7 +367,7 @@ def editar_imagen_producto(imagen_id):
 
     return redirect(url_for('admin.admin_productos'))
 
-@admin_bp.route('/admin/productos/eliminar/<int:producto_id>', methods=['POST'])
+@admin_bp.route('/productos/eliminar/<int:producto_id>', methods=['POST'])
 @admin_required
 def eliminar_producto(producto_id):
     producto = Producto.query.get_or_404(producto_id)
@@ -404,7 +393,7 @@ def eliminar_producto(producto_id):
 
     return redirect(url_for('admin.admin_productos'))
 
-@admin_bp.route('/admin/productos/imagenes/eliminar/<int:imagen_id>', methods=['POST'])
+@admin_bp.route('/productos/imagenes/eliminar/<int:imagen_id>', methods=['POST'])
 @admin_required
 def eliminar_imagen_producto(imagen_id):
     imagen = ProductoImagen.query.get_or_404(imagen_id)
@@ -422,7 +411,7 @@ def eliminar_imagen_producto(imagen_id):
 
     return redirect(url_for('admin.admin_productos'))
 
-@admin_bp.route("/admin/pedidos")
+@admin_bp.route("/pedidos")
 @admin_required
 def admin_pedidos():
     filtro = request.args.get('filtro', 'nuevos')
@@ -436,7 +425,7 @@ def admin_pedidos():
 
     return render_template("admin_pedidos.html", pedidos=pedidos, filtro=filtro, current_time=datetime.now())
 
-@admin_bp.route('/admin/pedidos/toggle_estado/<int:pedido_id>', methods=['POST'])
+@admin_bp.route('/pedidos/toggle_estado/<int:pedido_id>', methods=['POST'])
 @admin_required
 def toggle_estado_pedido(pedido_id):
     pedido = Pedido.query.get_or_404(pedido_id)
@@ -461,7 +450,7 @@ def toggle_estado_pedido(pedido_id):
 
     return redirect(url_for('admin.admin_pedidos', filtro='nuevos'))
 
-@admin_bp.route('/admin/pedidos/marcar_como_historial', methods=['POST'])
+@admin_bp.route('/pedidos/marcar_como_historial', methods=['POST'])
 @admin_required
 def marcar_como_historial():
     ids = request.form.getlist('pedido_ids')
