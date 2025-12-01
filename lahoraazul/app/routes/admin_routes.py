@@ -30,7 +30,7 @@ def guardar_archivo(file, subcarpeta):
 def admin_required(f):
     @wraps(f)
     def decorada(*args, **kwargs):
-        if not session.get('admin'):
+        if not session.get('admin_id'):
             flash('Necesitás iniciar sesión como admin')
             return redirect(url_for('admin.admin_login'))
         return f(*args, **kwargs)
