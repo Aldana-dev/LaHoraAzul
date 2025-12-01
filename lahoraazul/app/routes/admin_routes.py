@@ -44,20 +44,22 @@ def admin_login():
 
         usuario = Usuario.query.filter_by(email=email).first()
         if usuario and usuario.es_admin and usuario.check_password(clave):
-            session['admin'] = True
+            session.permanent = True
+            session['admin_id'] = usuario.id
+            print(f"DEBUG: Login exitoso - admin_id {usuario.id} guardado en sesión")
             flash('Sesión iniciada correctamente')
             return redirect(url_for('admin.dashboard'))
 
+        print(f"DEBUG: Login fallido - usuario: {usuario}, es_admin: {usuario.es_admin if usuario else 'N/A'}")
         flash('Credenciales incorrectas')
 
     return render_template('login.html')
 
 @admin_bp.route('/logout')
 def admin_logout():
-    session.pop('admin', None)
+    session.pop('admin_id', None)
     flash('Sesión cerrada')
     return redirect(url_for('main.index'))
-
 @admin_bp.route('/')
 @admin_required
 def dashboard():
