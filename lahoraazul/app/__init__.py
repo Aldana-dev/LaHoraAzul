@@ -18,7 +18,12 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['UPLOAD_FOLDER'] = 'app/static/uploads'
     app.secret_key = os.getenv('SECRET_KEY')
-        
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['PERMANENT_SESSION_LIFETIME'] = 3600
+    app.config['SESSION_REFRESH_EACH_REQUEST'] = True
+
     # ---------------- Configuración Payway ----------------
     app.config['PUBLIC_KEY'] = os.getenv('PUBLIC_KEY')
     app.config['PRIVATE_KEY'] = os.getenv('PRIVATE_KEY')
