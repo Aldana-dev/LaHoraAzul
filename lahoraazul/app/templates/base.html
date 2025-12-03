@@ -133,13 +133,23 @@
       const btnAgregar = document.getElementById("btn-agregar");
       if (btnAgregar) {
         btnAgregar.addEventListener("click", (e) => {
+          e.preventDefault();
+
           // Deshabilitar el botón
           btnAgregar.disabled = true;
-          btnAgregar.textContent = "Agregado al carrito";
+          btnAgregar.textContent = "¡En tu carrito!"; // Cambia este texto
           btnAgregar.classList.add("deshabilitado");
 
           // Actualizar indicador del carrito
           actualizarIndicadorCarrito();
+
+          // Enviar el formulario después de mostrar los cambios
+          const form = btnAgregar.closest("form");
+          if (form) {
+            setTimeout(() => {
+              form.submit();
+            }, 300);
+          }
         });
       }
 
