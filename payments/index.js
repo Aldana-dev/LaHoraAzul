@@ -23,20 +23,43 @@ if (missingVars.length > 0) {
 }
 
 const ambient = process.env.AMBIENT || "developer";
-const sdk = new sdkModulo.sdk(
-  ambient,
-  process.env.PUBLIC_KEY,
-  process.env.PRIVATE_KEY,
-  process.env.COMPANY,
-  process.env.USER
-);
 
-console.log(`✅ SDK de Payway inicializado en ambiente: ${ambient}`);
+console.log(`\n${'='.repeat(60)}`);
+console.log(`🚀 INICIALIZANDO NODE.JS PAYWAY API`);
+console.log(`${'='.repeat(60)}`);
+console.log(`📋 Configuración:`);
+console.log(`   Ambiente: ${ambient}`);
+console.log(`   Company: ${process.env.COMPANY}`);
+console.log(`   User: ${process.env.USER}`);
+console.log(`   Public Key: ${process.env.PUBLIC_KEY.substring(0, 15)}...`);
+console.log(`   Private Key: ${process.env.PRIVATE_KEY.substring(0, 15)}...`);
+console.log(`   API Key: ${process.env.API_KEY.substring(0, 10)}...`);
+console.log(`${'='.repeat(60)}\n`);
+
+console.log(`\n🔌 Creando instancia del SDK...`);
+try {
+  const sdk = new sdkModulo.sdk(
+    ambient,
+    process.env.PUBLIC_KEY,
+    process.env.PRIVATE_KEY,
+    process.env.COMPANY,
+    process.env.USER
+  );
+  console.log(`✅ SDK de Payway inicializado correctamente`);
+  console.log(`   Tipo: ${typeof sdk}`);
+  console.log(`   Métodos disponibles: payment, paymentInfo, refund`);
+} catch (error) {
+  console.error(`❌ Error al inicializar SDK:`);
+  console.error(`   Mensaje: ${error.message}`);
+  console.error(`   Stack: ${error.stack}`);
+  process.exit(1);
+}
 
 const authenticate = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
   
   if (!apiKey) {
+    console.warn(`\n⚠️ [${new Date().toISOString()}] Intento sin API Key`);
     return res.status(401).json({ 
       error: "Unauthorized", 
       message: "Falta el header 'x-api-key'" 
@@ -44,22 +67,36 @@ const authenticate = (req, res, next) => {
   }
   
   if (apiKey !== process.env.API_KEY) {
+    console.warn(`\n⚠️ [${new Date().toISOString()}] API Key inválida`);
     return res.status(401).json({ 
       error: "Unauthorized", 
       message: "API Key inválida" 
     });
   }
   
+  console.log(`✅ [${new Date().toISOString()}] Autenticación exitosa`);
   next();
 };
 
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+  console.log(`\n[${new Date().toISOString()}] ${req.method} ${req.path}`);
   next();
 });
 
 app.post("/create-payment-intent", authenticate, async (req, res) => {
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`💳 PROCESANDO PAGO`);
+  console.log(`${'='.repeat(60)}`);
+
   const { amount, token, user_id, bin, description, site_transaction_id } = req.body;
+
+  console.log(`\n📥 Datos recibidos:`);
+  console.log(`   Amount: ${amount}`);
+  console.log(`   Token: ${token ? token.substring(0, 20) + '...' : 'NO PROPORCIONADO'}`);
+  console.log(`   User ID: ${user_id}`);
+  console.log(`   BIN: ${bin}`);
+  console.log(`   Description: ${description}`);
+  console.log(`   Site Transaction ID: ${site_transaction_id}`);
 
   const errors = [];
   
@@ -88,20 +125,19 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
   }
 
   if (errors.length > 0) {
+    console.error(`\n❌ VALIDACIÓN FALLIDA:`);
+    errors.forEach(e => console.error(`   - ${e}`));
     return res.status(400).json({ 
       error: "Validación fallida", 
       details: errors 
     });
   }
 
-  try {
-    console.log(`\n🔄 Procesando pago...`);
-    console.log(`  Transaction ID: ${site_transaction_id}`);
-    console.log(`  User ID: ${user_id}`);
-    console.log(`  Amount: ${amount} (${(amount / 100).toFixed(2)} ARS)`);
-    console.log(`  Token: ${token.substring(0, 10)}...`);
-    console.log(`  BIN: ${bin}`);
+  console.log(`\n✅ Validación exitosa - todos los campos son correctos`);
 
+  try {
+    console.log(`\n🔐 Preparando argumentos para sdk.payment()...`);
+    
     const paymentArgs = {
       site_transaction_id,
       token,
@@ -121,9 +157,26 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
       }
     };
 
+    console.log(`\n📦 Argumentos de pago:`);
+    console.log(JSON.stringify(paymentArgs, null, 2));
+
+    console.log(`\n🚀 Llamando a sdk.payment()...`);
+    console.log(`   Timestamp: ${new Date().toISOString()}`);
+    console.log(`   Esperando respuesta...`);
+
     sdk.payment(paymentArgs, (result, err) => {
+      console.log(`\n📬 RESPUESTA DEL SDK RECIBIDA`);
+      console.log(`   Timestamp: ${new Date().toISOString()}`);
+
       if (err) {
-        console.error(`\n❌ Error en pago:`, err);
+        console.error(`\n❌ ERROR EN SDK.PAYMENT():`);
+        console.error(`   Type: ${typeof err}`);
+        console.error(`   Error:`, err);
+        
+        if (typeof err === 'object') {
+          console.error(`   Error stringified:`);
+          console.error(JSON.stringify(err, null, 2));
+        }
         
         let errorMessage = "Error al procesar el pago";
         let errorDetails = err;
@@ -143,16 +196,20 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
       }
 
       if (!result) {
-        console.error(`\n❌ No se recibió respuesta del SDK`);
+        console.error(`\n❌ No se recibió respuesta del SDK (result es null/undefined)`);
         return res.status(500).json({ 
           status: "error",
           error: "No se recibió respuesta del gateway de pago"
         });
       }
 
-      console.log(`\n✅ Respuesta del SDK:`, JSON.stringify(result, null, 2));
+      console.log(`\n✅ Respuesta recibida correctamente`);
+      console.log(`\n📊 Respuesta completa del SDK:`);
+      console.log(JSON.stringify(result, null, 2));
 
       const paymentStatus = result.status?.toLowerCase();
+      console.log(`\n📈 Status del pago: ${paymentStatus}`);
+
       const isApproved = paymentStatus === 'approved';
       const isRejected = paymentStatus === 'rejected';
       const isPending = paymentStatus === 'pending' || paymentStatus === 'pre_approved';
@@ -174,30 +231,56 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
         response.authorization_code = result.status_details?.card_authorization_code;
         response.message = "Pago aprobado exitosamente";
         
-        console.log(`\n🎉 PAGO APROBADO`);
-        console.log(`  Payment ID: ${result.id}`);
-        console.log(`  Ticket: ${result.status_details?.ticket}`);
-        console.log(`  Authorization: ${result.status_details?.card_authorization_code}`);
+        console.log(`\n${'='.repeat(60)}`);
+        console.log(`🎉 PAGO APROBADO EXITOSAMENTE`);
+        console.log(`${'='.repeat(60)}`);
+        console.log(`   Payment ID: ${result.id}`);
+        console.log(`   Ticket: ${result.status_details?.ticket}`);
+        console.log(`   Authorization Code: ${result.status_details?.card_authorization_code}`);
+        console.log(`   Monto: ${result.amount} ${result.currency}`);
+        console.log(`   Card Brand: ${result.card_brand}`);
+        console.log(`${'='.repeat(60)}\n`);
+
       } else if (isRejected) {
         response.error_code = result.status_details?.error?.code;
         response.error_reason = result.status_details?.error?.reason;
         response.message = result.status_details?.error?.description || "Pago rechazado";
         
-        console.log(`\n⚠️ PAGO RECHAZADO`);
-        console.log(`  Razón: ${response.error_reason}`);
-        console.log(`  Código: ${response.error_code}`);
+        console.log(`\n${'='.repeat(60)}`);
+        console.log(`⚠️ PAGO RECHAZADO`);
+        console.log(`${'='.repeat(60)}`);
+        console.log(`   Error Code: ${response.error_code}`);
+        console.log(`   Error Reason: ${response.error_reason}`);
+        console.log(`   Error Description: ${response.message}`);
+        console.log(`${'='.repeat(60)}\n`);
+
       } else if (isPending) {
         response.message = "Pago pendiente de aprobación";
         
-        console.log(`\n⏳ PAGO PENDIENTE`);
+        console.log(`\n${'='.repeat(60)}`);
+        console.log(`⏳ PAGO PENDIENTE DE APROBACIÓN`);
+        console.log(`${'='.repeat(60)}`);
+        console.log(`   Estado: ${paymentStatus}`);
+        console.log(`   El pago está siendo procesado...`);
+        console.log(`${'='.repeat(60)}\n`);
+
+      } else {
+        console.log(`\n❓ Estado desconocido del pago: ${paymentStatus}`);
       }
 
       response.raw_response = result;
+      
+      console.log(`\n📤 Respondiendo al cliente con:`);
+      console.log(JSON.stringify(response, null, 2));
+      
       res.json(response);
     });
 
   } catch (error) {
-    console.error(`\n❌ Error inesperado:`, error);
+    console.error(`\n❌ ERROR INESPERADO EN TRY-CATCH:`);
+    console.error(`   Mensaje: ${error.message}`);
+    console.error(`   Stack: ${error.stack}`);
+    
     res.status(500).json({ 
       status: "error",
       error: "Error interno del servidor",
@@ -207,19 +290,30 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
 });
 
 app.post("/payment-status", authenticate, async (req, res) => {
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`🔍 CONSULTANDO ESTADO DEL PAGO`);
+  console.log(`${'='.repeat(60)}`);
+
   const { payment_id } = req.body;
 
+  console.log(`   Payment ID: ${payment_id}`);
+
   if (!payment_id) {
+    console.error(`❌ Payment ID no proporcionado`);
     return res.status(400).json({ 
       error: "Missing payment_id",
       message: "El campo 'payment_id' es requerido" 
     });
   }
 
-  console.log(`\n🔍 Consultando estado del pago: ${payment_id}`);
-
   try {
+    console.log(`\n🚀 Llamando a sdk.paymentInfo()...`);
+    console.log(`   Timestamp: ${new Date().toISOString()}`);
+
     sdk.paymentInfo(payment_id, (result, err) => {
+      console.log(`\n📬 RESPUESTA RECIBIDA`);
+      console.log(`   Timestamp: ${new Date().toISOString()}`);
+
       if (err) {
         console.error(`\n❌ Error al consultar pago:`, err);
         
@@ -244,7 +338,9 @@ app.post("/payment-status", authenticate, async (req, res) => {
         });
       }
 
-      console.log(`\n✅ Estado del pago:`, result.status);
+      console.log(`\n✅ Estado del pago:`);
+      console.log(JSON.stringify(result, null, 2));
+      
       res.json(result);
     });
   } catch (error) {
@@ -257,19 +353,30 @@ app.post("/payment-status", authenticate, async (req, res) => {
 });
 
 app.post("/refund", authenticate, async (req, res) => {
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`🔄 PROCESANDO DEVOLUCIÓN`);
+  console.log(`${'='.repeat(60)}`);
+
   const { payment_id } = req.body;
 
+  console.log(`   Payment ID: ${payment_id}`);
+
   if (!payment_id) {
+    console.error(`❌ Payment ID no proporcionado`);
     return res.status(400).json({ 
       error: "Missing payment_id",
       message: "El campo 'payment_id' es requerido" 
     });
   }
 
-  console.log(`\n🔄 Procesando devolución del pago: ${payment_id}`);
-
   try {
+    console.log(`\n🚀 Llamando a sdk.refund()...`);
+    console.log(`   Timestamp: ${new Date().toISOString()}`);
+
     sdk.refund(payment_id, (result, err) => {
+      console.log(`\n📬 RESPUESTA RECIBIDA`);
+      console.log(`   Timestamp: ${new Date().toISOString()}`);
+
       if (err) {
         console.error(`\n❌ Error en devolución:`, err);
         return res.status(500).json({ 
@@ -278,7 +385,9 @@ app.post("/refund", authenticate, async (req, res) => {
         });
       }
 
-      console.log(`\n✅ Devolución exitosa:`, result);
+      console.log(`\n✅ Devolución exitosa:`);
+      console.log(JSON.stringify(result, null, 2));
+      
       res.json(result);
     });
   } catch (error) {
@@ -291,15 +400,19 @@ app.post("/refund", authenticate, async (req, res) => {
 });
 
 app.get("/health", (req, res) => {
-  res.json({ 
+  const healthResponse = {
     status: "ok", 
     message: "Node Payway API is running",
     ambient,
     timestamp: new Date().toISOString()
-  });
+  };
+  
+  console.log(`\n✅ Health check - API está funcionando`);
+  res.json(healthResponse);
 });
 
 app.use((req, res) => {
+  console.warn(`\n⚠️ Ruta no encontrada: ${req.method} ${req.path}`);
   res.status(404).json({ 
     error: "Not found",
     message: `Ruta ${req.method} ${req.path} no encontrada` 
@@ -307,7 +420,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error('Error no manejado:', err);
+  console.error('\n❌ Error no manejado:', err);
   res.status(500).json({ 
     error: "Internal server error",
     message: err.message 
@@ -316,9 +429,18 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`\n🚀 Node.js Payway API corriendo en puerto ${PORT}`);
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`✅ SERVIDOR INICIADO CORRECTAMENTE`);
+  console.log(`${'='.repeat(60)}`);
+  console.log(`🌐 Puerto: ${PORT}`);
   console.log(`📍 Ambiente: ${ambient}`);
   console.log(`🔑 Company: ${process.env.COMPANY}`);
   console.log(`👤 User: ${process.env.USER}`);
+  console.log(`📚 Endpoints disponibles:`);
+  console.log(`   - POST /create-payment-intent (Procesar pago)`);
+  console.log(`   - POST /payment-status (Consultar estado)`);
+  console.log(`   - POST /refund (Procesar devolución)`);
+  console.log(`   - GET /health (Health check)`);
+  console.log(`${'='.repeat(60)}`);
   console.log(`\n✨ Listo para recibir requests desde Flask\n`);
 });
