@@ -128,6 +128,38 @@
       }
     </script>
 
-    {% block extra_js %}{% endblock %}
+    {% block extra_js %}
+    <script>
+      // Handle add to cart button
+      const btnAgregar = document.getElementById("btn-agregar");
+      if (btnAgregar) {
+        btnAgregar.addEventListener("click", (e) => {
+          // Deshabilitar el botón
+          btnAgregar.disabled = true;
+          btnAgregar.textContent = "Agregado al carrito";
+          btnAgregar.classList.add("deshabilitado");
+
+          // Actualizar indicador del carrito
+          actualizarIndicadorCarrito();
+        });
+      }
+
+      // Función para actualizar el indicador del carrito
+      function actualizarIndicadorCarrito() {
+        const carritoIconoLink = document.querySelector("a[href*='carrito']");
+        let indicador = carritoIconoLink.querySelector(".carrito-indicador");
+
+        if (!indicador) {
+          indicador = document.createElement("span");
+          indicador.className = "carrito-indicador";
+          indicador.textContent = "1";
+          carritoIconoLink.appendChild(indicador);
+        } else {
+          const cantidad = parseInt(indicador.textContent) + 1;
+          indicador.textContent = cantidad;
+        }
+      }
+    </script>
+    {% endblock %}
   </body>
 </html>

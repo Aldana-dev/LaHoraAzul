@@ -4,7 +4,7 @@ class PaywayIntegration {
         console.log(`   Public Key: ${publicKey.substring(0, 20)}...`);
         
         const urlProduccion = "https://live.decidir.com/api/v2";
-        console.log(`   URL: ${urlSandbox}`);
+        console.log(`   URL: ${urlProduccion}`);
         
         this.decidir = new Decidir(urlProduccion);
         console.log(`   ✅ Decidir SDK instanciado`);

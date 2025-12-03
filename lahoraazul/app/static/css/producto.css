@@ -35,6 +35,12 @@ h2 {
   margin-bottom: 0;
 }
 
+.boton.agregar-carrito:disabled,
+.boton.agregar-carrito.deshabilitado {
+  background-color: var(--color-white);
+  color: var(--color-secondary);
+  border: 2px solid var(--color-secondary);
+}
 /* Description */
 .producto-descripcion {
   line-height: 1.6;

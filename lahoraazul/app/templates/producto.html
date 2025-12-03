@@ -33,7 +33,7 @@
     <div class="precio-boton">
       <p class="producto-precio" aria-label="Precio del producto">$ {{ "{:.2f}".format(producto.precio) }}</p>
       <form method="POST" action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}">
-        <button class="boton agregar-carrito" type="submit">Agregar al carrito</button>
+        <button class="boton agregar-carrito" type="submit" id="btn-agregar">Agregar al carrito</button>
       </form>
     </div>
 
@@ -55,6 +55,16 @@
       miniaturas.forEach((m) => m.classList.remove("seleccionada"));
       miniatura.classList.add("seleccionada");
     });
+  });
+
+  // Handle add to cart button
+  const btnAgregar = document.getElementById("btn-agregar");
+  const form = btnAgregar.closest("form");
+
+  btnAgregar.addEventListener("click", (e) => {
+    btnAgregar.disabled = true;
+    btnAgregar.textContent = "Agregado al carrito";
+    btnAgregar.classList.add("deshabilitado");
   });
 </script>
 {% endblock %}
