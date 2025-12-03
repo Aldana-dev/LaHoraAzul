@@ -3,17 +3,17 @@ class PaywayIntegration {
         console.log(`\n🔧 ========== INICIALIZANDO PAYWAY ==========`);
         console.log(`   Public Key: ${publicKey.substring(0, 20)}...`);
         
-        const urlSandbox = "https://developers.decidir.com/api/v2";
+        const urlProduccion = "https://live.decidir.com/api/v2";
         console.log(`   URL: ${urlSandbox}`);
         
-        this.decidir = new Decidir(urlSandbox, true);
+        this.decidir = new Decidir(urlProduccion);
         console.log(`   ✅ Decidir SDK instanciado`);
         
         this.decidir.setPublishableKey(publicKey);
         console.log(`   ✅ Public Key configurada`);
         
-        this.decidir.setTimeout(5000);
-        console.log(`   ✅ Timeout configurado: 5000ms`);
+        this.decidir.setTimeout(3000);
+        console.log(`   ✅ Timeout configurado: 3000ms`);
 
         this.form = null;
         this.isProcessing = false;

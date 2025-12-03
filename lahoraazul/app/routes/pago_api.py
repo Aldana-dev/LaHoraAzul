@@ -9,7 +9,7 @@ pago_bp = Blueprint("pago", __name__, url_prefix="/pago")
 
 
 def get_node_api_url():
-    return current_app.config.get("NODE_API_URL", "http://localhost:3001")
+    return current_app.config.get("NODE_API_URL")
 
 
 def get_api_key():
