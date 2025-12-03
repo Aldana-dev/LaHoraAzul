@@ -33,7 +33,7 @@
     <div class="precio-boton">
       <p class="producto-precio" aria-label="Precio del producto">$ {{ "{:.2f}".format(producto.precio) }}</p>
       <form method="POST" action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}">
-        <button class="boton agregar-carrito" type="submit" id="btn-agregar">Agregar al carrito</button>
+        <button class="boton agregar-carrito" type="submit" id="btn-agregar">Añadir al carrito</button>
       </form>
     </div>
 
@@ -63,7 +63,7 @@
 
   btnAgregar.addEventListener("click", (e) => {
     btnAgregar.disabled = true;
-    btnAgregar.textContent = "Agregado al carrito";
+    btnAgregar.textContent = "¡Añadido!";
     btnAgregar.classList.add("deshabilitado");
   });
 </script>
