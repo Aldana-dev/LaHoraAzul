@@ -128,6 +128,7 @@
       }
     </script>
 
+    <!-- Cart Button Handler -->
     <script>
       // Handle add to cart button
       const btnAgregar = document.getElementById("btn-agregar");
@@ -137,7 +138,7 @@
 
           // Deshabilitar el botón
           btnAgregar.disabled = true;
-          btnAgregar.textContent = "¡En tu carrito!"; // Cambia este texto
+          btnAgregar.textContent = "¡En tu carrito!";
           btnAgregar.classList.add("deshabilitado");
 
           // Actualizar indicador del carrito
@@ -169,6 +170,7 @@
         }
       }
     </script>
-    {% block extra_js %} {% endblock %}
+
+    {% block extra_js %}{% endblock %}
   </body>
 </html>

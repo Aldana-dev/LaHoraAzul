@@ -33,7 +33,7 @@
     <div class="precio-boton">
       <p class="producto-precio" aria-label="Precio del producto">$ {{ "{:.2f}".format(producto.precio) }}</p>
       <form method="POST" action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}">
-        <button class="boton agregar-carrito" type="submit" id="btn-agregar">Añadir al carrito</button>
+        <button class="boton agregar-carrito" id="btn-agregar" type="submit">Agregar al carrito</button>
       </form>
     </div>
 
@@ -59,12 +59,42 @@
 
   // Handle add to cart button
   const btnAgregar = document.getElementById("btn-agregar");
-  const form = btnAgregar.closest("form");
+  if (btnAgregar) {
+    btnAgregar.addEventListener("click", (e) => {
+      e.preventDefault();
+      
+      // Deshabilitar el botón
+      btnAgregar.disabled = true;
+      btnAgregar.textContent = "¡Agregado!";
+      btnAgregar.classList.add("deshabilitado");
 
-  btnAgregar.addEventListener("click", (e) => {
-    btnAgregar.disabled = true;
-    btnAgregar.textContent = "¡Añadido!";
-    btnAgregar.classList.add("deshabilitado");
-  });
+      // Actualizar indicador del carrito
+      actualizarIndicadorCarrito();
+      
+      // Enviar el formulario después de mostrar los cambios
+      const form = btnAgregar.closest("form");
+      if (form) {
+        setTimeout(() => {
+          form.submit();
+        }, 300);
+      }
+    });
+  }
+
+  // Función para actualizar el indicador del carrito
+  function actualizarIndicadorCarrito() {
+    const carritoIconoLink = document.querySelector("a[href*='carrito']");
+    let indicador = carritoIconoLink.querySelector(".carrito-indicador");
+
+    if (!indicador) {
+      indicador = document.createElement("span");
+      indicador.className = "carrito-indicador";
+      indicador.textContent = "1";
+      carritoIconoLink.appendChild(indicador);
+    } else {
+      const cantidad = parseInt(indicador.textContent) + 1;
+      indicador.textContent = cantidad;
+    }
+  }
 </script>
 {% endblock %}
