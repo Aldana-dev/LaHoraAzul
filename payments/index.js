@@ -10,31 +10,60 @@ const cors = require("cors");
 console.log("\n============================================================");
 console.log("🧪 DEBUG: Cargando módulo sdk-node-payway");
 console.log("============================================================");
+console.log("📦 Versión del SDK:", require('sdk-node-payway/package.json').version);
 
 let PaywayModule;
 let PaywaySDK;
 
 try {
-  PaywayModule = require("sdk-node-payway");
+  // ✅ FORMA CORRECTA según la documentación
+  sdk = new PaywaySDK(
+    ambient,
+    process.env.PUBLIC_KEY,
+    process.env.PRIVATE_KEY,
+    process.env.COMPANY,
+    process.env.USER
+  );
 
-  console.log("📌 typeof require:", typeof PaywayModule);
-  console.log("📌 Keys:", Object.keys(PaywayModule));
-  console.log("📌 Contenido:", PaywayModule);
-
-  // el SDK está en PaywayModule.sdk
-  if (typeof PaywayModule.sdk === "function") {
-    PaywaySDK = PaywayModule.sdk;
-    console.log("✅ SDK detectado en módulo.sdk");
-  } else {
-    console.error("❌ No se encontró función sdk en el módulo");
-    process.exit(1);
+  console.log(`\n✅ SDK de Payway inicializado correctamente`);
+  console.log("📌 typeof SDK instance:", typeof sdk);
+  console.log("📌 SDK es null:", sdk === null);
+  console.log("📌 SDK es undefined:", sdk === undefined);
+  console.log("📌 SDK value:", sdk);
+  
+  // 👇 NUEVO: Intenta acceder directamente a los métodos
+  console.log("\n🔬 PROBANDO ACCESO A MÉTODOS:");
+  console.log("📌 sdk.payment existe:", !!sdk?.payment);
+  console.log("📌 typeof sdk.payment:", typeof sdk?.payment);
+  console.log("📌 sdk.paymentInfo existe:", !!sdk?.paymentInfo);
+  console.log("📌 typeof sdk.paymentInfo:", typeof sdk?.paymentInfo);
+  
+  if (sdk) {
+    console.log("📌 Métodos disponibles:", Object.keys(sdk));
+    console.log("📌 Propiedades disponibles:", Object.getOwnPropertyNames(sdk));
+    console.log("📌 Prototype:", Object.getPrototypeOf(sdk));
+    console.log("📌 Constructor name:", sdk.constructor.name);
   }
-} catch (err) {
-  console.error("\n❌ ERROR al cargar el SDK");
-  console.error(err);
+
+  // Validación crítica
+  if (!sdk || typeof sdk.payment !== "function") {
+    throw new Error("SDK no inicializado correctamente - método payment no disponible");
+  }
+
+  console.log("✅ Método payment() detectado correctamente");
+
+} catch (error) {
+  console.error(`\n❌ ERROR al inicializar SDK:`);
+  console.error(`Mensaje: ${error.message}`);
+  console.error(`Stack: ${error.stack}`);
+  
+  // 👇 NUEVO: Más detalles del error
+  console.error(`\n🔍 DEBUG DEL ERROR:`);
+  console.error(`Tipo de error:`, typeof error);
+  console.error(`Error completo:`, error);
+  
   process.exit(1);
 }
-
 // =============================================================
 // 🔧 EXPRESS CONFIG
 // =============================================================
@@ -52,7 +81,7 @@ app.use(cors({
   credentials: true
 }));
 
-const requiredEnvVars = ['PUBLIC_KEY', 'PRIVATE_KEY', 'COMPANY', 'USER', 'API_KEY'];
+const requiredEnvVars = ['PUBLIC_KEY', 'PRIVATE_KEY', 'COMPANY', 'USER'];
 const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
 if (missingVars.length > 0) {
@@ -75,6 +104,45 @@ console.log(`   API Key: ${process.env.API_KEY.substring(0, 10)}...`);
 console.log(`${'='.repeat(60)}\n`);
 
 // =============================================================
+// 🧪 TEST DEL SDK ANTES DE INICIAR SERVIDOR
+// =============================================================
+
+console.log("\n============================================================");
+console.log("🧪 TESTEANDO SDK ANTES DE INICIAR SERVIDOR");
+console.log("============================================================");
+
+// Test 1: Verificar que sdk existe
+console.log("Test 1: SDK existe:", !!sdk);
+
+// Test 2: Verificar tipo
+console.log("Test 2: typeof sdk:", typeof sdk);
+
+// Test 3: Verificar métodos críticos
+const metodosRequeridos = ['payment', 'paymentInfo', 'refund', 'cardTokens', 'healthcheck'];
+console.log("\nTest 3: Verificando métodos requeridos:");
+metodosRequeridos.forEach(metodo => {
+  const existe = sdk && typeof sdk[metodo] === 'function';
+  console.log(`  - ${metodo}: ${existe ? '✅' : '❌'}`);
+});
+
+// Test 4: Intentar llamar a healthcheck (no requiere parámetros sensibles)
+if (sdk && typeof sdk.healthcheck === 'function') {
+  console.log("\nTest 4: Probando healthcheck()...");
+  try {
+    sdk.healthcheck((result, err) => {
+      if (err) {
+        console.error("❌ Error en healthcheck:", err);
+      } else {
+        console.log("✅ Healthcheck exitoso:", result);
+      }
+    });
+  } catch (error) {
+    console.error("❌ Excepción al llamar healthcheck:", error.message);
+  }
+}
+
+console.log("============================================================\n");
+// =============================================================
 // 🔌 INICIALIZAR SDK
 // =============================================================
 
@@ -83,24 +151,25 @@ console.log("🔌 Creando instancia del SDK...");
 let sdk = null;
 
 try {
-  sdk = PaywaySDK({
-  environment: ambient,
-  public_key: process.env.PUBLIC_KEY,
-  private_key: process.env.PRIVATE_KEY,
-  company: process.env.COMPANY,
-  developer: process.env.USER,
-  user: process.env.USER,        // depende tu cuenta Payway
-  password: process.env.PASSWORD // Payway la requiere
-});
-
+  // ✅ FORMA CORRECTA según la documentación
+  sdk = new PaywaySDK(
+    ambient,                    // "production" o "developer"
+    process.env.PUBLIC_KEY,     // public key
+    process.env.PRIVATE_KEY,    // private key
+    process.env.COMPANY,        // company name
+    process.env.USER            // user
+  );
 
   console.log(`\n✅ SDK de Payway inicializado correctamente`);
   console.log("📌 typeof SDK instance:", typeof sdk);
   console.log("📌 Métodos disponibles:", sdk ? Object.keys(sdk) : "(sdk es null)");
 
-  if (typeof sdk.payment !== "function") {
-    console.warn("\n⚠️ ADVERTENCIA: sdk.payment NO ES UNA FUNCIÓN");
+  // Validación crítica
+  if (!sdk || typeof sdk.payment !== "function") {
+    throw new Error("SDK no inicializado correctamente - método payment no disponible");
   }
+
+  console.log("✅ Método payment() detectado correctamente");
 
 } catch (error) {
   console.error(`\n❌ ERROR al inicializar SDK:`);
