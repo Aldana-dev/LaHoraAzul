@@ -91,10 +91,9 @@ try {
     process.env.USER
   );
 
-
   console.log(`\n✅ SDK de Payway inicializado correctamente`);
   console.log("📌 typeof SDK instance:", typeof sdk);
-  console.log("📌 Métodos disponibles:", Object.keys(sdk));
+  console.log("📌 Métodos disponibles:", sdk ? Object.keys(sdk) : "(sdk es null)");
 
   if (typeof sdk.payment !== "function") {
     console.warn("\n⚠️ ADVERTENCIA: sdk.payment NO ES UNA FUNCIÓN");
