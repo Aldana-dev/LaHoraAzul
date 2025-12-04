@@ -1,5 +1,5 @@
 import express from "express";
-import sdkModulo from "sdk-node-payway";
+import PaywaySDK from "sdk-node-payway";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -38,13 +38,13 @@ console.log(`${'='.repeat(60)}\n`);
 
 console.log(`\n🔌 Creando instancia del SDK...`);
 try {
-  const sdk = new sdkModulo(
-    ambient,
-    process.env.PUBLIC_KEY,
-    process.env.PRIVATE_KEY,
-    process.env.COMPANY,
-    process.env.USER
-  );
+  const sdk = PaywaySDK(
+  ambient,
+  process.env.PUBLIC_KEY,
+  process.env.PRIVATE_KEY,
+  process.env.COMPANY,
+  process.env.USER
+);
   console.log(`✅ SDK de Payway inicializado correctamente`);
   console.log(`   Tipo: ${typeof sdk}`);
   console.log(`   Métodos disponibles: payment, paymentInfo, refund`);
