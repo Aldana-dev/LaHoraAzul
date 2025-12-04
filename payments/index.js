@@ -83,13 +83,16 @@ console.log("🔌 Creando instancia del SDK...");
 let sdk = null;
 
 try {
-  sdk = PaywaySDK(
-    ambient,
-    process.env.PUBLIC_KEY,
-    process.env.PRIVATE_KEY,
-    process.env.COMPANY,
-    process.env.USER
-  );
+  sdk = PaywaySDK({
+  environment: ambient,
+  public_key: process.env.PUBLIC_KEY,
+  private_key: process.env.PRIVATE_KEY,
+  company: process.env.COMPANY,
+  developer: process.env.USER,
+  user: process.env.USER,        // depende tu cuenta Payway
+  password: process.env.PASSWORD // Payway la requiere
+});
+
 
   console.log(`\n✅ SDK de Payway inicializado correctamente`);
   console.log("📌 typeof SDK instance:", typeof sdk);
