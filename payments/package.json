@@ -15,7 +15,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
-    "sdk-node-payway": "^1.0.0"
+    "sdk-node-payway": "^1.0.6"
   },
   "devDependencies": {
     "nodemon": "^3.0.0"
