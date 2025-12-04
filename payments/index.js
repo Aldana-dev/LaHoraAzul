@@ -3,38 +3,35 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
+// =========================================
+// DEBUG: Cargar SDK
+// =========================================
+
 console.log("\n============================================================");
 console.log("🧪 DEBUG: Cargando módulo sdk-node-payway");
 console.log("============================================================");
 
-let PaywayModule = null;
-let PaywaySDKFunc = null;
+let PaywayModule;
+let PaywaySDK;
 
 try {
   PaywayModule = require("sdk-node-payway");
 
-  console.log("📌 typeof require('sdk-node-payway'):", typeof PaywayModule);
-  console.log("📌 Keys del módulo:", Object.keys(PaywayModule));
-  console.log("📌 Contenido del módulo:", PaywayModule);
+  console.log("📌 typeof require:", typeof PaywayModule);
+  console.log("📌 Keys:", Object.keys(PaywayModule));
+  console.log("📌 Contenido:", PaywayModule);
 
-  if (typeof PaywayModule === "function") {
-    console.log("🔎 Detectado: exporta UNA FUNCIÓN DIRECTA");
-    PaywaySDKFunc = PaywayModule;
-
-  } else if (PaywayModule?.default && typeof PaywayModule.default === "function") {
-    console.log("🔎 Detectado: el SDK está dentro de module.default");
-    PaywaySDKFunc = PaywayModule.default;
-
+  // el SDK está en PaywayModule.sdk
+  if (typeof PaywayModule.sdk === "function") {
+    PaywaySDK = PaywayModule.sdk;
+    console.log("✅ SDK detectado en módulo.sdk");
   } else {
-    console.error("\n❌ ERROR: El SDK no exporta una función válida.");
-    console.error(PaywayModule);
+    console.error("❌ No se encontró función sdk en el módulo");
     process.exit(1);
   }
-
 } catch (err) {
-  console.error("\n❌ ERROR AL CARGAR sdk-node-payway");
-  console.error("Mensaje:", err.message);
-  console.error("Stack:", err.stack);
+  console.error("\n❌ ERROR al cargar el SDK");
+  console.error(err);
   process.exit(1);
 }
 
@@ -86,7 +83,7 @@ console.log("🔌 Creando instancia del SDK...");
 let sdk = null;
 
 try {
-  sdk = PaywaySDKFunc(
+  sdk = PaywaySDK(
     ambient,
     process.env.PUBLIC_KEY,
     process.env.PRIVATE_KEY,
@@ -112,6 +109,16 @@ try {
 
 // Hacemos disponible el SDK globalmente
 global.sdk = sdk;
+
+console.log("\n============================================================");
+console.log("🔍 VALIDACIÓN FINAL DEL SDK");
+console.log("============================================================");
+console.log("📌 Tipo de sdk:", typeof sdk);
+console.log("📌 Métodos:", Object.keys(sdk));
+console.log("📌 Tiene método payment:", typeof sdk.payment);
+console.log("📌 Tiene método paymentInfo:", typeof sdk.paymentInfo);
+console.log("📌 Tiene método refund:", typeof sdk.refund);
+console.log("============================================================\n");
 
 // =============================================================
 // 🔐 AUTH
