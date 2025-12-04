@@ -77,6 +77,9 @@
         aria-label="Ver carrito"
       >
         <i class="fa-solid fa-cart-shopping carrito-icono-i"></i>
+        {% if session.get('carrito') and session.get('carrito')|length > 0 %}
+        <span class="carrito-indicador">{{ session.get('carrito')|length }}</span>
+        {% endif %}
       </a>
     </header>
 

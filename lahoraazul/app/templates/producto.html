@@ -59,14 +59,32 @@
 
   // Handle add to cart button
   const btnAgregar = document.getElementById("btn-agregar");
+  const productoId = "{{ producto.id }}";
+  
   if (btnAgregar) {
+    // Verificar si el producto ya fue agregado
+    const productosAgregados = JSON.parse(localStorage.getItem("productosAgregados")) || [];
+    
+    if (productosAgregados.includes(productoId)) {
+      btnAgregar.disabled = true;
+      btnAgregar.textContent = "¡En tu carrito!";
+      btnAgregar.classList.add("deshabilitado");
+    }
+    
     btnAgregar.addEventListener("click", (e) => {
       e.preventDefault();
       
       // Deshabilitar el botón
       btnAgregar.disabled = true;
-      btnAgregar.textContent = "¡Agregado!";
+      btnAgregar.textContent = "¡En tu carrito!";
       btnAgregar.classList.add("deshabilitado");
+
+      // Guardar en localStorage que este producto fue agregado
+      const productosAgregados = JSON.parse(localStorage.getItem("productosAgregados")) || [];
+      if (!productosAgregados.includes(productoId)) {
+        productosAgregados.push(productoId);
+        localStorage.setItem("productosAgregados", JSON.stringify(productosAgregados));
+      }
 
       // Actualizar indicador del carrito
       actualizarIndicadorCarrito();
