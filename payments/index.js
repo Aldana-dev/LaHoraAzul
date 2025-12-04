@@ -1,16 +1,58 @@
-import express from "express";
-import PaywaySDK from "sdk-node-payway";
-import bodyParser from "body-parser";
-import dotenv from "dotenv";
-import cors from "cors";
+const express = require("express");
+const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
+const cors = require("cors");
+
+console.log("\n============================================================");
+console.log("🧪 DEBUG: Cargando módulo sdk-node-payway");
+console.log("============================================================");
+
+let PaywayModule = null;
+let PaywaySDKFunc = null;
+
+try {
+  PaywayModule = require("sdk-node-payway");
+
+  console.log("📌 typeof require('sdk-node-payway'):", typeof PaywayModule);
+  console.log("📌 Keys del módulo:", Object.keys(PaywayModule));
+  console.log("📌 Contenido del módulo:", PaywayModule);
+
+  if (typeof PaywayModule === "function") {
+    console.log("🔎 Detectado: exporta UNA FUNCIÓN DIRECTA");
+    PaywaySDKFunc = PaywayModule;
+
+  } else if (PaywayModule?.default && typeof PaywayModule.default === "function") {
+    console.log("🔎 Detectado: el SDK está dentro de module.default");
+    PaywaySDKFunc = PaywayModule.default;
+
+  } else {
+    console.error("\n❌ ERROR: El SDK no exporta una función válida.");
+    console.error(PaywayModule);
+    process.exit(1);
+  }
+
+} catch (err) {
+  console.error("\n❌ ERROR AL CARGAR sdk-node-payway");
+  console.error("Mensaje:", err.message);
+  console.error("Stack:", err.stack);
+  process.exit(1);
+}
+
+// =============================================================
+// 🔧 EXPRESS CONFIG
+// =============================================================
 
 dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors({ 
-  origin: ["https://www.horaazul.com", "https://www.horaazul.com/carrito", "https://www.horaazul.com/modal_compra"],
-  credentials: true 
+app.use(cors({
+  origin: [
+    "https://www.horaazul.com",
+    "https://www.horaazul.com/carrito",
+    "https://www.horaazul.com/modal_compra"
+  ],
+  credentials: true
 }));
 
 const requiredEnvVars = ['PUBLIC_KEY', 'PRIVATE_KEY', 'COMPANY', 'USER', 'API_KEY'];
@@ -18,7 +60,6 @@ const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 
 if (missingVars.length > 0) {
   console.error(`❌ Error: Faltan las siguientes variables de entorno: ${missingVars.join(', ')}`);
-  console.error('Por favor, configura tu archivo .env correctamente.');
   process.exit(1);
 }
 
@@ -36,44 +77,65 @@ console.log(`   Private Key: ${process.env.PRIVATE_KEY.substring(0, 15)}...`);
 console.log(`   API Key: ${process.env.API_KEY.substring(0, 10)}...`);
 console.log(`${'='.repeat(60)}\n`);
 
-console.log(`\n🔌 Creando instancia del SDK...`);
+// =============================================================
+// 🔌 INICIALIZAR SDK
+// =============================================================
+
+console.log("🔌 Creando instancia del SDK...");
+
+let sdk = null;
+
 try {
-  const sdk = PaywaySDK(
-  ambient,
-  process.env.PUBLIC_KEY,
-  process.env.PRIVATE_KEY,
-  process.env.COMPANY,
-  process.env.USER
-);
-  console.log(`✅ SDK de Payway inicializado correctamente`);
-  console.log(`   Tipo: ${typeof sdk}`);
-  console.log(`   Métodos disponibles: payment, paymentInfo, refund`);
+  sdk = PaywaySDKFunc(
+    ambient,
+    process.env.PUBLIC_KEY,
+    process.env.PRIVATE_KEY,
+    process.env.COMPANY,
+    process.env.USER
+  );
+
+
+  console.log(`\n✅ SDK de Payway inicializado correctamente`);
+  console.log("📌 typeof SDK instance:", typeof sdk);
+  console.log("📌 Métodos disponibles:", Object.keys(sdk));
+
+  if (typeof sdk.payment !== "function") {
+    console.warn("\n⚠️ ADVERTENCIA: sdk.payment NO ES UNA FUNCIÓN");
+  }
+
 } catch (error) {
-  console.error(`❌ Error al inicializar SDK:`);
-  console.error(`   Mensaje: ${error.message}`);
-  console.error(`   Stack: ${error.stack}`);
+  console.error(`\n❌ ERROR al inicializar SDK:`);
+  console.error(`Mensaje: ${error.message}`);
+  console.error(`Stack: ${error.stack}`);
   process.exit(1);
 }
 
+// Hacemos disponible el SDK globalmente
+global.sdk = sdk;
+
+// =============================================================
+// 🔐 AUTH
+// =============================================================
+
 const authenticate = (req, res, next) => {
   const apiKey = req.headers['x-api-key'];
-  
+
   if (!apiKey) {
     console.warn(`\n⚠️ [${new Date().toISOString()}] Intento sin API Key`);
-    return res.status(401).json({ 
-      error: "Unauthorized", 
-      message: "Falta el header 'x-api-key'" 
+    return res.status(401).json({
+      error: "Unauthorized",
+      message: "Falta el header 'x-api-key'"
     });
   }
-  
+
   if (apiKey !== process.env.API_KEY) {
     console.warn(`\n⚠️ [${new Date().toISOString()}] API Key inválida`);
-    return res.status(401).json({ 
-      error: "Unauthorized", 
-      message: "API Key inválida" 
+    return res.status(401).json({
+      error: "Unauthorized",
+      message: "API Key inválida"
     });
   }
-  
+
   console.log(`✅ [${new Date().toISOString()}] Autenticación exitosa`);
   next();
 };
@@ -99,23 +161,23 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
   console.log(`   Site Transaction ID: ${site_transaction_id}`);
 
   const errors = [];
-  
+
   if (!amount || typeof amount !== 'number' || amount <= 0) {
     errors.push("amount debe ser un número positivo");
   }
-  
+
   if (!token || typeof token !== 'string') {
     errors.push("token es requerido y debe ser una cadena");
   }
-  
+
   if (!user_id || typeof user_id !== 'string') {
     errors.push("user_id es requerido y debe ser una cadena");
   }
-  
+
   if (!bin || typeof bin !== 'string' || bin.length !== 6) {
     errors.push("bin debe ser una cadena de 6 dígitos");
   }
-  
+
   if (!description || typeof description !== 'string') {
     errors.push("description es requerido");
   }
@@ -127,9 +189,9 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
   if (errors.length > 0) {
     console.error(`\n❌ VALIDACIÓN FALLIDA:`);
     errors.forEach(e => console.error(`   - ${e}`));
-    return res.status(400).json({ 
-      error: "Validación fallida", 
-      details: errors 
+    return res.status(400).json({
+      error: "Validación fallida",
+      details: errors
     });
   }
 
@@ -137,7 +199,7 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
 
   try {
     console.log(`\n🔐 Preparando argumentos para sdk.payment()...`);
-    
+
     const paymentArgs = {
       site_transaction_id,
       token,
@@ -172,23 +234,23 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
         console.error(`\n❌ ERROR EN SDK.PAYMENT():`);
         console.error(`   Type: ${typeof err}`);
         console.error(`   Error:`, err);
-        
+
         if (typeof err === 'object') {
           console.error(`   Error stringified:`);
           console.error(JSON.stringify(err, null, 2));
         }
-        
+
         let errorMessage = "Error al procesar el pago";
         let errorDetails = err;
-        
+
         if (typeof err === 'object') {
           errorMessage = err.message || err.error || errorMessage;
           errorDetails = err;
         } else if (typeof err === 'string') {
           errorMessage = err;
         }
-        
-        return res.status(500).json({ 
+
+        return res.status(500).json({
           status: "error",
           error: errorMessage,
           details: errorDetails
@@ -197,7 +259,7 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
 
       if (!result) {
         console.error(`\n❌ No se recibió respuesta del SDK (result es null/undefined)`);
-        return res.status(500).json({ 
+        return res.status(500).json({
           status: "error",
           error: "No se recibió respuesta del gateway de pago"
         });
@@ -230,7 +292,7 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
         response.ticket = result.status_details?.ticket;
         response.authorization_code = result.status_details?.card_authorization_code;
         response.message = "Pago aprobado exitosamente";
-        
+
         console.log(`\n${'='.repeat(60)}`);
         console.log(`🎉 PAGO APROBADO EXITOSAMENTE`);
         console.log(`${'='.repeat(60)}`);
@@ -245,7 +307,7 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
         response.error_code = result.status_details?.error?.code;
         response.error_reason = result.status_details?.error?.reason;
         response.message = result.status_details?.error?.description || "Pago rechazado";
-        
+
         console.log(`\n${'='.repeat(60)}`);
         console.log(`⚠️ PAGO RECHAZADO`);
         console.log(`${'='.repeat(60)}`);
@@ -256,7 +318,7 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
 
       } else if (isPending) {
         response.message = "Pago pendiente de aprobación";
-        
+
         console.log(`\n${'='.repeat(60)}`);
         console.log(`⏳ PAGO PENDIENTE DE APROBACIÓN`);
         console.log(`${'='.repeat(60)}`);
@@ -269,10 +331,10 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
       }
 
       response.raw_response = result;
-      
+
       console.log(`\n📤 Respondiendo al cliente con:`);
       console.log(JSON.stringify(response, null, 2));
-      
+
       res.json(response);
     });
 
@@ -280,11 +342,11 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
     console.error(`\n❌ ERROR INESPERADO EN TRY-CATCH:`);
     console.error(`   Mensaje: ${error.message}`);
     console.error(`   Stack: ${error.stack}`);
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       status: "error",
       error: "Error interno del servidor",
-      details: error.message 
+      details: error.message
     });
   }
 });
@@ -300,9 +362,9 @@ app.post("/payment-status", authenticate, async (req, res) => {
 
   if (!payment_id) {
     console.error(`❌ Payment ID no proporcionado`);
-    return res.status(400).json({ 
+    return res.status(400).json({
       error: "Missing payment_id",
-      message: "El campo 'payment_id' es requerido" 
+      message: "El campo 'payment_id' es requerido"
     });
   }
 
@@ -316,38 +378,38 @@ app.post("/payment-status", authenticate, async (req, res) => {
 
       if (err) {
         console.error(`\n❌ Error al consultar pago:`, err);
-        
+
         let errorMessage = "Error al consultar el estado del pago";
         if (typeof err === 'object' && err.message) {
           errorMessage = err.message;
         } else if (typeof err === 'string') {
           errorMessage = err;
         }
-        
-        return res.status(500).json({ 
+
+        return res.status(500).json({
           error: errorMessage,
-          details: err 
+          details: err
         });
       }
 
       if (!result) {
         console.error(`\n❌ No se encontró información del pago`);
-        return res.status(404).json({ 
+        return res.status(404).json({
           error: "Pago no encontrado",
-          payment_id 
+          payment_id
         });
       }
 
       console.log(`\n✅ Estado del pago:`);
       console.log(JSON.stringify(result, null, 2));
-      
+
       res.json(result);
     });
   } catch (error) {
     console.error(`\n❌ Error inesperado:`, error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Error interno del servidor",
-      details: error.message 
+      details: error.message
     });
   }
 });
@@ -363,9 +425,9 @@ app.post("/refund", authenticate, async (req, res) => {
 
   if (!payment_id) {
     console.error(`❌ Payment ID no proporcionado`);
-    return res.status(400).json({ 
+    return res.status(400).json({
       error: "Missing payment_id",
-      message: "El campo 'payment_id' es requerido" 
+      message: "El campo 'payment_id' es requerido"
     });
   }
 
@@ -379,51 +441,51 @@ app.post("/refund", authenticate, async (req, res) => {
 
       if (err) {
         console.error(`\n❌ Error en devolución:`, err);
-        return res.status(500).json({ 
+        return res.status(500).json({
           error: "Error al procesar la devolución",
-          details: err 
+          details: err
         });
       }
 
       console.log(`\n✅ Devolución exitosa:`);
       console.log(JSON.stringify(result, null, 2));
-      
+
       res.json(result);
     });
   } catch (error) {
     console.error(`\n❌ Error inesperado:`, error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Error interno del servidor",
-      details: error.message 
+      details: error.message
     });
   }
 });
 
 app.get("/health", (req, res) => {
   const healthResponse = {
-    status: "ok", 
+    status: "ok",
     message: "Node Payway API is running",
     ambient,
     timestamp: new Date().toISOString()
   };
-  
+
   console.log(`\n✅ Health check - API está funcionando`);
   res.json(healthResponse);
 });
 
 app.use((req, res) => {
   console.warn(`\n⚠️ Ruta no encontrada: ${req.method} ${req.path}`);
-  res.status(404).json({ 
+  res.status(404).json({
     error: "Not found",
-    message: `Ruta ${req.method} ${req.path} no encontrada` 
+    message: `Ruta ${req.method} ${req.path} no encontrada`
   });
 });
 
 app.use((err, req, res, next) => {
   console.error('\n❌ Error no manejado:', err);
-  res.status(500).json({ 
+  res.status(500).json({
     error: "Internal server error",
-    message: err.message 
+    message: err.message
   });
 });
 

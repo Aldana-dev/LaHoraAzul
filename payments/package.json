@@ -1,7 +1,6 @@
 {
   "name": "payments",
   "version": "1.0.0",
-  "type": "module",
   "description": "Microservicio de pagos para LaHoraAzul",
   "main": "index.js",
   "scripts": {
