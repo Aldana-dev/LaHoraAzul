@@ -38,7 +38,7 @@ console.log(`${'='.repeat(60)}\n`);
 
 console.log(`\n🔌 Creando instancia del SDK...`);
 try {
-  const sdk = new sdkModulo.sdk(
+  const sdk = new sdkModulo(
     ambient,
     process.env.PUBLIC_KEY,
     process.env.PRIVATE_KEY,
@@ -151,7 +151,7 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
       payment_type: "single",
       sub_payments: [],
       fraud_detection: {
-        send_to_cs: false,
+        send_to_cs: true,
         channel: "Web",
         dispatch_method: "Store Pick Up"
       }
