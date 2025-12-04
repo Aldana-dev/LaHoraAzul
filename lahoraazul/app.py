@@ -3,8 +3,16 @@ from app import create_app, db
 from app.models import Usuario
 from alembic.config import Config
 from alembic import command
+import logging
+
+# Configurar logging para ver todos los errores
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 
 app = create_app()
+# También en Flask
+app.logger.setLevel(logging.DEBUG)
 
 with app.app_context():
     # ---------------- Aplicar migraciones ----------------

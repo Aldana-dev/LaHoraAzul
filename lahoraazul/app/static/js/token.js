@@ -2,16 +2,16 @@ class PaywayIntegration {
     constructor(publicKey) {
         console.log(`\n🔧 ========== INICIALIZANDO PAYWAY ==========`);
         console.log(`   Public Key: ${publicKey.substring(0, 20)}...`);
-        
+
         const urlProduccion = "https://live.decidir.com/api/v2";
         console.log(`   URL: ${urlProduccion}`);
-        
+
         this.decidir = new Decidir(urlProduccion);
         console.log(`   ✅ Decidir SDK instanciado`);
-        
+
         this.decidir.setPublishableKey(publicKey);
         console.log(`   ✅ Public Key configurada`);
-        
+
         this.decidir.setTimeout(3000);
         console.log(`   ✅ Timeout configurado: 3000ms`);
 
@@ -23,20 +23,20 @@ class PaywayIntegration {
     initForm(formId) {
         console.log(`\n📋 ========== INICIALIZANDO FORMULARIO ==========`);
         console.log(`   Buscando formulario: ${formId}`);
-        
+
         this.form = document.querySelector(formId);
         if (!this.form) {
             console.error(`❌ Formulario ${formId} NO ENCONTRADO`);
             return;
         }
-        
+
         console.log(`✅ Formulario encontrado`);
         this.setupFieldFormatting();
     }
 
     setupFieldFormatting() {
         console.log(`\n🎯 ========== CONFIGURANDO CAMPOS ==========`);
-        
+
         const numeroTarjeta = document.querySelector('#numero_tarjeta');
         const mesVencimiento = document.querySelector('#mes_vencimiento');
         const anioVencimiento = document.querySelector('#anio_vencimiento');
@@ -96,13 +96,13 @@ class PaywayIntegration {
         } else {
             console.warn(`⚠️ Campo #dni NO encontrado`);
         }
-        
+
         console.log(`✅ Campos configurados\n`);
     }
 
     validateCardFields() {
         console.log(`\n✔️ ========== VALIDANDO CAMPOS ==========`);
-        
+
         const errors = [];
 
         const numeroTarjeta = document.querySelector('#numero_tarjeta').value.replace(/\s/g, '');
@@ -173,7 +173,7 @@ class PaywayIntegration {
     async generatePaymentToken() {
         console.log(`\n🎫 ========== GENERANDO TOKEN DE PAGO ==========`);
         console.log(`   Timestamp: ${new Date().toISOString()}`);
-        
+
         if (this.isProcessing) {
             console.error(`❌ Ya hay un procesamiento en curso`);
             return { success: false, error: 'Procesamiento en curso' };
@@ -212,7 +212,7 @@ class PaywayIntegration {
                         console.log(`\n✅ TOKEN GENERADO EXITOSAMENTE`);
                         console.log(`   Token: ${token.substring(0, 30)}...${token.substring(token.length - 10)}`);
                         console.log(`   Status HTTP: ${status}\n`);
-                        
+
                         resolve({
                             success: true,
                             token: token,
@@ -225,7 +225,7 @@ class PaywayIntegration {
                         console.error(`   Status HTTP: ${status}`);
                         console.error(`   Mensaje: ${errorMessage}`);
                         console.error(`   Respuesta completa:`, response, '\n');
-                        
+
                         resolve({
                             success: false,
                             error: errorMessage,
@@ -243,7 +243,7 @@ class PaywayIntegration {
                 console.error(`\n❌ EXCEPCIÓN EN TRY-CATCH`);
                 console.error(`   Error: ${error.message}`);
                 console.error(`   Stack:`, error.stack, '\n');
-                
+
                 resolve({
                     success: false,
                     error: 'Error inesperado al generar el token',
@@ -255,7 +255,7 @@ class PaywayIntegration {
 
     parseSDKError(response) {
         console.log(`   📋 Parseando error del SDK...`);
-        
+
         if (!response || !response.error) {
             console.log(`   ⚠️ Response no contiene 'error'`);
             return 'Error desconocido al generar el token';
@@ -285,7 +285,7 @@ class PaywayIntegration {
 
     clearCardFields() {
         console.log(`\n🧹 Limpiando campos del formulario...`);
-        
+
         const fields = [
             '#numero_tarjeta',
             '#mes_vencimiento',
@@ -322,17 +322,17 @@ let paywayIntegration = null;
 function initPaywayIntegration(publicKey) {
     console.log(`\n🔌 ========== INICIALIZANDO INTEGRACIÓN PAYWAY ==========`);
     console.log(`   Public Key recibida: ${publicKey.substring(0, 20)}...`);
-    
+
     paywayIntegration = new PaywayIntegration(publicKey);
     paywayIntegration.initForm('#form-datos-usuario');
-    
+
     console.log(`✅ Integración Payway lista\n`);
 }
 
 async function procesarPagoConPayway() {
     console.log(`\n💳 ========== PROCESANDO PAGO ==========`);
     console.log(`   Timestamp: ${new Date().toISOString()}`);
-    
+
     if (!paywayIntegration) {
         console.error('❌ Payway no está inicializado');
         return { success: false, error: 'SDK no inicializado' };
@@ -341,12 +341,12 @@ async function procesarPagoConPayway() {
     try {
         console.log(`\n1️⃣ Mostrando loading...`);
         mostrarLoading(true);
-        
+
         console.log(`\n2️⃣ Generando token de pago...`);
         const tokenResult = await paywayIntegration.generatePaymentToken();
 
         console.log(`\n3️⃣ Resultado del token:`, tokenResult);
-        
+
         if (!tokenResult.success) {
             console.error(`❌ Error en generación de token:`, tokenResult.error);
             mostrarErrorAPI(tokenResult.error || "Error al generar token de pago");
@@ -356,7 +356,7 @@ async function procesarPagoConPayway() {
 
         const token = tokenResult.token;
         console.log(`✅ Token obtenido: ${token.substring(0, 30)}...`);
-        
+
         console.log(`\n4️⃣ Extrayendo BIN...`);
         const bin = paywayIntegration.getCardBin();
 
@@ -405,12 +405,19 @@ async function procesarPagoConPayway() {
         console.log(`\n8️⃣ Enviando POST a /pago/crear...`);
         console.log(`   URL: ${window.location.origin}/pago/crear`);
         console.log(`   Timestamp: ${new Date().toISOString()}`);
-        
+
         const response = await fetch("/pago/crear", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(paymentData)
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(paymentData),
+            credentials: 'same-origin'  // Importante para cookies si las usas
         });
+
+        console.log(`   Payload enviado:`, JSON.stringify(paymentData, null, 2));
+        console.log(`   Response status: ${response.status}`);
+        console.log(`   Response headers:`, response.headers);
 
         console.log(`\n9️⃣ Respuesta recibida`);
         console.log(`   Status HTTP: ${response.status}`);
@@ -430,7 +437,7 @@ async function procesarPagoConPayway() {
             console.log(`\n✅ PAGO APROBADO`);
             console.log(`   Payment ID: ${resultado.payment_id}`);
             console.log(`   Ticket: ${resultado.ticket}`);
-            
+
             mostrarLoading(false);
             ocultarErrorAPI();
 
@@ -449,7 +456,7 @@ async function procesarPagoConPayway() {
             console.error(`\n❌ PAGO RECHAZADO`);
             console.error(`   Razón: ${resultado.error_reason}`);
             console.error(`   Código: ${resultado.error_code}`);
-            
+
             const errorMsg = `Pago rechazado: ${resultado.message || resultado.error_reason || "Motivo desconocido"}`;
             mostrarErrorAPI(errorMsg);
             mostrarLoading(false);
@@ -476,7 +483,7 @@ async function procesarPagoConPayway() {
         console.error(`\n❌ EXCEPCIÓN EN PROCESAR PAGO`);
         console.error(`   Mensaje: ${error.message}`);
         console.error(`   Stack:`, error.stack);
-        
+
         mostrarErrorAPI(`Error al procesar el pago: ${error.message}`);
         mostrarLoading(false);
 
@@ -518,7 +525,7 @@ function ocultarErrorAPI() {
 document.addEventListener('DOMContentLoaded', function () {
     console.log(`\n📄 ========== DOM CONTENT LOADED ==========`);
     console.log(`   Timestamp: ${new Date().toISOString()}`);
-    
+
     const btnConfirmar = document.querySelector('#btn-confirmar');
     const form = document.querySelector('#form-datos-usuario');
 
@@ -529,13 +536,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (btnConfirmar && form) {
         console.log(`✅ Botón y formulario encontrados, agregando listener...`);
-        
+
         btnConfirmar.addEventListener('click', async function (e) {
             console.log(`\n🖱️ CLICK EN CONFIRMAR COMPRA`);
             console.log(`   Timestamp: ${new Date().toISOString()}`);
-            
+
             e.preventDefault();
-            
+
             if (processingPayment) {
                 console.warn(`⚠️ Ya hay un pago en procesamiento`);
                 return;
@@ -547,7 +554,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (resultado.success) {
                 console.log(`\n✅ PAGO EXITOSO - Guardando datos...`);
-                
+
                 if (typeof datosFormulario !== 'undefined') {
                     datosFormulario.payment_id = resultado.payment_id;
                     datosFormulario.payment_token = resultado.token;
