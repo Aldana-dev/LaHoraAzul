@@ -12,8 +12,8 @@ class PaywayIntegration {
         this.decidir.setPublishableKey(publicKey);
         console.log(`   ✅ Public Key configurada`);
 
-        this.decidir.setTimeout(3000);
-        console.log(`   ✅ Timeout configurado: 3000ms`);
+        this.decidir.setTimeout(6000);
+        console.log(`   ✅ Timeout configurado: 6000ms`);
 
         this.form = null;
         this.isProcessing = false;

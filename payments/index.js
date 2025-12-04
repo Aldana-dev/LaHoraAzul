@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 app.use(bodyParser.json());
 app.use(cors({ 
-  origin: ["http://localhost:5000", "http://127.0.0.1:5000"],
+  origin: ["https://www.horaazul.com", "https://www.horaazul.com/carrito", "https://www.horaazul.com/modal_compra"],
   credentials: true 
 }));
 
@@ -22,7 +22,7 @@ if (missingVars.length > 0) {
   process.exit(1);
 }
 
-const ambient = process.env.AMBIENT || "developer";
+const ambient = process.env.AMBIENT || "production";
 
 console.log(`\n${'='.repeat(60)}`);
 console.log(`🚀 INICIALIZANDO NODE.JS PAYWAY API`);
