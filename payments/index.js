@@ -149,7 +149,7 @@ app.post("/create-payment-intent", authenticate, async (req, res) => {
       payment_type: "single",
       sub_payments: [],
       fraud_detection: {
-        send_to_cs: true,
+        send_to_cs: false,
         channel: "Web",
         dispatch_method: "Store Pick Up"
       }
