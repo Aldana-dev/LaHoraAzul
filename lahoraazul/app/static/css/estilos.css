@@ -266,7 +266,7 @@ nav a:hover {
 
 .footer-disclaimer {
   max-width: 1000px;
-  margin: 1.5em auto 0 auto;
+  margin: 3em auto 0 auto !important;
   font-size: 10px;
   color: var(--color-primary);
   text-align: center;
