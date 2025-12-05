@@ -78,7 +78,9 @@
       >
         <i class="fa-solid fa-cart-shopping carrito-icono-i"></i>
         {% if session.get('carrito') and session.get('carrito')|length > 0 %}
-        <span class="carrito-indicador">{{ session.get('carrito')|length }}</span>
+        <span class="carrito-indicador"
+          >{{ session.get('carrito')|length }}</span
+        >
         {% endif %}
       </a>
     </header>
@@ -119,13 +121,11 @@
 
         <p class="footer-right">Creado con 💙 por Aldana Ravalle.</p>
       </div>
-      <div class="footer-disclaimer">
-        <p>
-          Una vez despachado el pedido, no nos hacemos responsables por
-          eventuales roturas, pérdidas o demoras ocasionadas durante el envío.
-        </p>
-        <p>No se aceptan cambios ni devoluciones.</p>
-      </div>
+      <p class="footer-disclaimer">
+        Una vez despachado el pedido, no nos hacemos responsables por eventuales
+        roturas, pérdidas o demoras ocasionadas durante el envío.
+      </p>
+      <p class="footer-disclaimer">No se aceptan cambios ni devoluciones.</p>
     </footer>
 
     <!-- Scripts Section -->
@@ -139,45 +139,47 @@
       }
     </script>
 
-    <!-- Global Cart Indicator Update Function -->
+    <!-- Cart Button Handler -->
     <script>
-      // ============================================
-      // FUNCIÓN GLOBAL PARA ACTUALIZAR INDICADOR DEL CARRITO
-      // Esta función se puede llamar desde cualquier página
-      // ============================================
-      
-      async function actualizarIndicadorCarrito() {
-        try {
-          const response = await fetch("{{ url_for('main.carrito_estado') }}");
-          const data = await response.json();
-          
-          const carritoIconoLink = document.querySelector("a[href*='carrito']");
-          if (!carritoIconoLink) return;
-          
-          let indicador = carritoIconoLink.querySelector(".carrito-indicador");
+      // Handle add to cart button
+      const btnAgregar = document.getElementById("btn-agregar");
+      if (btnAgregar) {
+        btnAgregar.addEventListener("click", (e) => {
+          e.preventDefault();
 
-          if (data.cantidad > 0) {
-            if (!indicador) {
-              indicador = document.createElement("span");
-              indicador.className = "carrito-indicador";
-              carritoIconoLink.appendChild(indicador);
-            }
-            indicador.textContent = data.cantidad;
-            indicador.style.display = 'flex';
-          } else {
-            if (indicador) {
-              indicador.style.display = 'none';
-            }
+          // Deshabilitar el botón
+          btnAgregar.disabled = true;
+          btnAgregar.textContent = "¡En tu carrito!";
+          btnAgregar.classList.add("deshabilitado");
+
+          // Actualizar indicador del carrito
+          actualizarIndicadorCarrito();
+
+          // Enviar el formulario después de mostrar los cambios
+          const form = btnAgregar.closest("form");
+          if (form) {
+            setTimeout(() => {
+              form.submit();
+            }, 300);
           }
-        } catch (error) {
-          console.error("Error al actualizar indicador del carrito:", error);
+        });
+      }
+
+      // Función para actualizar el indicador del carrito
+      function actualizarIndicadorCarrito() {
+        const carritoIconoLink = document.querySelector("a[href*='carrito']");
+        let indicador = carritoIconoLink.querySelector(".carrito-indicador");
+
+        if (!indicador) {
+          indicador = document.createElement("span");
+          indicador.className = "carrito-indicador";
+          indicador.textContent = "1";
+          carritoIconoLink.appendChild(indicador);
+        } else {
+          const cantidad = parseInt(indicador.textContent) + 1;
+          indicador.textContent = cantidad;
         }
       }
-      
-      // Actualizar el indicador al cargar cualquier página
-      document.addEventListener('DOMContentLoaded', function() {
-        actualizarIndicadorCarrito();
-      });
     </script>
 
     {% block extra_js %}{% endblock %}
