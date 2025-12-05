@@ -23,11 +23,13 @@
           <form
             method="POST"
             action="{{ url_for('main.quitar_del_carrito', producto_id=item.id) }}"
+            class="form-quitar-producto"
           >
             <button
               class="btn-close"
               aria-label="Quitar {{ item.nombre }} del carrito"
               type="submit"
+              data-producto-id="{{ item.id }}"
             ></button>
           </form>
         </div>
@@ -140,9 +142,94 @@
   </aside>
 
   <!-- Modal de compra separado -->
-  {% include "modal_compra.html" %} {% else %}
+  {% include "modal_compra.html" %} 
+  {% else %}
   <p class="mensaje-vacio">Tu carrito está vacío</p>
   {% endif %}
+
+  <script>
+    // ============================================
+    // SINCRONIZACIÓN AL QUITAR PRODUCTOS
+    // ============================================
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      // Interceptar formularios de quitar producto
+      const formsQuitar = document.querySelectorAll('.form-quitar-producto');
+      
+      formsQuitar.forEach(form => {
+        form.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          const btnClose = this.querySelector('.btn-close');
+          const productoId = btnClose.dataset.productoId;
+          const itemCarrito = this.closest('.item-carrito');
+          
+          // Deshabilitar botón mientras procesa
+          btnClose.disabled = true;
+          btnClose.style.opacity = '0.5';
+          
+          try {
+            // Enviar petición al servidor
+            const response = await fetch(this.action, {
+              method: 'POST',
+              credentials: 'same-origin'
+            });
+            
+            if (response.ok) {
+              // Animar la eliminación del item
+              itemCarrito.style.transition = 'opacity 0.3s, transform 0.3s';
+              itemCarrito.style.opacity = '0';
+              itemCarrito.style.transform = 'translateX(-20px)';
+              
+              setTimeout(() => {
+                // Recargar la página para actualizar todo
+                window.location.reload();
+              }, 300);
+            } else {
+              // Si falla, restaurar el botón
+              btnClose.disabled = false;
+              btnClose.style.opacity = '1';
+              alert('Error al quitar el producto. Intenta nuevamente.');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            btnClose.disabled = false;
+            btnClose.style.opacity = '1';
+            alert('Error de conexión. Intenta nuevamente.');
+          }
+        });
+      });
+      
+      // Actualizar indicador del carrito en el header
+      actualizarIndicadorCarrito();
+    });
+    
+    // Función para actualizar el indicador del carrito
+    async function actualizarIndicadorCarrito() {
+      try {
+        const response = await fetch("{{ url_for('main.carrito_estado') }}");
+        const data = await response.json();
+        
+        const carritoIconoLink = document.querySelector("a[href*='carrito']");
+        if (!carritoIconoLink) return;
+        
+        let indicador = carritoIconoLink.querySelector(".carrito-indicador");
+
+        if (data.cantidad > 0) {
+          if (!indicador) {
+            indicador = document.createElement("span");
+            indicador.className = "carrito-indicador";
+            carritoIconoLink.appendChild(indicador);
+          }
+          indicador.textContent = data.cantidad;
+        } else if (indicador) {
+          indicador.remove();
+        }
+      } catch (error) {
+        console.error("Error al actualizar indicador:", error);
+      }
+    }
+  </script>
 
   <script
     src="{{ url_for('static', filename='js/carrito.js') }}"

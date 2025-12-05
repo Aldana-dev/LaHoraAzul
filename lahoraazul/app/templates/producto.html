@@ -1,10 +1,9 @@
-{% extends "base.html" %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/producto.css') }}" />
-{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block extra_css %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/producto.css') }}"
+/>
+{% endblock %} {% block content %}
 <main class="pagina">
   <section class="producto-detalle">
     <!-- Product Header -->
@@ -14,16 +13,32 @@
 
     <!-- Product Gallery -->
     <div class="producto-galeria">
-      <div class="imagen-principal" role="img" aria-label="{{ producto.nombre }}">
-        <img id="img-principal" src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" />
+      <div
+        class="imagen-principal"
+        role="img"
+        aria-label="{{ producto.nombre }}"
+      >
+        <img
+          id="img-principal"
+          src="{{ url_for('static', filename=producto.imagen) }}"
+          alt="{{ producto.nombre }}"
+        />
       </div>
 
       {% if imagenes %}
       <aside class="galeria-miniaturas" aria-label="Miniaturas del producto">
         <!-- Main image as first thumbnail -->
-        <img class="miniatura seleccionada" src="{{ url_for('static', filename=producto.imagen) }}" alt="Imagen principal" />
+        <img
+          class="miniatura seleccionada"
+          src="{{ url_for('static', filename=producto.imagen) }}"
+          alt="Imagen principal"
+        />
         {% for img in imagenes %}
-        <img class="miniatura" src="{{ url_for('static', filename=img.imagen) }}" alt="Miniatura {{ loop.index }}" />
+        <img
+          class="miniatura"
+          src="{{ url_for('static', filename=img.imagen) }}"
+          alt="Miniatura {{ loop.index }}"
+        />
         {% endfor %}
       </aside>
       {% endif %}
@@ -31,9 +46,16 @@
 
     <!-- Price and Button -->
     <div class="precio-boton">
-      <p class="producto-precio" aria-label="Precio del producto">$ {{ "{:.2f}".format(producto.precio) }}</p>
-      <form method="POST" action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}">
-        <button class="boton agregar-carrito" id="btn-agregar" type="submit">Agregar al carrito</button>
+      <p class="producto-precio" aria-label="Precio del producto">
+        $ {{ "{:.2f}".format(producto.precio) }}
+      </p>
+      <form
+        method="POST"
+        action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}"
+      >
+        <button class="boton agregar-carrito" id="btn-agregar" type="submit">
+          Agregar al carrito
+        </button>
       </form>
     </div>
 
@@ -57,62 +79,114 @@
     });
   });
 
-  // Handle add to cart button
+  // ============================================
+  // GESTIÓN DEL CARRITO - SINCRONIZADO CON SERVIDOR
+  // ============================================
+
   const btnAgregar = document.getElementById("btn-agregar");
   const productoId = "{{ producto.id }}";
-  
-  if (btnAgregar) {
-    // Verificar si el producto ya fue agregado
-    const productosAgregados = JSON.parse(localStorage.getItem("productosAgregados")) || [];
-    
-    if (productosAgregados.includes(productoId)) {
-      btnAgregar.disabled = true;
-      btnAgregar.textContent = "¡En tu carrito!";
-      btnAgregar.classList.add("deshabilitado");
+
+  // Función para verificar si el producto está en el carrito (consulta al servidor)
+  async function verificarEstadoCarrito() {
+    try {
+      const response = await fetch("{{ url_for('main.carrito_estado') }}");
+      const data = await response.json();
+      return data.productos.includes(parseInt(productoId));
+    } catch (error) {
+      console.error("Error al verificar carrito:", error);
+      return false;
     }
-    
-    btnAgregar.addEventListener("click", (e) => {
-      e.preventDefault();
-      
-      // Deshabilitar el botón
+  }
+
+  // Función para actualizar el estado visual del botón
+  function actualizarBoton(enCarrito) {
+    if (enCarrito) {
       btnAgregar.disabled = true;
       btnAgregar.textContent = "¡En tu carrito!";
       btnAgregar.classList.add("deshabilitado");
+    } else {
+      btnAgregar.disabled = false;
+      btnAgregar.textContent = "Agregar al carrito";
+      btnAgregar.classList.remove("deshabilitado");
+    }
+  }
 
-      // Guardar en localStorage que este producto fue agregado
-      const productosAgregados = JSON.parse(localStorage.getItem("productosAgregados")) || [];
-      if (!productosAgregados.includes(productoId)) {
-        productosAgregados.push(productoId);
-        localStorage.setItem("productosAgregados", JSON.stringify(productosAgregados));
-      }
+  // Verificar estado inicial al cargar la página
+  if (btnAgregar) {
+    verificarEstadoCarrito().then((enCarrito) => {
+      actualizarBoton(enCarrito);
+    });
 
-      // Actualizar indicador del carrito
-      actualizarIndicadorCarrito();
-      
-      // Enviar el formulario después de mostrar los cambios
+    btnAgregar.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      // Deshabilitar el botón inmediatamente
+      btnAgregar.disabled = true;
+      btnAgregar.textContent = "Agregando...";
+
+      // Enviar el formulario
       const form = btnAgregar.closest("form");
       if (form) {
-        setTimeout(() => {
-          form.submit();
-        }, 300);
+        try {
+          // Enviar mediante fetch para mejor control
+          const formData = new FormData(form);
+          const response = await fetch(form.action, {
+            method: "POST",
+            body: formData,
+            credentials: "same-origin",
+          });
+
+          if (response.ok) {
+            // Actualizar estado visual
+            btnAgregar.textContent = "¡En tu carrito!";
+            btnAgregar.classList.add("deshabilitado");
+
+            // Actualizar indicador del carrito
+            actualizarIndicadorCarrito();
+
+            // Opcional: mostrar mensaje de éxito
+            mostrarNotificacion("Producto agregado al carrito");
+          } else {
+            // Si falla, restaurar el botón
+            btnAgregar.disabled = false;
+            btnAgregar.textContent = "Agregar al carrito";
+            mostrarNotificacion("Error al agregar al carrito", true);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          btnAgregar.disabled = false;
+          btnAgregar.textContent = "Agregar al carrito";
+          mostrarNotificacion("Error de conexión", true);
+        }
       }
     });
   }
 
   // Función para actualizar el indicador del carrito
-  function actualizarIndicadorCarrito() {
-    const carritoIconoLink = document.querySelector("a[href*='carrito']");
-    let indicador = carritoIconoLink.querySelector(".carrito-indicador");
+  async function actualizarIndicadorCarrito() {
+    try {
+      const response = await fetch("{{ url_for('main.carrito_estado') }}");
+      const data = await response.json();
 
-    if (!indicador) {
-      indicador = document.createElement("span");
-      indicador.className = "carrito-indicador";
-      indicador.textContent = "1";
-      carritoIconoLink.appendChild(indicador);
-    } else {
-      const cantidad = parseInt(indicador.textContent) + 1;
-      indicador.textContent = cantidad;
+      const carritoIconoLink = document.querySelector("a[href*='carrito']");
+      if (!carritoIconoLink) return;
+
+      let indicador = carritoIconoLink.querySelector(".carrito-indicador");
+
+      if (data.cantidad > 0) {
+        if (!indicador) {
+          indicador = document.createElement("span");
+          indicador.className = "carrito-indicador";
+          carritoIconoLink.appendChild(indicador);
+        }
+        indicador.textContent = data.cantidad;
+      } else if (indicador) {
+        indicador.remove();
+      }
+    } catch (error) {
+      console.error("Error al actualizar indicador:", error);
     }
   }
+  actualizarIndicadorCarrito();
 </script>
 {% endblock %}

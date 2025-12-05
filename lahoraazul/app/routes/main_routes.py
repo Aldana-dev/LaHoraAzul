@@ -132,6 +132,7 @@ def carrito():
     return render_template(
         'carrito.html',
         carrito=carrito_data,
+        carrito_ids=carrito_ids,  # <-- NUEVO: pasamos los IDs al template
         subtotal=subtotal,
         costo_envio=costo_envio,
         total=total
@@ -145,6 +146,7 @@ def agregar_al_carrito(producto_id):
     if producto_id not in carrito:
         carrito.append(producto_id)
         session['carrito'] = carrito
+        session.modified = True  # <-- NUEVO: forzar que Flask guarde la sesión
         flash('Producto agregado al carrito')
     
     return redirect(url_for('main.producto', producto_id=producto_id))
@@ -157,10 +159,21 @@ def quitar_del_carrito(producto_id):
     if producto_id in carrito:
         carrito.remove(producto_id)
         session['carrito'] = carrito
+        session.modified = True  # <-- NUEVO: forzar que Flask guarde la sesión
         flash('Producto eliminado del carrito')
     
     return redirect(url_for('main.carrito'))
 
+
+# NUEVA RUTA: API para obtener el estado del carrito
+@main_bp.route('/api/carrito/estado', methods=['GET'])
+def carrito_estado():
+    """Devuelve los IDs de productos en el carrito (para sincronizar con frontend)"""
+    carrito_ids = session.get('carrito', [])
+    return jsonify({
+        'productos': carrito_ids,
+        'cantidad': len(carrito_ids)
+    })
 
 @main_bp.route('/carrito/confirmar', methods=['POST'])
 def confirmar_pedido():
