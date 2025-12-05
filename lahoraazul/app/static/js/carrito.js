@@ -246,9 +246,68 @@ document.addEventListener("DOMContentLoaded", () => {
       actualizarResumen('modal');
     });
   }
+
+  // ============================================
+  // MANEJO DEL SELECTOR DE SUCURSALES
+  // ============================================
+  
+  // Mostrar/ocultar campo de sucursal según tipo de envío
+  document.querySelectorAll('input[name="tipo_envio"]').forEach(radio => {
+    radio.addEventListener('change', async (e) => {
+      const campoSucursal = document.getElementById('campo-sucursal');
+      const errorSucursal = document.getElementById('error-sucursal');
+
+      if (e.target.value === 'sucursal') {
+        // Mostrar campo de sucursal
+        if (campoSucursal) campoSucursal.classList.remove('d-none');
+
+        // Obtener código de provincia
+        const provinciaSelect = document.getElementById('provincia');
+        const provinceCode = provinciaSelect?.value;
+
+        if (provinceCode) {
+          await cargarSucursales(provinceCode);
+        } else {
+          mostrarErrorAPI("Por favor, seleccione una provincia primero.");
+          if (errorSucursal) {
+            errorSucursal.textContent = "Seleccione una provincia primero";
+            errorSucursal.style.display = "block";
+          }
+        }
+      } else {
+        // Ocultar campo de sucursal
+        if (campoSucursal) campoSucursal.classList.add('d-none');
+        if (errorSucursal) errorSucursal.style.display = "none";
+      }
+    });
+  });
+
+  // Cargar sucursales cuando cambia la provincia (si ya está seleccionado "sucursal")
+  const provinciaSelect = document.getElementById('provincia');
+  if (provinciaSelect) {
+    provinciaSelect.addEventListener('change', async () => {
+      const tipoEnvioSeleccionado = document.querySelector('input[name="tipo_envio"]:checked');
+      
+      if (tipoEnvioSeleccionado && tipoEnvioSeleccionado.value === 'sucursal') {
+        const provinceCode = provinciaSelect.value;
+        if (provinceCode) {
+          await cargarSucursales(provinceCode);
+        } else {
+          mostrarErrorAPI("Seleccione una provincia válida.");
+        }
+      }
+    });
+  }
+
+  // Actualizar resumen cuando cambia el tipo de envío en el modal
+  document.querySelectorAll('input[name="tipo_envio"]').forEach(radio => {
+    radio.addEventListener("change", () => {
+      actualizarResumen('modal');
+    });
+  });
 });
 
-// Cotización dentro del modal
+// Cotizar envío cuando se ingresa CP en el modal
 async function cotizarEnvioModal(cpDestino) {
   if (!cpDestino) {
     mostrarErrorAPI("Por favor ingrese un Código Postal de destino.");
@@ -321,98 +380,73 @@ function actualizarLabelModal(tipo, precio, minDias, maxDias) {
   const radioInput = labelModal.querySelector('input[name="tipo_envio"]');
   if (radioInput && radioInput.checked) actualizarResumen('modal');
 }
-document.addEventListener("DOMContentLoaded", () => {
 
-  // Actualizar resumen cuando cambie el tipo de envío
-  document.querySelectorAll('input[name="tipo_envio"]').forEach(radio => {
-    radio.addEventListener("change", () => {
-      actualizarResumen('modal');
-    });
-  });
-
-  // Mostrar u ocultar el campo de sucursal
-  document.querySelectorAll('input[name="tipo_envio"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-      const campo = document.getElementById('campo-sucursal');
-
-      if (e.target.value === 'sucursal') {
-        if (campo) campo.classList.remove('d-none');
-
-        const provinceCode = document.getElementById('provincia').value;
-        if (provinceCode) {
-          cargarSucursales(provinceCode);
-        } else {
-          mostrarErrorAPI("Selecciona una provincia primero.");
-        }
-      } else {
-        if (campo) campo.classList.add('d-none');
-      }
-    });
-  });
-
-  // Cargar sucursales al cambiar provincia
-  const provinciaSelect = document.getElementById('provincia');
-  if (provinciaSelect) {
-    provinciaSelect.addEventListener('change', () => {
-      const tipoEnvio = document.querySelector('input[name="tipo_envio"]:checked');
-      if (tipoEnvio && tipoEnvio.value === 'sucursal') {
-        const provinceCode = provinciaSelect.value;
-        if (provinceCode) cargarSucursales(provinceCode);
-        else mostrarErrorAPI("Selecciona una provincia válida.");
-      }
-    });
-  }
-});
-
-
-// Cargar sucursales dinámicamente
+// ============================================
+// CARGAR SUCURSALES DINÁMICAMENTE
+// ============================================
 async function cargarSucursales(provinceCode) {
   const selector = document.getElementById('selector-sucursal');
   const horariosSmall = document.getElementById('horarios-sucursal');
+  const errorSucursal = document.getElementById('error-sucursal');
 
   if (!selector) return;
 
+  // Mostrar estado de carga
   selector.innerHTML = '<option value="">Cargando sucursales...</option>';
   if (horariosSmall) horariosSmall.textContent = '';
+  if (errorSucursal) errorSucursal.style.display = "none";
 
   try {
     const customerId = "0001079998";
     const response = await fetch(`/sucursales?customerId=${customerId}&provinceCode=${provinceCode}`);
-    if (!response.ok) throw new Error();
+    
+    if (!response.ok) throw new Error('Error en la respuesta del servidor');
 
     const data = await response.json();
     const sucursales = Array.isArray(data) ? data : data.agencies || [];
 
+    // Limpiar selector
     selector.innerHTML = '<option value="">Seleccione una sucursal</option>';
+
+    if (sucursales.length === 0) {
+      selector.innerHTML = '<option value="">No hay sucursales disponibles en esta provincia</option>';
+      if (horariosSmall) horariosSmall.textContent = 'No se encontraron sucursales para esta provincia.';
+      mostrarErrorAPI('No hay sucursales disponibles en esta provincia.');
+      return;
+    }
+
+    // Agregar sucursales al selector
     sucursales.forEach(sucursal => {
       const option = document.createElement('option');
       option.value = sucursal.id;
       option.textContent = sucursal.name || sucursal.nombre;
+      option.dataset.horario = sucursal.schedule || sucursal.horario || '';
       selector.appendChild(option);
     });
 
-    if (sucursales.length === 0) {
-      selector.innerHTML = '<option value="">No hay sucursales disponibles</option>';
-      if (horariosSmall) horariosSmall.textContent = 'No se encontraron sucursales.';
-    } else {
-      selector.addEventListener('change', () => {
-        const selectedId = selector.value;
-        const selectedSucursal = sucursales.find(s => s.id == selectedId);
-        if (selectedSucursal && (selectedSucursal.schedule || selectedSucursal.horario)) {
-          if (horariosSmall) horariosSmall.textContent =
-            `Horarios: ${selectedSucursal.schedule || selectedSucursal.horario}`;
-        } else if (horariosSmall) {
-          horariosSmall.textContent = '';
-        }
-      });
-    }
+    // Event listener para mostrar horarios
+    selector.addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const horario = selectedOption.dataset.horario;
+      
+      if (horariosSmall) {
+        horariosSmall.textContent = horario ? `Horarios: ${horario}` : '';
+      }
+    });
+
+    ocultarErrorAPI();
 
   } catch (error) {
+    console.error('Error al cargar sucursales:', error);
     selector.innerHTML = '<option value="">Error al cargar sucursales</option>';
-    mostrarErrorAPI('Error al cargar sucursales. Intenta de nuevo.');
+    mostrarErrorAPI('Error al cargar sucursales. Por favor, intente nuevamente.');
+    
+    if (errorSucursal) {
+      errorSucursal.textContent = "Error al cargar sucursales";
+      errorSucursal.style.display = "block";
+    }
   }
 }
-
 
 // Validar y guardar datos en memoria
 function validarYGuardarPaso1() {
@@ -421,6 +455,20 @@ function validarYGuardarPaso1() {
 
   if (tipoEnvio !== "local") {
     requiredFields.push("cp_usuario", "direccion");
+  }
+
+  // Si es envío a sucursal, validar que se haya seleccionado una sucursal
+  if (tipoEnvio === "sucursal") {
+    const selectorSucursal = document.getElementById('selector-sucursal');
+    if (!selectorSucursal?.value) {
+      const errorSucursal = document.getElementById('error-sucursal');
+      if (errorSucursal) {
+        errorSucursal.textContent = "Debe seleccionar una sucursal";
+        errorSucursal.style.display = "block";
+      }
+      mostrarErrorAPI("Por favor, seleccione una sucursal de Correo Argentino.");
+      return false;
+    }
   }
 
   let isValid = true;
@@ -468,8 +516,9 @@ function validarYGuardarPaso1() {
   }
 
   datosFormulario.tipo_envio = tipoEnvio;
-  datosFormulario.selector_sucursal = document.getElementById('selector-sucursal')?.value;
+  datosFormulario.selector_sucursal = document.getElementById('selector-sucursal')?.value || '';
   datosFormulario.mensaje = document.getElementById('mensaje')?.value || '';
+  datosFormulario.referencias = document.getElementById('referencias')?.value || '';
 
   if (!isValid) {
     mostrarErrorAPI(errores.join(" | "));
@@ -479,7 +528,6 @@ function validarYGuardarPaso1() {
   mostrarErrorAPI("");
   return true;
 }
-
 
 // Guardar paso 1 en BD
 async function guardarPaso1EnBD() {
@@ -522,7 +570,6 @@ async function guardarPaso1EnBD() {
     return null;
   }
 }
-
 
 // Importar envío a Correo Argentino
 async function importarEnvio() {
@@ -599,7 +646,6 @@ async function importarEnvio() {
   }
 }
 
-
 // Mostrar resumen final
 function mostrarResumenFinal() {
   const resumenUl = document.getElementById('resumen-compra');
@@ -621,7 +667,6 @@ function mostrarResumenFinal() {
     `;
   }
 }
-
 
 // Finalizar compra (llamado por token.js)
 async function procesarCompraFinal() {
@@ -681,7 +726,6 @@ async function procesarCompraFinal() {
     mostrarErrorAPI('Error al completar la compra');
   }
 }
-
 
 // Manejo global de errores
 function mostrarErrorAPI(mensaje) {

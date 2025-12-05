@@ -106,6 +106,7 @@
                 type="text"
                 class="form-control"
                 id="referencias"
+                name="referencias"
                 autocomplete="shipping address-line2"
                 tabindex="4"
               />
@@ -211,7 +212,6 @@
                 autocomplete="shipping postal-code"
                 tabindex="8"
                 required
-                onchange="cotizarEnvioModal(this.value)"
               />
               <span
                 id="error-cp_usuario"
@@ -258,7 +258,7 @@
                   />
                   <strong>Envío a domicilio</strong>
                   <span class="precio-opcion-modal" id="precio-domicilio-modal"
-                    >Cotizando...</span
+                    >Ingrese CP arriba</span
                   >
                   <small class="texto-envio" id="dias-domicilio-modal"></small>
                 </label>
@@ -277,13 +277,14 @@
                   />
                   <strong>Retiro en sucursal</strong>
                   <span class="precio-opcion-modal" id="precio-sucursal-modal"
-                    >Cotizando...</span
+                    >Ingrese CP arriba</span
                   >
                   <small class="texto-envio" id="dias-sucursal-modal"></small>
                 </label>
               </div>
             </fieldset>
 
+            <!-- Campo de sucursal (oculto por defecto, se muestra al seleccionar "sucursal") -->
             <div class="mb-3 d-none" id="campo-sucursal">
               <label for="selector-sucursal" class="form-label"
                 >Seleccionar sucursal</label
@@ -300,7 +301,13 @@
                 id="horarios-sucursal"
                 class="form-text text-muted"
               ></small>
+              <span
+                id="error-sucursal"
+                class="error-message"
+                style="color: red; display: none"
+              ></span>
             </div>
+
             <div class="mb-4 p-3 bg-light rounded">
               <h6 class="mb-3">Resumen de tu compra</h6>
               <div class="d-flex justify-content-between mb-2">
