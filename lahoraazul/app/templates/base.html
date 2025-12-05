@@ -121,11 +121,13 @@
 
         <p class="footer-right">Creado con 💙 por Aldana Ravalle.</p>
       </div>
-      <p class="footer-disclaimer">
-        Una vez despachado el pedido, no nos hacemos responsables por eventuales
-        roturas, pérdidas o demoras ocasionadas durante el envío.
-      </p>
-      <p class="footer-disclaimer">No se aceptan cambios ni devoluciones.</p>
+      <div class="footer-disclaimer">
+        <p>
+          Una vez despachado el pedido, no nos hacemos responsables por
+          eventuales roturas, pérdidas o demoras ocasionadas durante el envío.
+        </p>
+        <p>No se aceptan cambios ni devoluciones.</p>
+      </div>
     </footer>
 
     <!-- Scripts Section -->
@@ -173,7 +175,7 @@
         if (!indicador) {
           indicador = document.createElement("span");
           indicador.className = "carrito-indicador";
-          indicador.textContent = "1";
+          indicador.textContent = "0";
           carritoIconoLink.appendChild(indicador);
         } else {
           const cantidad = parseInt(indicador.textContent) + 1;

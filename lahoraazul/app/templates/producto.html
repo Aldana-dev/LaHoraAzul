@@ -151,7 +151,7 @@
       
       let indicador = carritoIconoLink.querySelector(".carrito-indicador");
 
-      if (data.cantidad > 1) {
+      if (data.cantidad > 0) {
         if (!indicador) {
           indicador = document.createElement("span");
           indicador.className = "carrito-indicador";
@@ -162,7 +162,7 @@
       } else {
         // Si la cantidad es 0, ocultar o remover el indicador
         if (indicador) {
-          indicador.style.display = 'none';
+          indicador.style.display = 0;
           // O si prefieres removerlo completamente:
           // indicador.remove();
         }
