@@ -222,8 +222,14 @@
             carritoIconoLink.appendChild(indicador);
           }
           indicador.textContent = data.cantidad;
-        } else if (indicador) {
-          indicador.remove();
+          indicador.style.display = 'flex'; // Mostrar el indicador
+        } else {
+          // Si la cantidad es 0, ocultar o remover el indicador
+          if (indicador) {
+            indicador.style.display = 'none';
+            // O si prefieres removerlo completamente:
+            // indicador.remove();
+          }
         }
       } catch (error) {
         console.error("Error al actualizar indicador:", error);

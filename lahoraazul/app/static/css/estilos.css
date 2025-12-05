@@ -264,6 +264,14 @@ nav a:hover {
   text-align: right;
 }
 
+.footer-disclaimer {
+  max-width: 1000px;
+  margin: 1.5em auto 0 auto;
+  font-size: 10px;
+  color: var(--color-primary);
+  text-align: center;
+}
+
 /* Admin trigger */
 #admin-trigger {
   cursor: pointer;

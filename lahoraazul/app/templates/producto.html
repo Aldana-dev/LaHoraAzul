@@ -1,9 +1,10 @@
-{% extends "base.html" %} {% block extra_css %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/producto.css') }}"
-/>
-{% endblock %} {% block content %}
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/producto.css') }}" />
+{% endblock %}
+
+{% block content %}
 <main class="pagina">
   <section class="producto-detalle">
     <!-- Product Header -->
@@ -13,32 +14,16 @@
 
     <!-- Product Gallery -->
     <div class="producto-galeria">
-      <div
-        class="imagen-principal"
-        role="img"
-        aria-label="{{ producto.nombre }}"
-      >
-        <img
-          id="img-principal"
-          src="{{ url_for('static', filename=producto.imagen) }}"
-          alt="{{ producto.nombre }}"
-        />
+      <div class="imagen-principal" role="img" aria-label="{{ producto.nombre }}">
+        <img id="img-principal" src="{{ url_for('static', filename=producto.imagen) }}" alt="{{ producto.nombre }}" />
       </div>
 
       {% if imagenes %}
       <aside class="galeria-miniaturas" aria-label="Miniaturas del producto">
         <!-- Main image as first thumbnail -->
-        <img
-          class="miniatura seleccionada"
-          src="{{ url_for('static', filename=producto.imagen) }}"
-          alt="Imagen principal"
-        />
+        <img class="miniatura seleccionada" src="{{ url_for('static', filename=producto.imagen) }}" alt="Imagen principal" />
         {% for img in imagenes %}
-        <img
-          class="miniatura"
-          src="{{ url_for('static', filename=img.imagen) }}"
-          alt="Miniatura {{ loop.index }}"
-        />
+        <img class="miniatura" src="{{ url_for('static', filename=img.imagen) }}" alt="Miniatura {{ loop.index }}" />
         {% endfor %}
       </aside>
       {% endif %}
@@ -46,16 +31,9 @@
 
     <!-- Price and Button -->
     <div class="precio-boton">
-      <p class="producto-precio" aria-label="Precio del producto">
-        $ {{ "{:.2f}".format(producto.precio) }}
-      </p>
-      <form
-        method="POST"
-        action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}"
-      >
-        <button class="boton agregar-carrito" id="btn-agregar" type="submit">
-          Agregar al carrito
-        </button>
+      <p class="producto-precio" aria-label="Precio del producto">$ {{ "{:.2f}".format(producto.precio) }}</p>
+      <form method="POST" action="{{ url_for('main.agregar_al_carrito', producto_id=producto.id) }}">
+        <button class="boton agregar-carrito" id="btn-agregar" type="submit">Agregar al carrito</button>
       </form>
     </div>
 
@@ -82,10 +60,10 @@
   // ============================================
   // GESTIÓN DEL CARRITO - SINCRONIZADO CON SERVIDOR
   // ============================================
-
+  
   const btnAgregar = document.getElementById("btn-agregar");
   const productoId = "{{ producto.id }}";
-
+  
   // Función para verificar si el producto está en el carrito (consulta al servidor)
   async function verificarEstadoCarrito() {
     try {
@@ -97,7 +75,7 @@
       return false;
     }
   }
-
+  
   // Función para actualizar el estado visual del botón
   function actualizarBoton(enCarrito) {
     if (enCarrito) {
@@ -110,20 +88,20 @@
       btnAgregar.classList.remove("deshabilitado");
     }
   }
-
+  
   // Verificar estado inicial al cargar la página
   if (btnAgregar) {
-    verificarEstadoCarrito().then((enCarrito) => {
+    verificarEstadoCarrito().then(enCarrito => {
       actualizarBoton(enCarrito);
     });
-
+    
     btnAgregar.addEventListener("click", async (e) => {
       e.preventDefault();
-
+      
       // Deshabilitar el botón inmediatamente
       btnAgregar.disabled = true;
       btnAgregar.textContent = "Agregando...";
-
+      
       // Enviar el formulario
       const form = btnAgregar.closest("form");
       if (form) {
@@ -131,19 +109,19 @@
           // Enviar mediante fetch para mejor control
           const formData = new FormData(form);
           const response = await fetch(form.action, {
-            method: "POST",
+            method: 'POST',
             body: formData,
-            credentials: "same-origin",
+            credentials: 'same-origin'
           });
-
+          
           if (response.ok) {
             // Actualizar estado visual
             btnAgregar.textContent = "¡En tu carrito!";
             btnAgregar.classList.add("deshabilitado");
-
+            
             // Actualizar indicador del carrito
             actualizarIndicadorCarrito();
-
+            
             // Opcional: mostrar mensaje de éxito
             mostrarNotificacion("Producto agregado al carrito");
           } else {
@@ -167,10 +145,10 @@
     try {
       const response = await fetch("{{ url_for('main.carrito_estado') }}");
       const data = await response.json();
-
+      
       const carritoIconoLink = document.querySelector("a[href*='carrito']");
       if (!carritoIconoLink) return;
-
+      
       let indicador = carritoIconoLink.querySelector(".carrito-indicador");
 
       if (data.cantidad > 0) {
@@ -180,13 +158,29 @@
           carritoIconoLink.appendChild(indicador);
         }
         indicador.textContent = data.cantidad;
-      } else if (indicador) {
-        indicador.remove();
+        indicador.style.display = 'flex'; // Mostrar el indicador
+      } else {
+        // Si la cantidad es 0, ocultar o remover el indicador
+        if (indicador) {
+          indicador.style.display = 'none';
+          // O si prefieres removerlo completamente:
+          // indicador.remove();
+        }
       }
     } catch (error) {
       console.error("Error al actualizar indicador:", error);
     }
   }
+  
+  // Función para mostrar notificaciones (opcional - mejora UX)
+  function mostrarNotificacion(mensaje, esError = false) {
+    // Puedes implementar un toast/notificación aquí
+    console.log(mensaje);
+    // Ejemplo simple con alert (reemplaza con algo mejor):
+    // alert(mensaje);
+  }
+  
+  // Actualizar indicador al cargar la página
   actualizarIndicadorCarrito();
 </script>
 {% endblock %}
