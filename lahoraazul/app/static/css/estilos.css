@@ -89,12 +89,6 @@ p {
   font-family: var(--font-logo);
   font-size: 3.5rem;
 }
-/* Logo - Tamaño base (pantallas grandes) */
-header img {
-  width: 200px;
-  height: auto;
-  transition: width 0.3s ease;
-}
 
 /* Tablets y pantallas medianas */
 @media (max-width: 768px) {
@@ -103,19 +97,6 @@ header img {
   }
 }
 
-/* Móviles grandes */
-@media (max-width: 576px) {
-  header img {
-    width: 120px;
-  }
-}
-
-/* Móviles pequeños */
-@media (max-width: 400px) {
-  header img {
-    width: 100px;
-  }
-}
 /* ───────────── Botones y navegación ───────────── */
 button,
 .btn,
